@@ -1,0 +1,76 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+date_default_timezone_set('America/Lima');
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/**
+ * Description of cobranza
+ *
+ * @author HP
+ */
+class cobranza extends CI_Controller {
+    //put your code here
+    public function __construct() {
+        parent::__construct();
+          $this->load->model('model_usuarios');
+          $this->load->model('model_seguridad');
+          $this->load->model('model_login');
+          $this->load->model('model_cliente');
+          $this->load->model('model_cobranza');
+          
+    }
+    function Seguridad()
+    {
+     	$url="http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+         $this->model_seguridad->SessionActivo($url);
+    }
+    
+    public function index()
+     {
+          /*Si el usuario esta logeado*/
+          $this->Seguridad();
+          $this->load->view('header');
+          $data['arraycobranza'] = $this->model_cobranza->ListarCobranza1();         
+          $this->load->view('view_cobranza', $data);
+          $this->load->view('footer');
+     }
+     
+     
+     public function nuevo(){
+        $this->Seguridad();
+    	$this->load->view('header');
+        $data =  $this->input->post();
+        echo "hola".$this->input->post();
+        $this->load->view('view_nuevo_cobranza', $data);
+        $this->load->view('footer');
+    } 
+    
+        function insertarDatos(){
+            
+                $this->Seguridad();
+		$this->validaCampos();
+		if($this->form_validation->run() == TRUE)
+        {
+            $data = $this->input->post();
+            $this->model_prestamo->crearCobranza($data);
+            redirect("cobranza?save=true");			
+		}else
+                {
+			$this->load->view('header');                   
+			$this->load->view('view_nuevo_cobranza');
+			$this->load->view('footer');
+		} 
+    }
+    
+    function validaCampos()
+    {
+		/*Campos para validar que no esten vacio los campos*/
+                 $this->form_validation->set_rules("pago", "Pago", "trim|required");
+		 $this->form_validation->set_rules("saldo", "Saldo", "trim|required");
+                 $this->form_validation->set_rules("nRecibo", "nRecibo", "trim|required");
+    }
+    
+}
