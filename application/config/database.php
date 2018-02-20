@@ -49,8 +49,8 @@ $active_group = 'default';
 $active_record = TRUE;
 
 $db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'codeignater';
-$db['default']['password'] = 'codeignater';
+$db['default']['username'] = 'codeigniter';
+$db['default']['password'] = 'codeigniter';
 $db['default']['database'] = 'dbfinanciera';
 $db['default']['dbdriver'] = 'mysqli';
 $db['default']['dbprefix'] = '';
