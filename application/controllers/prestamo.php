@@ -100,6 +100,14 @@ class prestamo extends CI_Controller{
 		return true;
 		}
 	}
+
+
+  public function cadena()  {
+      $var1 = $_POST['periodo'];
+      $hoy = date("Y")."-".(date("m")+$var1)."-".date("d");
+      $date = new DateTime($hoy);
+      echo $date->format('Y-m-d');
+    }
     
     /*
     public function insertarDatos()
