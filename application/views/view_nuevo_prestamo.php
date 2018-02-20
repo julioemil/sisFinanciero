@@ -1,13 +1,17 @@
 <?php
                         // Creando los campos del formulario:
                         // Dibujando el campo producto
-                        $producto 	  = array(
-                        'name'        => 'producto',
-                        'id'          => 'producto',
-                        'size'        => 50,
-                        'value'       => set_value('producto',@$datos_prestamo[0]->PRODUCTO),
-                        'placeholder' => 'Ingrese producto',
-                        'type'        => 'text',
+
+                        $js = 'id="producto"';
+
+
+
+                        $producto = array(
+                        '0'           => 'Seleccione Producto',                            
+                        'diario'      => 'Diario',
+                        'semanal'     => 'Semanal',
+                        'mesCampana'  => 'Mes Campaña',
+                        'mensual'     => 'Mensual',
                         );
                         // Dibujando el campo plazo
                         $plazo = array(
@@ -15,7 +19,6 @@
                         'id'          => 'plazo',
                         'size'        => 50,
                         'value'       => set_value('plazo',@$datos_prestamo[0]->PLAZO),
-                        'placeholder' => 'Ingrese el plazo',
                         'type'        => 'text',
                         );
                         //Dibujando el campo fechaInicio
@@ -86,7 +89,8 @@
             <table border=0>                                        
                     <tr>
                         <td><?php echo form_label("Producto(*)",'producto'); ?></td>
-                        <td> <?php  echo form_input($producto); ?></td>
+                        <td><?php echo form_dropdown('producto', $producto,set_value('producto',@$datos_prestamo[0]->producto),$js);?>
+                        </td>
                         <td><font color="red"><?php echo form_error('producto');?></font></td>
                         <td><?php echo form_label("Plazo(*)",'plazo');?></td>
                         <td><?php echo form_input($plazo);?></td>
@@ -184,3 +188,57 @@
             </tr>
         </table>
     </center>
+
+
+<script type="text/javascript">
+
+
+
+    $("#producto").change(function () {
+        //alert("changes");
+        if($("#producto").val()=='diario' || $("#producto").val()=='semanal'){
+            $( "#plazo" ).prop("disabled", true);    
+            $( "#plazo" ).val("1");
+            var periodo = document.getElementById('plazo').value;
+            $.ajax({
+                data: {"periodo":periodo},
+                url: 'http://localhost:8080/financiero/sistemafinanciero/index.php/prestamo/cadena',
+                type: 'post',
+                success: function(response,status){
+                    //alert("Respueta: "+response+" Estado "+status);
+                    $("#fechaFinal").val(response);
+                }
+
+            })
+              
+        }
+
+        if($("#producto").val()=='mesCampana' || $("#producto").val()=='mensual'){
+            $( "#plazo" ).prop("disabled", false);    
+            $( "#plazo" ).val("");
+        }
+    });
+
+   
+    $("#capital").focusout(function(e) {
+        /*if($("#capital").val()==''){
+            alert("vacio");
+        }*/
+        if($("#capital").val()!='' &&  $("#tasaInteres").val()!=''){
+            var tasaI = document.getElementById('tasaInteres').value;
+            var capital = document.getElementById('capital').value;
+            var deuda = parseFloat(capital*tasaI) + parseFloat(capital);
+            document.getElementById("deuda").value = deuda;    
+        }        
+    });
+
+    $("#tasaInteres").focusout(function(e) {
+        if($("#capital").val()!='' &&  $("#tasaInteres").val()!=''){
+            var tasaI = document.getElementById('tasaInteres').value;
+            var capital = document.getElementById('capital').value;
+            var deuda = parseFloat(capital*tasaI) + parseFloat(capital);
+            document.getElementById("deuda").value = deuda;    
+        }        
+    });
+
+</script>
