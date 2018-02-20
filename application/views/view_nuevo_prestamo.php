@@ -202,7 +202,7 @@
             var periodo = document.getElementById('plazo').value;
             $.ajax({
                 data: {"periodo":periodo},
-                url: 'http://localhost:8080/financiero/sistemafinanciero/index.php/prestamo/cadena',
+                url: 'http://localhost:8080/sisfinanciero/index.php/prestamo/cadena',
                 type: 'post',
                 success: function(response,status){
                     //alert("Respueta: "+response+" Estado "+status);

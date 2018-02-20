@@ -100,6 +100,19 @@ class prestamo extends CI_Controller{
 		return true;
 		}
 	}
+
+
+  function select_estado($campo)
+  {
+    // Validamos Estatus
+    if($campo=="NONE"){
+      $this->form_validation->set_message('select_estado', '*Campo Obligatorio');
+      return false;
+    } else{
+    // 
+    return true;
+    }
+  }
     
     /*
     public function insertarDatos()
