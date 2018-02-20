@@ -102,17 +102,12 @@ class prestamo extends CI_Controller{
 	}
 
 
-  function select_estado($campo)
-  {
-    // Validamos Estatus
-    if($campo=="NONE"){
-      $this->form_validation->set_message('select_estado', '*Campo Obligatorio');
-      return false;
-    } else{
-    // 
-    return true;
+  public function cadena()  {
+      $var1 = $_POST['periodo'];
+      $hoy = date("Y")."-".(date("m")+$var1)."-".date("d");
+      $date = new DateTime($hoy);
+      echo $date->format('Y-m-d');
     }
-  }
     
     /*
     public function insertarDatos()
