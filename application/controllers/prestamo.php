@@ -42,7 +42,7 @@ class prestamo extends CI_Controller{
         $this->Seguridad();
     	$this->load->view('header');
         $hoy   = date("Y")."-".date("m")."-".date("d");
-        $dataCliente['fechaInicio'] = $hoy;
+        $dataCliente['hoy'] = $hoy;
         $dataCliente['arrayclientes'] = $this->model_cliente->ListarCliente();
         $dataCliente['arrayusuarios'] = $this->model_usuarios->ListarUsuarios();
         $this->load->view('view_nuevo_prestamo', $dataCliente);
@@ -56,6 +56,19 @@ class prestamo extends CI_Controller{
 		if($this->form_validation->run() == TRUE)
         {
             $data = $this->input->post();
+            $capital = $this->input->post('capital');
+            $tasaInteres = $this->input->post('tasaInteres');
+            $plazo = $this->input->post('plazo');
+            if($this->input->post('producto')=="mensual"){
+              $cuota = $capital*(pow((1 + $tasaInteres/100), $plazo)*$tasaInteres/100)/(pow((1 + $tasaInteres/100), $plazo) - 1);
+              $data["cuota"] = $cuota;
+            }
+
+            if($this->input->post('producto')=="mesCampana"){
+              $cuota = $capital*(pow((1 + $tasaInteres/100), $plazo));
+              $data["cuota"] = $cuota;
+            }
+            
             $this->model_prestamo->crearPrestamo($data);
             redirect("prestamo?save=true");			
 		}else
@@ -71,14 +84,14 @@ class prestamo extends CI_Controller{
     {
 		/*Campos para validar que no esten vacio los campos*/
         $this->form_validation->set_rules("producto", "Producto", "trim|required");
-		$this->form_validation->set_rules("plazo", "Plazo", "trim|required");
+		    $this->form_validation->set_rules("plazo", "Plazo", "trim|required");
         $this->form_validation->set_rules("fechaInicio", "Fecha Inicio", "trim|required");
         $this->form_validation->set_rules("fechaFinal", "Fecha Final", "trim|required");
         $this->form_validation->set_rules("tasaInteres", "Tasa Interes", "trim|required");
         $this->form_validation->set_rules("capital", "Capital", "trim|required");
         $this->form_validation->set_rules("deuda", "Deuda", "trim|required");
-		$this->form_validation->set_rules("tipo", "Tipo", "callback_select_tipo");
-		$this->form_validation->set_rules("estado", "Estado", "callback_select_estado");
+    		$this->form_validation->set_rules("tipo", "Tipo", "callback_select_tipo");
+    		$this->form_validation->set_rules("estado", "Estado", "callback_select_estado");
         /*$this->form_validation->set_rules("distrito", "Distrito", "callback_select_distrito");
         $this->form_validation->set_rules("provincia", "Provincia", "callback_select_provincia");
         $this->form_validation->set_rules("departamento", "Departamento", "callback_select_departamento");
@@ -103,10 +116,32 @@ class prestamo extends CI_Controller{
 
 
   public function cadena()  {
-      $var1 = $_POST['periodo'];
-      $hoy = date("Y")."-".(date("m")+$var1)."-".date("d");
+      $periodo = $_POST['periodo'];
+      $hoyYear = date("Y");
+      $hoyMonth = date("m");
+      $hoydate = date("d");
+
+      while($periodo>0){
+        if($hoyMonth + $periodo>12){
+          $hoyYear = $hoyYear + 1;
+          $periodo = $periodo - 12;
+        }else{
+          $hoyMonth = $hoyMonth + $periodo;          
+          $periodo = 0;
+        }
+      }
+
+      $hoy = $hoyYear.'/'.$hoyMonth.'/'.$hoydate;
       $date = new DateTime($hoy);
       echo $date->format('Y-m-d');
+    }
+
+    public function detalle($id){
+        $this->Seguridad();
+        $this->load->view('header');
+        $dataPrestamo['arrayprestamo'] = $this->model_prestamo->listarPrestamoDetalle($id);
+        $this->load->view('view_prestamo_detalle',$dataPrestamo);
+        $this->load->view('footer');
     }
     
     /*

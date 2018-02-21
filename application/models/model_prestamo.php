@@ -40,6 +40,12 @@ class model_prestamo extends CI_Model
         $query = $this->db->get('prestamo');
         return $query->result();	
 	}
+
+    public function listarPrestamoDetalle($id){
+        $query = $this->db->where('idPrestamo',$id);
+        $query = $this->db->get('prestamo');
+        return $query->row();
+    }
      /*
      public function ExisteEmail($email){
         $this->db->from('cliente');
