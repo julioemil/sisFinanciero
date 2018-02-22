@@ -2,7 +2,7 @@
                         // Creando los campos del formulario:
                         // Dibujando el campo producto
 
-                        $js = 'id="producto"';
+                        $js = 'id="producto" name="producto"';
 
 
 
@@ -19,6 +19,7 @@
                         'id'          => 'plazo',
                         'size'        => 50,
                         'value'       => set_value('plazo',@$datos_prestamo[0]->PLAZO),
+                        'placeholder' => 'Plazo',
                         'type'        => 'text',
                         );
                         //Dibujando el campo fechaInicio
@@ -26,7 +27,7 @@
                         'name'        => 'fechaInicio',
                         'id'          => 'fechaInicio',
                         'size'        => 10, 
-                        'value'	  => set_value('fechaInicio',$fechaInicio),
+                        'value'	  => set_value('fechaInicio',@$hoy),
                         'type'        => 'date',
                         );
                         //Dibujando el campo fechaFinal
@@ -63,6 +64,18 @@
                         'size'        => 10,
                         'value'	  => set_value('deuda',@$datos_prestamo[0]->DEUDA),
                         'placeholder' => 'deuda',
+                        'readonly'    => 'true',
+                        'type'        => 'text',
+                        );
+
+                        // Dibujando el campo deuda
+                        $cuota       = array(
+                        'name'        => 'cuota',
+                        'id'          => 'cuota',
+                        'size'        => 10,
+                        'value'   => set_value('cuota',@$datos_prestamo[0]->CUOTA),
+                        'placeholder' => 'cuota',
+                        'readonly'    => 'true',
                         'type'        => 'text',
                         );
 
@@ -107,24 +120,30 @@
                     </tr>
                     
                     <tr>
-                        <td><?php echo form_label("Tasa Interes(*)",'tasaInteres');?>
+                        <td><?php echo form_label("Tasa Interes(*) %",'tasaInteres');?></td>
                         <td><?php echo form_input($tasaInteres);?></td>
                         <td><font color="red"><?php echo form_error('tasaInteres'); ?></font></td>
-                        <td><?php echo form_label("Capital",'capital');?></td>
+                        <td><?php echo form_label("Capital S/.",'capital');?></td>
                         <td><?php echo form_input($capital);?></td>
                         <td><font color="red"><?php echo form_error('capital'); ?></font></td>
                     </tr>
                     
                     <tr>
-                        <td><?php echo form_label("Deuda(*)",'deuda');?>
+                        <td><?php echo form_label("Deuda(*) S/. ",'deuda');?></td>
                         <td><?php echo form_input($deuda);?></td>
                         <td><font color="red"><?php echo form_error('deuda'); ?></font></td>
+
+                        <td><?php echo form_label("Cuota(*) S/. ",'cuota');?></td>
+                        <td><?php echo form_input($cuota);?></td>
+                        <td><font color="red"><?php echo form_error('cuota'); ?></font></td>
                         
+                    </tr>
+                    <tr>
                         <td><label>Usuario</label></td>
                         <td>
                         
-           <?php if($this->session->userdata('TIPOUSUARIO')=="Caja")
-              {?>
+                        <?php if($this->session->userdata('TIPOUSUARIO')=="Caja")
+                        {?>
                         <select name="idUsuario">
                              <option>Seleccione Usuario</option>
                         <?php foreach ($arrayusuarios as  $usuario) {
@@ -132,8 +151,8 @@
                         }?>     
                         </select>
                         <?php
-              }else 
-               {?>
+                        }else 
+                        {?>
                         <select name="idUsuario">
                         <?php 
                         echo '<option value="'.$this->session->userdata('ID').'">'.$this->session->userdata('NOMBRE').'</option>';
@@ -194,51 +213,105 @@
 
 
 
+
     $("#producto").change(function () {
-        //alert("changes");
+        
         if($("#producto").val()=='diario' || $("#producto").val()=='semanal'){
-            $( "#plazo" ).prop("disabled", true);    
+            $( "#plazo" ).prop("readonly", true);    
             $( "#plazo" ).val("1");
             var periodo = document.getElementById('plazo').value;
             $.ajax({
                 data: {"periodo":periodo},
-                url: 'http://localhost:8080/sisfinanciero/index.php/prestamo/cadena',
+                url: 'http://localhost:8080/sisFinanciero/index.php/prestamo/cadena',
                 type: 'post',
                 success: function(response,status){
                     //alert("Respueta: "+response+" Estado "+status);
                     $("#fechaFinal").val(response);
                 }
 
-            })
-              
+            });              
         }
 
         if($("#producto").val()=='mesCampana' || $("#producto").val()=='mensual'){
-            $( "#plazo" ).prop("disabled", false);    
+            $( "#plazo" ).prop("readonly", false);    
             $( "#plazo" ).val("");
+            $( "#cuota" ).val("");
+            $( "#deuda" ).val("");
+        }
+
+        if($("#capital").val()!='' &&  $("#tasaInteres").val()!='' && $("#plazo").val()!=''){
+            calcularValores();
         }
     });
 
+    $("#plazo").focusout(function(e) {
+        if($("#producto").val()=='mesCampana' || $("#producto").val()=='mensual'){
+            var periodo = document.getElementById('plazo').value;
+            $.ajax({
+                data: {"periodo":periodo},
+                url: 'http://localhost:8080/sisFinanciero/index.php/prestamo/cadena',
+                type: 'post',
+                success: function(response,status){
+                    //alert("Respueta: "+response+" Estado "+status);
+                    $("#fechaFinal").val(response);
+                }
+
+            });    
+        }
+        if($("#capital").val()!='' &&  $("#tasaInteres").val()!='' && $("#plazo").val()!=''){
+            calcularValores();
+        }
+    });
    
     $("#capital").focusout(function(e) {
-        /*if($("#capital").val()==''){
-            alert("vacio");
-        }*/
-        if($("#capital").val()!='' &&  $("#tasaInteres").val()!=''){
-            var tasaI = document.getElementById('tasaInteres').value;
-            var capital = document.getElementById('capital').value;
-            var deuda = parseFloat(capital*tasaI) + parseFloat(capital);
-            document.getElementById("deuda").value = deuda;    
+        if($("#capital").val()!='' &&  $("#tasaInteres").val()!='' && $("#plazo").val()!=''){
+            calcularValores();
         }        
     });
 
     $("#tasaInteres").focusout(function(e) {
-        if($("#capital").val()!='' &&  $("#tasaInteres").val()!=''){
-            var tasaI = document.getElementById('tasaInteres').value;
-            var capital = document.getElementById('capital').value;
-            var deuda = parseFloat(capital*tasaI) + parseFloat(capital);
-            document.getElementById("deuda").value = deuda;    
+        if($("#capital").val()!='' &&  $("#tasaInteres").val()!='' && $("#plazo").val()!=''){
+            calcularValores();
         }        
     });
+
+    function calcularValores(){
+        if($("#producto").val()=='diario'){
+                var tasaI = document.getElementById('tasaInteres').value;
+                var capital = document.getElementById('capital').value;
+                var deuda = parseFloat(capital*(1+tasaI/100)).toFixed(2);
+                var cuota = parseFloat(deuda/27).toFixed(2);
+                document.getElementById("deuda").value = deuda;
+                document.getElementById("cuota").value = cuota;
+                document.getElementById("capital").value = parseFloat(capital).toFixed(2);
+            }
+            if($("#producto").val()=='semanal'){
+                var tasaI = document.getElementById('tasaInteres').value;
+                var capital = document.getElementById('capital').value;
+                var deuda = parseFloat(capital*(1+tasaI/100)).toFixed(2);
+                var cuota = parseFloat(deuda/4).toFixed(2);
+                document.getElementById("deuda").value = deuda;
+                document.getElementById("cuota").value = cuota;
+            }
+            if($("#producto").val()=='mesCampana'){
+                var tasaI = document.getElementById('tasaInteres').value;
+                var capital = document.getElementById('capital').value;
+                var periodo = document.getElementById('plazo').value;
+                var deuda = parseFloat(capital*Math.pow((1 + tasaI/100), periodo)).toFixed(2);
+                var cuota = parseFloat(deuda/1).toFixed(2);
+                document.getElementById("deuda").value = deuda;
+                document.getElementById("cuota").value = cuota;
+            }
+
+            if($("#producto").val()=='mensual'){
+                var tasaI = document.getElementById('tasaInteres').value;
+                var capital = document.getElementById('capital').value;
+                var periodo = document.getElementById('plazo').value;
+                var cuota = parseFloat(capital*(Math.pow((1 + tasaI/100), periodo) * tasaI/100)/(Math.pow((1 + tasaI/100), periodo) -1)).toFixed(2);
+                var deuda = parseFloat(cuota*periodo).toFixed(2);
+                document.getElementById("deuda").value = deuda;
+                document.getElementById("cuota").value = cuota;
+            }
+    }
 
 </script>

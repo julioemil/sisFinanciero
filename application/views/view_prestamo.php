@@ -1,5 +1,5 @@
 <script type="text/javascript">
-            /*CLIENTES*/
+            /*prestamo*/
             $(document).ready(function() {
                 $('#prestamos').dataTable( {
                     // sDom: hace un espacio entre la tabla y los controles 
@@ -58,24 +58,27 @@ if(isset($_GET['password']))
 <tbody>
  <?php 
  if(!empty($arrayprestamos)){
-    foreach($arrayprestamos as $clientes){
+    foreach($arrayprestamos as $prestamo){
         echo '<tr>';
-        echo '<td>'.$clientes->producto.'</td>';
-        echo '<td>'.$clientes->plazo.'</td>';
-        echo '<td>'.$clientes->fechaInicio.'</td>';
-        echo '<td>'.$clientes->fechaFinal.'</td>';
-                echo '<td>'.$clientes->tasaInteres.'</td>';
-                echo '<td>'.$clientes->capital.'</td>';
-                echo '<td>'.$clientes->deuda.'</td>';
-                echo '<td>'.$clientes->nombreU.'</td>';
-                if($clientes->estado=='0'){
+        echo '<td>'.$prestamo->producto.'</td>';
+        echo '<td>'.$prestamo->plazo.'</td>';
+        echo '<td>'.$prestamo->fechaInicio.'</td>';
+        echo '<td>'.$prestamo->fechaFinal.'</td>';
+                echo '<td>% '.$prestamo->tasaInteres.'</td>';
+                echo '<td>'.number_format($prestamo->capital,2).'</td>';
+                echo '<td>'.number_format($prestamo->deuda,2).'</td>';
+                echo '<td>'.$prestamo->nombreU.'</td>';
+                if($prestamo->estado=='0'){
                     echo '<td>'.'Activo'.'</td>';
                 }else{
                     echo '<td>'.'Inactivo'.'</td>';
                 }
-                echo '<td>'.$clientes->nombreC.'</td>';
-                echo '<td></td>';
-        echo '</tr>';
+                echo '<td>'.$prestamo->nombreC.'</td>';?>
+                <td>
+                <?php if($prestamo->producto=='mensual'){ ?>
+                <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">Detalle</a><?php } ?>
+                </td>
+        <?php echo '</tr>';
     } 
  }
  ?>

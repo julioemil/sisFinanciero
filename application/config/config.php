@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://localhost:8080/sisfinanciero';
+$config['base_url']	= 'http://localhost:8080/sisFinanciero/';
 
 /*
 |--------------------------------------------------------------------------
