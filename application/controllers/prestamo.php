@@ -143,6 +143,74 @@ class prestamo extends CI_Controller{
         $this->load->view('view_prestamo_detalle',$dataPrestamo);
         $this->load->view('footer');
     }
+
+    public function detallaReprograma($idPrestamo, $vez){
+        $this->Seguridad();
+        $this->load->view('header');
+        $dataPrestamo['arrayprestamo'] = $this->model_prestamo->listarReprogramaDetalle($idPrestamo,$vez);
+        $this->load->view('view_prestamo_detalle',$dataPrestamo);
+        $this->load->view('footer');
+    }
+
+    public function reprogramar($id){
+        $this->Seguridad();
+        $this->load->view('header');
+        $dataPrestamo['arrayprestamo'] = $this->model_prestamo->verPrestamoDetalle($id);
+        $hoy   = date("Y")."-".date("m")."-".date("d");
+        $dataPrestamo['hoy'] = $hoy;
+        $this->load->view('view_prestamo_reprogramo',$dataPrestamo);
+        $this->load->view('footer');
+    }
+
+
+    function insertarReprograma(){
+    $this->Seguridad();
+    $hoy   = date("Y")."-".date("m")."-".date("d")." ".date("H:i:s");
+    $this->validaCampos();
+    if($this->form_validation->run() == TRUE)
+        {
+
+            $data = array(
+              'producto' => $this->input->post('producto'),
+              'fechaInicio' => $this->input->post('fechaInicio'),
+              'fechaFinal' => $this->input->post('fechaFinal'),
+              'capital' => $this->input->post('capital'),
+              'tasaInteres' => $this->input->post('tasaInteres'),
+              'deuda' => $this->input->post('deuda'),
+              'cuota' => $this->input->post('cuota'),
+              'plazo' => $this->input->post('plazo'),
+              'idPrestamo' => $this->input->post('idPrestamo'),
+              'vez' => '',
+              );
+            $id = $this->input->post('idPrestamo');
+            //$data = $this->input->post();
+            $capital = $this->input->post('capital');
+            $tasaInteres = $this->input->post('tasaInteres');
+            $plazo = $this->input->post('plazo');
+
+
+            //La condicion permite almacenar los decimales
+            if($this->input->post('producto')=="mensual"){
+              $cuota = $capital*(pow((1 + $tasaInteres/100), $plazo)*$tasaInteres/100)/(pow((1 + $tasaInteres/100), $plazo) - 1);
+              $data["cuota"] = $cuota;
+            }
+
+            if($this->input->post('producto')=="mesCampana"){
+              $cuota = $capital*(pow((1 + $tasaInteres/100), $plazo));
+              $data["cuota"] = $cuota;
+            }
+            
+            $result = $this->model_prestamo->crearReprogramaPrestamo($data, $id);
+            redirect("prestamo?save=true".$result);     
+    }else
+                {
+      $this->load->view('header');                   
+            $dataCliente['arrayclientes'] = $this->model_cliente->ListarCliente();
+            $dataCliente['arrayusuarios'] = $this->model_usuarios->ListarUsuarios();
+      $this->load->view('view_nuevo_prestamo',$dataCliente);
+      $this->load->view('footer');
+    } 
+    }
     
     /*
     public function insertarDatos()
