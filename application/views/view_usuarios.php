@@ -45,43 +45,35 @@ if(isset($_GET['password']))
 <thead>
 <tr>
 <th>ACCION</th>
-<th>NOMBRE</th>
 <th>APELLIDOS</th>
+<th>NOMBRES</th></th>
 <th>DNI</th>
 <th>TELEFONO</th>
-<th>TIPO</th>
-<th>ESTATO</th>
+<th>CORREO</th>
+<th>CARGO</th>
+<th>ESTADO</th>
 </tr>
 </thead>
 <tbody>
  <?php 
- $contador = 0;
  if(!empty($usuarios)){
  	foreach($usuarios as $usuario){
  		echo '<tr>';
 		echo '<td>'
 ?>
-		<a href="<?php echo base_url();?>index.php/usuarios/editar/<?php echo $usuario->ID;?>/" class="btn btn-success">Editar</a>
-		<a href="<?php echo base_url();?>index.php/usuarios/password/<?php echo $usuario->ID ?>" class="btn btn-default">Password</a>
-		<a href="<?php echo base_url();?>index.php/usuarios/permisos/<?php echo $usuario->ID;?>" class="btn btn-info">Permisos</a>
-		<a href="<?php echo base_url();?>index.php/usuarios/eliminar/<?php echo $usuario->ID ?>" class="btn btn-danger">Eliminar</a>
+                <a href="<?php echo base_url();?>index.php/usuarios/editar/<?php echo $usuario->ID;?>" class="btn btn-success">Edita</a>
+		<a href="<?php echo base_url();?>index.php/usuarios/password/<?php echo $usuario->ID; ?>" class="btn btn-default">Password</a>
+		<a href="<?php echo base_url();?>index.php/usuarios/permisos/<?php echo $usuario->ID;?>" class="btn btn-info">Permiso</a>
+		<a href="<?php echo base_url();?>index.php/usuarios/eliminar/<?php echo $usuario->ID; ?>" class="btn btn-danger">Elimina</a>
 <?php		
 		echo '</td>';
- 		echo '<td>'.$usuario->NOMBRE.'</td>';
 		echo '<td>'.$usuario->APELLIDOS.'</td>';
+                echo '<td>'.$usuario->NOMBRE.'</td>';
 		echo '<td>'.$usuario->DNI.'</td>';
 		echo '<td>'.$usuario->TELEFONO.'</td>';
+                echo '<td>'.$usuario->EMAIL.'</td>';
 		echo '<td>'.$usuario->TIPO.'</td>';
- 			
- 			/*Si es estatus mostramos en texto*/
-			if($usuario->ESTATUS==0){
-			echo '<td>Activo</td>';
-			}
-			else{
-			echo '<td>Inactivo</td>';
-			}
- 			
- 	
+                echo '<td>'.$usuario->ESTATUS.'</td>';
  		echo '</tr>';
  	} 
  }

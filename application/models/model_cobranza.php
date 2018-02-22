@@ -36,4 +36,13 @@ class model_cobranza extends CI_Model{
         $this->db->join('usuarios u','u.ID = p.idUsuario');
         return $this->db->get()->result();
     }
+    function BuscarID($id){
+        $query =  $this->db->select('*');
+        $query = $this->db->from('prestamo p');
+        $query = $this->db->where('idPrestamo',$id);
+        $query = $this->db->join('cliente c','c.idCliente=p.idCliente');
+        $query=$this->db->get();
+        return $query->result();	
+        
+    }
 }

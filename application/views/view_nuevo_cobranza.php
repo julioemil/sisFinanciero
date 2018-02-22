@@ -25,8 +25,9 @@
                         'id'          => 'saldo',
                         'size'        => 8, 
                         'value'	  => set_value('saldo',@$datos_cobranza[0]->saldo),
-                        'placeholder' => 'Capital',
+                        'placeholder' => 'Saldo',
                         'type'        => 'text',
+                        'readonly'    => 'readonly',
                         );
 ?>
 <center>
@@ -37,10 +38,32 @@
             <tr>
                 <td colspan=3>
                 <?php $attributes = array("class" => "form-horizontal", "id" => "form", "name" => "form");
-                      //echo form_open("clientes/Save", $attributes);
+                    foreach ($arrayprestamo as $array) { 
+                      echo form_open("/cobranza/nuevo/$array->idPrestamo");
                  ?> 
                     
-            <table border=0>                                        
+            <table border=0>    
+                    <tr>
+                        <td><label>Cliente</label></td>
+                        <td>    
+                        <select name="idPrestamo">
+                          <option value="<?php echo $array->idPrestamo?>"><?php echo $array->apellidos.', '.$array->nombres?></option>
+                        </select>     
+                        </td>
+                        <td></td>
+                        <td><label>Documento de Identidad</label></td>
+                        <td><input type="text" readonly=”readonly” value="<?php echo $array->dni ?>" /></td>
+                        <td></td>
+                        
+                    </tr>
+                    <tr>
+                        <td><label>Deuda (S/.)</label></td>
+                        <td><input type="text" id="deuda" name="deuda" readonly=”readonly” value="<?php echo $array->deuda ?>" /></td>
+                        <td></td>
+                        <td><label>Detalles</label></td>
+                        <td><h4>Capital:<?php echo number_format($array->capital, 2, '.', '') ?><br> Interes:<?php echo $array->tasaInteres ?></h4></td>
+                        <?php } ?>
+                    </tr>
                     <tr>
                         <td><?php echo form_label("Pago(*)",'pago'); ?></td>
                         <td> <?php  echo form_input($pago); ?></td>
@@ -57,19 +80,6 @@
                     </tr>
                     
                     <tr>
-                    </tr>
-
-                    <tr>
-                        <td><label>Prestamo</label></td>
-                        <td>    
-                        <select name="idPrestamo">
-                             <option>Seleccione Prestamo</option>
-                            <?php
-                             echo '<option value="'.$data.'">'.$data.'</option>';
-                             ?>
-                        </select>     
-                        
-                        </td>
                     </tr>
 
                     <tr>
@@ -98,3 +108,23 @@
             </tr>
         </table>
     </center>
+
+<script type="text/javascript">
+   $("#deuda").focusout(function(e) {
+   if($("#deuda").val()!='' &&  $("#pago").val()!=''){
+            var deuda = document.getElementById('deuda').value;
+            var pago = document.getElementById('pago').value;
+            var saldo = parseFloat(deuda-pago);
+            document.getElementById("saldo").value = saldo;    
+        }        
+    });
+
+    $("#pago").focusout(function(e) {
+        if($("#deuda").val()!='' &&  $("#pago").val()!=''){
+            var deuda = document.getElementById('deuda').value;
+            var pago = document.getElementById('pago').value;
+            var saldo = parseFloat(deuda-pago);
+            document.getElementById("saldo").value = saldo;  
+        }        
+    });
+</script>

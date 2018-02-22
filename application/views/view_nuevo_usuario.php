@@ -9,6 +9,7 @@
                         'placeholder' => 'Nombres',
                         'type'        => 'text',
                         );
+                        
                         // Dibujando el campo apellidos
                         $apellidos = array(
                         'name'        => 'apellidos',
@@ -18,15 +19,16 @@
                         'placeholder' => 'Apellidos',
                         'type'        => 'text',
                         );
+                        
                         //Dibujando el campo dni
                         $dni       = array(
                         'name'        => 'dni',
                         'id'          => 'dni',
-                        'size'        => 8, 
                         'value'	  => set_value('dni',@$datos_usuarios[0]->DNI),
                         'placeholder' => 'DNI',
-                        'type'        => 'text',
+                        'type'        => 'integer',
                         );
+                        
                         //Dibujando el campo fecha nacimiento
                         $fechaEgreso = array(
                         'name'        => 'fecha_egreso',
@@ -34,7 +36,8 @@
                         'size'        => 10,
                         'value'	  => set_value('fecha_egreso',@$datos_usuarios[0]->FECHA_EGRESO),
                         'type'        => 'date',
-                        );                       
+                        );    
+                        
                         // Dibujando el campo correo electronico
                         $email 		  = array(
                         'name'        => 'email',
@@ -44,6 +47,7 @@
                         'placeholder' => 'Email',
                         'type'        => 'text',
                         );
+                        
                         //Dibujando el campo direccion
                         $direccion       = array(
                         'name'        => 'direccion',
@@ -66,14 +70,14 @@
 
                         // Dibujando el campo sexo
                         $campoOpcionesSexo = array(
-                        'NONE'             => 'Seleccione Sexo',
-                        '0'     => 'Masculino',
-                        '1'	=> 'Femenino',
+                        '0'             => 'Seleccione Sexo',
+                        'Masculino'     => 'Masculino',
+                        'Femenino'	=> 'Femenino',
                         );
                         
                         // Dibujando el campo tipo de usuario
                         $campoOpcionesTipo = array(
-                        '0'                 => 'Seleccione Tipo Empleado',
+                        '0'                 => 'Seleccione Responsabilidad',
                         'Administrador'     => 'Administrador',
                         'Ejecutivo de Negocio'	    => 'Ejecutivo de Negocio',
                         'Caja'=>'Caja',    
@@ -81,24 +85,36 @@
 
                         // Dibujando el campo estado
                         $estatus = array(
-                        'NONE'   => 'Seleccione Estado',
-                        '0'	 => 'Activo',
-                        '1'      => 'Inactivo',
+                        '0'   => 'Seleccione Estado',
+                        'Activo'	 => 'Activo',
+                        'Inactivo'      => 'Inactivo',
                         );
+                        
+                        // Dibujando el campo sueldo
+                        $sueldo = array(
+                        'name'        => 'sueldo',
+                        'id'          => 'sueldo',
+                        'size'        => 100,
+                        'value'	  => set_value('sueldo', number_format(@$datos_usuarios[0]->SUELDO, 2, '.', '')),
+                        'placeholder' => 'Sueldo',
+                        'type'        => 'decimal',
+                        );
+                        
                         // Dibujando el oficina Afiliación
                         $campoOpcionesOficina = array(
                         '0'                 => 'Seleccione Oficina',
                         'Talavera'     => 'Talavera',
                         'Andahuaylas'	=> 'Andahuaylas',
-                        'San Jeronimo' =>'San Jeronimo',
                         'Uripa'       => 'Uripa',
+                        'Abancay' =>'Abancay',
+                        'Cusco' =>'Cusco',
                         );
 
 ?>
 <center>
-        <table border=0 class="ventanas" width="650" cellspacing="0" cellpadding="0">
+        <table border=0 class="ventanas" width="1000" cellspacing="0" cellpadding="0">
             <tr>
-                <td height='10' class='tabla_ventanas_login' height='10' colspan='6'><legend align='center'>.: REGISTRO EMPLEADO :.</legend></td>
+                <td  class='tabla_ventanas_login' height='10' colspan='6'><legend align='center'>.: REGISTRO EMPLEADO :.</legend></td>
             </tr>
             <tr>
                 <td colspan=6>
@@ -109,14 +125,13 @@
                     
             <table border=0>                                        
                     <tr>
-                        <td><?php echo form_label("Nombres(*)",'nombre'); ?></td>
-                        <td> <?php  echo form_input($nombre); ?></td>
-                        <td><font color="red"><?php echo form_error('nombre');?></font></td>
                         <td><?php echo form_label("Apellidos(*)",'apellidos');?></td>
                         <td><?php echo form_input($apellidos);?></td>
                         <td><font color="red"><?php echo form_error('apellidos');?></font></td>
+                        <td><?php echo form_label("Nombres(*)",'nombre'); ?></td>
+                        <td> <?php  echo form_input($nombre); ?></td>
+                        <td><font color="red"><?php echo form_error('nombre');?></font></td>
                     </tr>
-
                     <tr>
                         <td><?php echo form_label(" DNI(*)",'dni');?></td>
                         <td><?php echo form_input($dni);?></td>
@@ -129,65 +144,69 @@
                         <td><?php echo form_label("Sexo(*)",'sexo');?></td>
                         <td><?php echo  form_dropdown('sexo', $campoOpcionesSexo, set_value('sexo',@$datos_usuarios[0]->SEXO));?></td>
                         <td><font color="red"><?php echo  form_error('sexo');?></font></td>
-                        <td><?php echo form_label("Fecha Nacimiento",'fecha_egreso');?></td>
+                        <td><?php echo form_label("Fecha Nacimiento(*)",'fecha_egreso');?></td>
                         <td><?php echo form_input($fechaEgreso);?></td>
+                        <td><font color="red"><?php echo  form_error('fecha_egreso');?></font></td>
                     </tr>
                     <tr>
                         <td><?php echo form_label("Email(*)",'email');?>
                         <td><?php echo form_input($email);?></td>
                         <td><font color="red"><?php echo form_error('email'); ?></font></td>
-                        <td><?php echo form_label("Dirección",'direccion');?></td>
+                        <td><?php echo form_label("Dirección(*)",'direccion');?></td>
                         <td><?php echo form_input($direccion);?></td>
+                        <td><font color="red"><?php echo form_error('direccion'); ?></font></td>
                     </tr>
-
                     <tr>
-                        <td><label>Departamento</label></td>
+                        <td><label>Departamento(*)</label></td>
                         <td>
-                        <?php if(@$datos_usuarios[0]->DEPARTAMENTO==null){?>
-                        <select id="idDepartamento" name="DEPARTAMENTO">
-                        <option value="0">Seleccione Departamento</option>
-                        <?php 
-                             foreach ($datos_departamento as $datos) {
-                              echo '<option value="'.$datos->id_ciudad.'">'.$datos->nomb_ciudad.'</option>';
-                            }?>
-                          </select>   
-                        <?php }else{?>
                            <select id="idDepartamento" name="DEPARTAMENTO"> 
+                           <option value="0">Seleccione Departamento</option>
                            <?php foreach ($datos_departamento as $datos) {
-                               if($datos->id_ciudad==@$datos_usuarios[0]->DEPARTAMENTO){
+                                 if($datos->id_ciudad==@$datos_usuarios[0]->DEPARTAMENTO){
                                   echo '<option selected value="'.$datos->id_ciudad.'">'.$datos->nomb_ciudad.'</option>';
                             } else{
-                            echo '<option value="'.$datos->id_ciudad.'">'.$datos->nomb_ciudad.'</option>';
+                                  echo '<option value="'.$datos->id_ciudad.'">'.$datos->nomb_ciudad.'</option>';
                             }
-                        }
-                        }
-                        ?>
-                       </select>
-                       
-                        </td>
-                        <td><label>Provincia</label></td>
+                            }
+                             ?>
+                       </select>  
+                       </td>
+                       <td><font color="red"><?php echo form_error('DEPARTAMENTO'); ?></font></td>
+                        <td><label>Provincia(*)</label></td>
                         <td> 
                           <select id="idProvincia" name="PROVINCIA">
-                          <option value="0">Seleccione Provincia</option>
+                              <?php if($datos_usuarios[0]->PROVINCIA){ ?>
+                              <option value="<?php echo @$datos_usuarios[0]->PROVINCIA?>"><?php $provincia = $this->model_ciudad->getNombProvincia($datos_usuarios[0]->PROVINCIA); foreach($provincia as $datos){ echo $datos->nomb_provincia;}?></option>
+                              <?php } else {?>
+                              <option value="0">Seleccione Provincia</option>
+                              <?php }?>
                           </select>
                         </td>  
-                        <td><label>Distrito</label></td>
+                        <td><font color="red"><?php echo form_error('PROVINCIA'); ?></font></td>
+                        <td><center><label>Distrito(*)</label></center></td>
                         <td> 
                           <select id="idDistrito" name="DISTRITO">
+                          <?php if($datos_usuarios[0]->DISTRITO){ ?>
+                          <option value="<?php echo $datos_usuarios[0]->DISTRITO?>"><?php $distrito=$this->model_ciudad->getNombDistrito($datos_usuarios[0]->DISTRITO); foreach($distrito as $datos){ echo $datos->nomb_distrito;}?></option>
+                          <?php } else {?>
                           <option value="0">Seleccione Distrito</option>
+                          <?php }?>
                           </select>
-                        </td> 
-                    </tr>
-                                        
+                        </td>
+                        <td><font color="red"><?php echo form_error('DISTRITO'); ?></font></td>
+                    </tr>           
                     <tr>
-                        <td><?php echo form_label("Tipo(*)",'tipo');?></td>
+                        <td><?php echo form_label("Responsabilidad(*)",'tipo');?></td>
                         <td><?php echo  form_dropdown('tipo', $campoOpcionesTipo, set_value('tipo',@$datos_usuarios[0]->TIPO));?></td>
                         <td><font color="red"><?php echo  form_error('tipo');?></font></td>
+                        <td><?php echo form_label("Sueldo(*)",'sueldo');?></td>
+                        <td><?php echo form_input($sueldo);?></td>
+                        <td><font color="red"><?php echo form_error('sueldo'); ?></font></td>
+                    </tr>
+                    <tr>
                         <td><?php echo form_label("Estado(*)",'estatus');?></td>
                         <td><?php echo  form_dropdown('estatus', $estatus, set_value('estatus',@$datos_usuarios[0]->ESTATUS));?></td>
                         <td><font color="red"><?php echo form_error('estatus');?></font></td>
-                    </tr>
-                    <tr>
                         <td><?php echo form_label("Oficina(*)",'oficina');?></td>
                         <td><?php echo  form_dropdown('oficina', $campoOpcionesOficina, set_value('oficina',@$datos_usuarios[0]->OFICINA));?></td>
                         <td><font color="red"><?php echo  form_error('oficina');?></font></td>
@@ -197,12 +216,12 @@
                     </tr>
                     
                     <tr>
-                        <td colspan=6><hr/></td>
+                        <td colspan=9><hr/></td>
                     </tr>
                     
                     <tr>
-                        <td colspan=3><center> <input type="submit" class="btn btn-success" value="GRABAR"></center></td>
-                        <td colspan=3>
+                        <td colspan=4><center> <input type="submit" class="btn btn-success" value="GRABAR"></center></td>
+                        <td colspan=4>
                         <center>
                         <a href="<?php echo base_url();?>index.php/usuarios" class="btn btn-danger">CANCELAR</a>
                         </center>

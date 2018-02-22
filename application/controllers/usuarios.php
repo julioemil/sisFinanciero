@@ -68,18 +68,18 @@ class usuarios extends CI_Controller
 		} 
      }
      
-        public function consultaProvincia() {
+        public function consultaProvincia($ciudades) {
         $idDepartamento = $this->input->post('idDepartamento');
         if($idDepartamento){
             $ciudades = $this->model_ciudad->getProvincia($idDepartamento);
             echo '<option value="0">Seleccione Provincia</option>';
             foreach($ciudades as $fila){
-                echo '<option value="'. $fila->id_provincia.'">'.$fila->nomb_provincia.'</option>';
+            echo '<option value="'. $fila->id_provincia.'">'.$fila->nomb_provincia.'</option>';
             }
         }  else {
             echo '<option value="0">Seleccione Provincia</option>';
         }
-         }
+        }
          
         public function consultaDistrito() {
         $idProvincia = $this->input->post('idProvincia');
@@ -99,20 +99,27 @@ class usuarios extends CI_Controller
 		 $this->form_validation->set_rules("nombre", "Nombres", "trim|required");
 		 $this->form_validation->set_rules("apellidos", "Apellidos", "trim|required");
 		 $this->form_validation->set_rules("email", "Email", "trim|required|valid_email");
-		 $this->form_validation->set_rules("tipo", "Tipo", "callback_select_tipo");
+		 $this->form_validation->set_rules("fecha_egreso", "Fecha_egreso", "trim|required");
+		 $this->form_validation->set_rules("apellidos", "Apellidos", "trim|required");
 		 $this->form_validation->set_rules("estatus", "Estatus", "callback_select_estatus");
                  $this->form_validation->set_rules("telefono", "Telefono", "trim|required");
+                 $this->form_validation->set_rules("direccion", "Direccion", "trim|required");
+                 $this->form_validation->set_rules("sueldo", "Sueldo", "trim|required|decimal");                 
                  $this->form_validation->set_rules("sexo", "Sexo", "callback_select_sexo");
-                 $this->form_validation->set_rules("dni", "Dni", "trim|required");
+                 $this->form_validation->set_rules("dni", "Dni", "trim|required|integer|exact_length[8]");
                  $this->form_validation->set_rules("direccion", "Direccion", "trim|required");
                  $this->form_validation->set_rules("oficina", "Oficina", "callback_select_oficina");
+                 $this->form_validation->set_rules("tipo", "Tipo", "callback_select_tipo");
+                 $this->form_validation->set_rules("DEPARTAMENTO", "DEPARTAMENTO", "callback_select_DEPARTAMENTO");
+                 $this->form_validation->set_rules("PROVINCIA", "PROVINCIA", "callback_select_PROVINCIA");
+                 $this->form_validation->set_rules("DISTRITO", "DISTRITO", "callback_select_DISTRITO");
                  //$this->form_validation->set_rules("anioegreso","anioegreso","callback_checkDateFormat");    
 	 }
         
         function select_sexo($campo)
 	{
 		//Validamos tipo de usuario
-		if($campo=="NONE"){
+		if($campo=="0"){
 			$this->form_validation->set_message('select_sexo', '*Campo Obligatorio');
 			return false;
 		} else{
@@ -146,8 +153,41 @@ class usuarios extends CI_Controller
 	function select_estatus($campo)
 	{
 		// Validamos Estatus
-		if($campo=="NONE"){
+		if($campo=="0"){
 			$this->form_validation->set_message('select_estatus', '*Campo Obligatorio');
+			return false;
+		} else{
+		// 
+		return true;
+		}
+	}
+        function select_DEPARTAMENTO($campo)
+	{
+		// Validamos Estatus
+		if($campo=="0"){
+			$this->form_validation->set_message('select_DEPARTAMENTO', '*Campo Obligatorio');
+			return false;
+		} else{
+		// 
+		return true;
+		}
+	}
+        function select_PROVINCIA($campo)
+	{
+		// Validamos Estatus
+		if($campo=="0"){
+			$this->form_validation->set_message('select_PROVINCIA', '*Campo Obligatorio');
+			return false;
+		} else{
+		// 
+		return true;
+		}
+	}
+        function select_DISTRITO($campo)
+	{
+		// Validamos Estatus
+		if($campo=="0"){
+			$this->form_validation->set_message('select_DISTRITO', '*Campo Obligatorio');
 			return false;
 		} else{
 		// 

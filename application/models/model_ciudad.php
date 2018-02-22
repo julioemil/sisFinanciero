@@ -45,4 +45,20 @@ class model_ciudad extends CI_Model {
             return $distritos->result();
         }
     }
+    
+    public function getNombProvincia($idProvincia){
+        $this->db->where('id_provincia', $idProvincia);
+        $provincias = $this->db->get('provincia');
+        if($provincias->num_rows() > 0){
+            return $provincias ->result();
+        }
+    }
+    
+    public function getNombDistrito($idDistrito){
+        $this->db->where('id_distrito', $idDistrito);
+        $provincias = $this->db->get('distrito');
+        if($provincias->num_rows() > 0){
+            return $provincias ->result();
+        }
+    }
 }

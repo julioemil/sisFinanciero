@@ -39,35 +39,36 @@ class cobranza extends CI_Controller {
      }
      
      
-     public function nuevo(){
+     public function nuevo($id = NULL){
+         
         $this->Seguridad();
-    	$this->load->view('header');
-        $data =  $this->input->post();
-        echo "hola".$this->input->post();
-        $this->load->view('view_nuevo_cobranza', $data);
-        $this->load->view('footer');
-    } 
-    
-        function insertarDatos(){
+        $this->validaCampos();
+        if($this->form_validation->run() == TRUE)
+            {
             
-                $this->Seguridad();
-		$this->validaCampos();
-		if($this->form_validation->run() == TRUE)
-        {
+            $hoy   = date("Y")."-".date("m")."-".date("d")." ".date("H:i:s");
             $data = $this->input->post();
-            $this->model_prestamo->crearCobranza($data);
-            redirect("cobranza?save=true");			
-		}else
-                {
-			$this->load->view('header');                   
-			$this->load->view('view_nuevo_cobranza');
-			$this->load->view('footer');
-		} 
-    }
+            $data["fechaCobranza"] = $hoy;
+            $this->model_cobranza->crearCobranza($data);
+            redirect("cobranza?save=true");
+            }
+        else{
+            
+                $id=$this->uri->segment(3);
+                $data['arrayprestamo']= $this->model_cobranza->buscarID($id);
+                $this->load->view('header');
+                 $this->load->view('view_nuevo_cobranza', $data);
+        	$this->load->view('footer');
+        }             
+        }
+     
+    
+
     
     function validaCampos()
     {
 		/*Campos para validar que no esten vacio los campos*/
+                 $this->form_validation->set_rules("idPrestamo", "idPrestamo", "trim|required");
                  $this->form_validation->set_rules("pago", "Pago", "trim|required");
 		 $this->form_validation->set_rules("saldo", "Saldo", "trim|required");
                  $this->form_validation->set_rules("nRecibo", "nRecibo", "trim|required");

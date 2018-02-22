@@ -27,15 +27,6 @@ if(isset($_GET['update']))
     echo '<div class="alert alert-success text-center">La Información  se Actualizo Correctamente</div>';
 }
 
-if(isset($_GET['permisos']))
-{
-    echo '<div class="alert alert-success text-center">Los Permisos fueron Asignados Correctamente</div>';
-}
-
-if(isset($_GET['password']))
-{
-    echo '<div class="alert alert-success text-center">La Contraseña fue actualizado Correctamente</div>';                
-}
 ?>
 <br><br>
 <center>  
@@ -63,9 +54,9 @@ if(isset($_GET['password']))
         echo '<td>'.$cobranza->capital.'</td>';
         echo '<td>'.$cobranza->tasaInteres.'</td>';
         echo '<td>'.$cobranza->deuda.'</td>';
-        echo '<td>'.'</td>';
+        echo '<td>'.$cobranza->idPrestamo.'</td>';
 ?>
-        <td><a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo; ?>" class="btn btn-success">Pago</a></td> 
+        <td><a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Pago</a></td> 
 <?php
         echo '</tr>';
     } 
