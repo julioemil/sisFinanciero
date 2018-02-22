@@ -61,17 +61,25 @@ class cobranza extends CI_Controller {
         	$this->load->view('footer');
         }             
         }
-     
-    
 
-    
-    function validaCampos()
+       function validaCampos()
     {
 		/*Campos para validar que no esten vacio los campos*/
                  $this->form_validation->set_rules("idPrestamo", "idPrestamo", "trim|required");
                  $this->form_validation->set_rules("pago", "Pago", "trim|required");
 		 $this->form_validation->set_rules("saldo", "Saldo", "trim|required");
                  $this->form_validation->set_rules("nRecibo", "nRecibo", "trim|required");
+    }
+    
+    function listado($id = null){
+                $this->Seguridad();
+                $id=$this->uri->segment(3);
+                $data['arraycobranza']=$this->model_cobranza->getPago($id);
+                $data['arrayprestamo']  = $this->model_cobranza->BuscarID($id);
+                $data['arrayusuario']  = $this->model_cobranza->getUsuario($id);
+                $this->load->view('header');
+                $this->load->view('view_listado_cobranza', $data);
+        	$this->load->view('footer');
     }
     
 }

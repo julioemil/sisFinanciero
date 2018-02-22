@@ -17,15 +17,6 @@ if(isset($_GET['save']))
     echo '<div class="alert alert-success text-center">La Información  se Almaceno Correctamente</div>';
 }
 
-if(isset($_GET['delete']))
-{
-    echo '<div class="alert alert-warning text-center">La Información  se ha Eliminado Correctamente</div>';
-}
-
-if(isset($_GET['update']))
-{
-    echo '<div class="alert alert-success text-center">La Información  se Actualizo Correctamente</div>';
-}
 
 ?>
 <br><br>
@@ -37,8 +28,8 @@ if(isset($_GET['update']))
 <th>APELLIDOS Y NOMBRES</th>
 <th>CAPITAL</th>
 <th>TASA INTERES</th>
-<th>DEUDA</th>
-<th>SALDO</th>
+<th>DEUDA INICIAL</th>
+<th>SALDO ACTUAL</th>
 <th>ACCION</th>
 </tr>
 </thead>
@@ -54,9 +45,20 @@ if(isset($_GET['update']))
         echo '<td>'.$cobranza->capital.'</td>';
         echo '<td>'.$cobranza->tasaInteres.'</td>';
         echo '<td>'.$cobranza->deuda.'</td>';
-        echo '<td>'.$cobranza->idPrestamo.'</td>';
 ?>
-        <td><a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Pago</a></td> 
+        <?php 
+        $sumapago=0;
+        $arraypago=$this->model_cobranza->getPago($cobranza->idPrestamo);
+        foreach($arraypago as $datos){ 
+            $sumapago=$sumapago+ $datos->pago;          
+        }
+        $saldo=$cobranza->deuda-$sumapago;
+        echo '<td>'.$saldo.'</td>'
+         ?>
+        <td>
+            <a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Pago</a>
+            <a href="<?php echo base_url();?>index.php/cobranza/listado/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Detalle</a>
+        </td> 
 <?php
         echo '</tr>';
     } 
