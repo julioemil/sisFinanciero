@@ -100,6 +100,10 @@ class model_prestamo extends CI_Model
         }        
     }
 
+
+
+
+
      /*
      public function ExisteEmail($email){
         $this->db->from('cliente');
