@@ -42,7 +42,13 @@ class model_cobranza extends CI_Model{
         $query = $this->db->where('idPrestamo',$id);
         $query = $this->db->join('cliente c','c.idCliente=p.idCliente');
         $query=$this->db->get();
-        return $query->result();	
-        
+        return $query->result();	  
+    }
+    function getPago($id){
+        $query =  $this->db->select('*');
+        $query = $this->db->from('cobranza');
+        $query = $this->db->where('idPrestamo',$id);
+        $query=$this->db->get();
+        return $query->result();	  
     }
 }

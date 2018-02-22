@@ -37,8 +37,8 @@ if(isset($_GET['update']))
 <th>APELLIDOS Y NOMBRES</th>
 <th>CAPITAL</th>
 <th>TASA INTERES</th>
-<th>DEUDA</th>
-<th>SALDO</th>
+<th>DEUDA INICIAL</th>
+<th>SALDO ACTUAL</th>
 <th>ACCION</th>
 </tr>
 </thead>
@@ -54,8 +54,16 @@ if(isset($_GET['update']))
         echo '<td>'.$cobranza->capital.'</td>';
         echo '<td>'.$cobranza->tasaInteres.'</td>';
         echo '<td>'.$cobranza->deuda.'</td>';
-        echo '<td>'.$cobranza->idPrestamo.'</td>';
 ?>
+        <?php 
+        $sumapago=0;
+        $arraypago=$this->model_cobranza->getPago($cobranza->idPrestamo);
+        foreach($arraypago as $datos){ 
+            $sumapago=$sumapago+ $datos->pago;          
+        }
+        $saldo=$cobranza->deuda-$sumapago;
+        echo '<td>'.$saldo.'</td>'
+         ?>
         <td><a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Pago</a></td> 
 <?php
         echo '</tr>';
