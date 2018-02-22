@@ -17,15 +17,6 @@ if(isset($_GET['save']))
     echo '<div class="alert alert-success text-center">La Información  se Almaceno Correctamente</div>';
 }
 
-if(isset($_GET['delete']))
-{
-    echo '<div class="alert alert-warning text-center">La Información  se ha Eliminado Correctamente</div>';
-}
-
-if(isset($_GET['update']))
-{
-    echo '<div class="alert alert-success text-center">La Información  se Actualizo Correctamente</div>';
-}
 
 ?>
 <br><br>
@@ -64,7 +55,10 @@ if(isset($_GET['update']))
         $saldo=$cobranza->deuda-$sumapago;
         echo '<td>'.$saldo.'</td>'
          ?>
-        <td><a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Pago</a></td> 
+        <td>
+            <a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Pago</a>
+            <a href="<?php echo base_url();?>index.php/cobranza/listado/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Detalle</a>
+        </td> 
 <?php
         echo '</tr>';
     } 

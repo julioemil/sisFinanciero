@@ -64,7 +64,7 @@
                                  }
                         ?>
                         <td><label>Deuda Actual (S/.)</label></td>
-                        <td><input type="text" id="deuda" name="deuda" readonly=”readonly” value="<?php echo $sumadeudaactual ?>" /></td>
+                        <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo $sumadeudaactual ?>" /></td>
                         <td></td>
                         <td><label>Detalles:</label></td>
                         <td><h4>-Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?><br> -Interes(%):  <?php echo $array->tasaInteres ?><br>
@@ -117,20 +117,20 @@
     </center>
 
 <script type="text/javascript">
-   $("#deuda").focusout(function(e) {
-   if($("#deuda").val()!='' &&  $("#pago").val()!=''){
-            var deuda = document.getElementById('deuda').value;
+   $("#deudaActual").focusout(function(e) {
+   if($("#deudaActual").val()!='' &&  $("#pago").val()!=''){
+            var deudaActual = document.getElementById('deudaActual').value;
             var pago = document.getElementById('pago').value;
-            var saldo = parseFloat(deuda-pago);
+            var saldo = parseFloat(deudaActaul-pago);
             document.getElementById("saldo").value = saldo;    
         }        
     });
 
     $("#pago").focusout(function(e) {
-        if($("#deuda").val()!='' &&  $("#pago").val()!=''){
-            var deuda = document.getElementById('deuda').value;
+        if($("#deudaActual").val()!='' &&  $("#pago").val()!=''){
+            var deudaActual = document.getElementById('deudaActual').value;
             var pago = document.getElementById('pago').value;
-            var saldo = parseFloat(deuda-pago);
+            var saldo = parseFloat(deudaActual-pago);
             document.getElementById("saldo").value = saldo;  
         }        
     });
