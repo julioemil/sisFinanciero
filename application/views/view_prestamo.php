@@ -75,7 +75,8 @@ if(isset($_GET['password']))
                 }
                 echo '<td>'.$prestamo->nombreC.'</td>';?>
                 <td>
-                <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">Detalle</a>
+                <?php if($prestamo->producto=='mensual'){ ?>
+                <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">Detalle</a><?php } ?>
                 </td>
         <?php echo '</tr>';
     } 
