@@ -76,7 +76,34 @@ if(isset($_GET['password']))
                 echo '<td>'.$prestamo->nombreC.'</td>';?>
                 <td>
                 <?php if($prestamo->producto=='mensual'){ ?>
+<<<<<<< master
                 <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">Detalle</a><?php } ?>
+=======
+                <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">P</a>
+                <?php } ?>
+
+                <a href="<?php echo base_url();?>index.php/prestamo/reprogramar/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-info">R</a>
+
+                <!--Reprogramacion 1-->
+                <?php if($prestamo->cantidad=='1'){ ?>
+                <a href="<?php echo base_url();?>index.php/prestamo/detallaReprograma/<?php echo $prestamo->idPrestamo; ?>/1" class="btn btn-success">P1</a>
+                <?php } ?>
+
+                <!--Reprogramacion 1, 2-->
+                <?php if($prestamo->cantidad=='2'){ ?>
+                <a href="<?php echo base_url();?>index.php/prestamo/detallaReprograma/<?php echo $prestamo->idPrestamo; ?>/1" class="btn btn-success">P1</a>
+                <a href="<?php echo base_url();?>index.php/prestamo/detallaReprograma/<?php echo $prestamo->idPrestamo; ?>/2" class="btn btn-success">P2</a>
+                <?php } ?>
+
+
+
+                <!--Reprogramacion 1, 2, 3-->
+                <?php if($prestamo->cantidad=='3'){ ?>
+                <a href="<?php echo base_url();?>index.php/prestamo/detallaReprograma/<?php echo $prestamo->idPrestamo; ?>/1" class="btn btn-success">P1</a>
+                <a href="<?php echo base_url();?>index.php/prestamo/detallaReprograma/<?php echo $prestamo->idPrestamo; ?>/2" class="btn btn-success">P2</a>
+                <a href="<?php echo base_url();?>index.php/prestamo/detallaReprograma/<?php echo $prestamo->idPrestamo; ?>/3" class="btn btn-success">P3</a>
+                <?php } ?>
+>>>>>>> Uniendo
                 </td>
         <?php echo '</tr>';
     } 
