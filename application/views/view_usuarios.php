@@ -38,13 +38,18 @@ if(isset($_GET['password']))
     echo '<div class="alert alert-success text-center">La Contraseña fue actualizado Correctamente</div>';                
 }
 ?>
-<a href="<?php echo base_url();?>index.php/usuarios/nuevo" class="btn btn-success">REGISTRAR NUEVO EMPLEADO</a> 
+<a href="<?php echo base_url(); ?>index.php/usuarios/excels" class="btn btn-success">EXPORTAR REGISTRO</a>
 <br><br>
 <center>  
 <table id="usuarios" border="0" cellpadding="0" cellspacing="0" class="pretty">
 <thead>
-<tr>
-<th>ACCION</th>
+    <tr>
+        <td colspan="3">
+            <a href="<?php echo base_url();?>index.php/usuarios/nuevo" class="btn btn-success">NUEVO REGISTRO</a>  
+        </td>
+    </tr>
+<tr>  
+<th>N°</th>    
 <th>APELLIDOS</th>
 <th>NOMBRES</th></th>
 <th>DNI</th>
@@ -52,21 +57,19 @@ if(isset($_GET['password']))
 <th>CORREO</th>
 <th>CARGO</th>
 <th>ESTADO</th>
+<th>ACCION</th>
 </tr>
 </thead>
 <tbody>
  <?php 
  if(!empty($usuarios)){
+        $i=0;
  	foreach($usuarios as $usuario){
+                $i++;
  		echo '<tr>';
-		echo '<td>'
+                echo '<td>'.$i.'</td>';
 ?>
-                <a href="<?php echo base_url();?>index.php/usuarios/editar/<?php echo $usuario->ID;?>" class="btn btn-success">Edita</a>
-		<a href="<?php echo base_url();?>index.php/usuarios/password/<?php echo $usuario->ID; ?>" class="btn btn-default">Password</a>
-		<a href="<?php echo base_url();?>index.php/usuarios/permisos/<?php echo $usuario->ID;?>" class="btn btn-info">Permiso</a>
-		<a href="<?php echo base_url();?>index.php/usuarios/eliminar/<?php echo $usuario->ID; ?>" class="btn btn-danger">Elimina</a>
 <?php		
-		echo '</td>';
 		echo '<td>'.$usuario->APELLIDOS.'</td>';
                 echo '<td>'.$usuario->NOMBRE.'</td>';
 		echo '<td>'.$usuario->DNI.'</td>';
@@ -74,6 +77,15 @@ if(isset($_GET['password']))
                 echo '<td>'.$usuario->EMAIL.'</td>';
 		echo '<td>'.$usuario->TIPO.'</td>';
                 echo '<td>'.$usuario->ESTATUS.'</td>';
+                echo '<td>';
+?>
+                <a href="<?php echo base_url();?>index.php/usuarios/listado/<?php echo $usuario->ID;?>" class="btn btn-success">D</a>
+                <a href="<?php echo base_url();?>index.php/usuarios/editar/<?php echo $usuario->ID;?>" class="btn btn-warning">E</a>
+                <a href="<?php echo base_url();?>index.php/usuarios/eliminar/<?php echo $usuario->ID; ?>" class="btn btn-danger">X</a>
+                <a href="<?php echo base_url();?>index.php/usuarios/permisos/<?php echo $usuario->ID;?>" class="btn btn-info">P</a>
+		<a href="<?php echo base_url();?>index.php/usuarios/password/<?php echo $usuario->ID; ?>" class="btn btn-default">Password</a>
+<?php              
+		echo '</td>';
  		echo '</tr>';
  	} 
  }

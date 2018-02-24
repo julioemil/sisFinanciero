@@ -21,6 +21,7 @@ class cliente extends CI_Controller{
           $this->load->model('model_seguridad');
           $this->load->model('model_login');
           $this->load->model('model_cliente');
+          $this->load->model('model_ciudad');
     }
     function Seguridad()
      {
@@ -79,7 +80,8 @@ class cliente extends CI_Controller{
 			
 		}else
                 {
-			  $this->load->view('header');                   
+			  $this->load->view('header');   
+                          $dataUsuario['datos_departamento'] = $this->model_ciudad->getCiudad();
                           $dataUsuario['arrayusuarios'] = $this->model_usuarios->ListarUsuarios();
 			  $this->load->view('view_nuevo_cliente',$dataUsuario);
 			  $this->load->view('footer');
@@ -92,16 +94,71 @@ class cliente extends CI_Controller{
 		 $this->form_validation->set_rules("apellidos", "Apellidos", "trim|required");
                  $this->form_validation->set_rules("dni", "Dni", "trim|required");
                  $this->form_validation->set_rules("direccion", "Direccion", "trim|required");
-		 $this->form_validation->set_rules("email", "Email", "trim|required|valid_email");
-		 $this->form_validation->set_rules("tipo", "Tipo", "callback_select_tipo");
+                 $this->form_validation->set_rules("direccionNegocio", "DireccionNegocio", "trim|required");
 		 $this->form_validation->set_rules("estado", "Estado", "callback_select_estado");
                  $this->form_validation->set_rules("distrito", "Distrito", "callback_select_distrito");
                  $this->form_validation->set_rules("provincia", "Provincia", "callback_select_provincia");
                  $this->form_validation->set_rules("departamento", "Departamento", "callback_select_departamento");
+                 $this->form_validation->set_rules("distritoNegocio", "DistritoNegocio", "callback_select_distrito");
+                 $this->form_validation->set_rules("provinciaNegocio", "ProvinciaNegocio", "callback_select_provincia");
+                 $this->form_validation->set_rules("departamentoNegocio", "DepartamentoNegocio", "callback_select_departamento");
                  $this->form_validation->set_rules("telefono", "Telefono", "trim|required");
+                 $this->form_validation->set_rules("fechaNacimiento", "FechaNacimiento", "trim|required");
                  $this->form_validation->set_rules("sexo", "Sexo", "callback_select_sexo");
+                 $this->form_validation->set_rules("idUsuario", "idUsuario", "callback_select_usuario");
                  $this->form_validation->set_rules("oficinaAfiliacion", "OficinaAfiliacion", "callback_select_oficina");
     }
+    public function consultaProvincia($ciudades) {
+        $idDepartamento = $this->input->post('idDepartamento');
+        if($idDepartamento){
+            $ciudades = $this->model_ciudad->getProvincia($idDepartamento);
+            echo '<option value="0">Seleccione Provincia</option>';
+            foreach($ciudades as $fila){
+            echo '<option value="'. $fila->id_provincia.'">'.$fila->nomb_provincia.'</option>';
+            }
+        }  else {
+            echo '<option value="0">Seleccione Provincia</option>';
+        }
+        }
+         
+        public function consultaDistrito() {
+        $idProvincia = $this->input->post('idProvincia');
+        if($idProvincia){
+            $ciudades = $this->model_ciudad->getDistrito($idProvincia);
+            echo '<option value="0">Seleccione Distrito</option>';
+            foreach($ciudades as $fila){
+                echo '<option value="'. $fila->id_distrito.'">'.$fila->nomb_distrito.'</option>';
+            }
+        }  else {
+            echo '<option value="0">Seleccione Distrito</option>';
+        }
+        }
+        
+        public function consultaProvinciaNegocio($ciudades) {
+        $idDepartamentoNegocio = $this->input->post('idDepartamentoNegocio');
+        if($idDepartamentoNegocio){
+            $ciudades = $this->model_ciudad->getProvincia($idDepartamentoNegocio);
+            echo '<option value="0">Seleccione Provincia</option>';
+            foreach($ciudades as $fila){
+            echo '<option value="'. $fila->id_provincia.'">'.$fila->nomb_provincia.'</option>';
+            }
+        }  else {
+            echo '<option value="0">Seleccione Provincia</option>';
+        }
+        }
+         
+        public function consultaDistritoNegocio() {
+        $idProvinciaNegocio = $this->input->post('idProvinciaNegocio');
+        if($idProvinciaNegocio){
+            $ciudades = $this->model_ciudad->getDistrito($idProvinciaNegocio);
+            echo '<option value="0">Seleccione Distrito</option>';
+            foreach($ciudades as $fila){
+                echo '<option value="'. $fila->id_distrito.'">'.$fila->nomb_distrito.'</option>';
+            }
+        }  else {
+            echo '<option value="0">Seleccione Distrito</option>';
+        }
+        }
     
         function select_sexo($campo)
 	{
@@ -114,6 +171,17 @@ class cliente extends CI_Controller{
 		return true;
 		}
 	}    
+        function select_usuario($campo)
+	{
+		//Validamos tipo de usuario
+		if($campo=="0"){
+			$this->form_validation->set_message('select_usuario', '*Campo Obligatorio');
+			return false;
+		} else{
+		// Retornamos
+		return true;
+		}
+	}
 	 function select_distrito($campo)
 	{
 		//Validamos tipo de usuario
@@ -190,6 +258,7 @@ class cliente extends CI_Controller{
 				redirect("cliente?delete=true");
 			}
 		}else{
+                        $data['datos_departamento'] = $this->model_ciudad->getCiudad();
 			$data['arraycliente'] = $this->model_cliente->BuscarID($id);
 			if (empty($data['arraycliente'])){
 				$data['Modulo']  = "cliente";
@@ -229,6 +298,7 @@ class cliente extends CI_Controller{
 			}
 			
 		}else{
+                        $data['datos_departamento'] = $this->model_ciudad->getCiudad();
 			$data['datos_cliente'] = $this->model_cliente->BuscarID($id);
                         $data['arrayusuarios'] = $this->model_usuarios->ListarUsuarios();
 			if (empty($data['datos_cliente'])){
@@ -245,19 +315,13 @@ class cliente extends CI_Controller{
 		}
 		
 	}
-    /*
-    public function insertarDatos()
-        {
-        $this->Seguridad();
-        $data= array(
-            'nombres'=>$this->input->post('nombres'),
-            'apellidos'=>$this->input->post('apellidos'),
-        );
-        $this->load->view('header');
-        $this->model_cliente->crearCliente($data);
-        $this->load->view('footer');
-        redirect("cliente");
-        }
-    */     
+
+          public function listado($id){
+          $this->Seguridad();
+          $this->load->view('header');
+          $data['clientes'] = $this->model_cliente->BuscarNombre($id);    
+          $this->load->view('view_listado_cliente', $data);
+          $this->load->view('footer');
+         }
          
 }

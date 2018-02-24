@@ -15,6 +15,7 @@
 |
 */
 $config['base_url']	= 'http://localhost:8080/sisFinanciero/';
+$config['base_url']	= 'http://localhost:8080/sisfinanciero';
 
 /*
 |--------------------------------------------------------------------------

@@ -13,6 +13,7 @@ class usuarios extends CI_Controller
           $this->load->model('model_login');
           $this->load->model('model_cliente');
           $this->load->model('model_ciudad');
+          $this->load->library('export_excel');
      }
      
      function Seguridad()
@@ -92,14 +93,14 @@ class usuarios extends CI_Controller
         }  else {
             echo '<option value="0">Seleccione Distrito</option>';
         }
-         }
+        }
      
 	 function validaCampos(){
 		/*Campos para validar que no esten vacio los campos*/
 		 $this->form_validation->set_rules("nombre", "Nombres", "trim|required");
 		 $this->form_validation->set_rules("apellidos", "Apellidos", "trim|required");
 		 $this->form_validation->set_rules("email", "Email", "trim|required|valid_email");
-		 $this->form_validation->set_rules("fecha_egreso", "Fecha_egreso", "trim|required");
+		 $this->form_validation->set_rules("fecha_nacimiento", "Fecha_nacimiento", "trim|required");
 		 $this->form_validation->set_rules("apellidos", "Apellidos", "trim|required");
 		 $this->form_validation->set_rules("estatus", "Estatus", "callback_select_estatus");
                  $this->form_validation->set_rules("telefono", "Telefono", "trim|required");
@@ -387,19 +388,27 @@ class usuarios extends CI_Controller
 		}
 		
 	 }
-
-	 function encuesta(){
-               $this->Seguridad();
-	 	$this->load->view('header');
-                //$data['string'] = $this->model_carrera->consultaCarrera();        
-                //$this->load->view('view_usuarios_encuesta',$data);
-                $datos["dato"] = $this->model_carrera->getUsuarioEncuesta();
-                $datos["data"] = $this->model_carrera->getUsuarioCarrera();        
-                $this->load->view('view_usuarios_encuesta', $datos);
-		$this->load->view('footer');
-	 }
          
-       
+         public function listado($id){
+          $this->Seguridad();
+          $this->load->view('header');
+          $data['usuarios'] = $this->model_usuarios->BuscarNombre($id);    
+          $this->load->view('view_listado_usuario', $data);
+          $this->load->view('footer');
+         }
+         		
+	
+
+	public function excel($id){
+		$result = $this->model_usuarios->getUsuario($id);
+		$this->export_excel->to_excel($result, 'lista_de_empleado');
+	}
+        
+        public function excels(){
+		$result = $this->model_usuarios->getUsuarios();
+		$this->export_excel->to_excel($result, 'lista_de_empleados');
+	}
+  
          
 
 }

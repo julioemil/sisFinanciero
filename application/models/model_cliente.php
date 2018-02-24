@@ -34,10 +34,17 @@ class model_cliente extends CI_Model
         $this->db->where('dni',$dni);
         return $this->db->count_all_results();
      }
-        function BuscarID($id){
+    function BuscarID($id){
         $query = $this->db->where('idCliente',$id);
         $query = $this->db->get('cliente');
         return $query->result();	
+	}
+    function BuscarNombre($id){
+
+		$query = $this->db->where('idCliente',$id);
+		$query = $this->db->get('cliente');
+		return $query->result();
+		
 	}
     function Eliminar($id){
         $this->db->where('idCliente',$id);

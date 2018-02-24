@@ -53,6 +53,16 @@
                         'placeholder' => 'Telefono',
                         'type'        => 'text',
                         );
+                        
+                                                // Dibujando el campo telefono
+                        $telefono2       = array(
+                        'name'        => 'telefono2',
+                        'id'          => 'telefono2',
+                        'size'        => 10,
+                        'value'	  => set_value('telefono2',@$datos_cliente[0]->telefono2),
+                        'placeholder' => 'Telefono2',
+                        'type'        => 'text',
+                        );
                                      
                         // Dibujando el campo sexo
                         $opcionSexo = array(
@@ -65,50 +75,18 @@
                         $direccion       = array(
                         'name'        => 'direccion',
                         'id'          => 'direccion',
-                        'size'        => 8, 
                         'value'	  => set_value('direccion',@$datos_cliente[0]->direccion),
                         'placeholder' => 'Dirección',
                         'type'        => 'text',
                         );
-                        // Dibujando el campo departamento
-                        $opcionDepartamento = array(
-                        '0'   => 'Seleccione Departamento',
-                        'Apurímac'	 => 'Apurímac',
-                        'Otro'      => 'Otro',    
-                        );
-                        // Dibujando el campo provincia
-                        $opcionProvincia = array(
-                        '0'   => 'Seleccione Provincia',
-                        'Andahuaylas'	 => 'Andahuaylas',
-                        'Abancay'      => 'Abancay',
-                        'Chincheros'      => 'Chincheros',
-                        'Otro'      => 'Otro',    
+                        $direccionNegocio       = array(
+                        'name'        => 'direccionNegocio',
+                        'id'          => 'direccionNegocio',
+                        'value'	  => set_value('direccion',@$datos_cliente[0]->direccionNegocio),
+                        'placeholder' => 'Dirección',
+                        'type'        => 'text',
                         );
 
-                        // Dibujando el campo distrito
-                        $opcionDistrito = array(
-                        '0'   => 'Seleccione Distrito',
-                        'Andahuaylas'	 => 'Andahuaylas',
-                        'Andarapa'      => 'Andarapa',
-                        'Chiara'      => 'Chiara',
-                        'Huancaray'      => 'Huancaray',
-                        'Huancarama'      => 'Huancarama',
-                        'Huayana'      => 'Huayana',
-                        'José María Arguedas'      => 'José María Arguedas',
-                        'Kaquiabamba'      => 'Kaquiabamba',
-                        'Kishuara'      => 'Kishuara',
-                        'Pacobamba'     => 'Pacobamba',
-                        'Pacucha'      => 'Pacucha',
-                        'Pomacocha'      => 'Pomacocha',
-                        'Pampachiri'      => 'Pampachiri',
-                        'San Antonio de Cachi' => 'San Antonio de Cachi',
-                        'San Jerónimo'  => 'San Jerónimo',
-                        'San Miguel de Chaccrapampa' => 'San Miguel de Chaccrapampa',
-                        'Santa María de Chicmo'  => 'Santa María de Chicmo',
-                        'Talavera' => 'Talavera',
-                        'Tumay Huaraca' => 'Tumay Huaraca',
-                        'Turpo'   => 'Turpo',
-                        );
                         // Dibujando el campo estado
                         $opcionEstado = array(
                         '0'   => 'Seleccione Estado',
@@ -137,51 +115,37 @@
                        <td height='10' class='tabla_ventanas_login' height='10' colspan='9'><legend align='center'>.: REGISTRAR CLIENTE:.</legend></td>
                     </tr>
                     <tr>
-                        <td><?php echo form_label("Nombres(*)",'nombres'); ?></td>
-                        <td> <?php  echo form_input($nombres); ?></td>
-                        <td><font color="red"><?php echo form_error('nombres');?></font></td>
                         <td><?php echo form_label("Apellidos(*)",'apellidos');?></td>
                         <td><?php echo form_input($apellidos);?></td>
                         <td><font color="red"><?php echo form_error('apellidos');?></font></td>
-                    </tr>
-
-                    <tr>
+                        <td><?php echo form_label("Nombres(*)",'nombres'); ?></td>
+                        <td> <?php  echo form_input($nombres); ?></td>
+                        <td><font color="red"><?php echo form_error('nombres');?></font></td>
                         <td><?php echo form_label(" DNI(*)",'dni');?></td>
                         <td><?php echo form_input($dni);?></td>
                         <td><font color="red"><?php echo form_error('dni'); ?></font></td>
+                    </tr>
+
+                    <tr>
                         <td><?php echo form_label("Telefono(*)",'telefono');?></td>
                         <td><?php echo form_input($telefono);?></td>
                         <td><font color="red"><?php echo form_error('telefono'); ?></font></td>
+                        <td><?php echo form_label("Telefono2",'telefono2');?></td>
+                        <td><?php echo form_input($telefono2);?></td>
+                        <td></td>
                     </tr>
                     
                     <tr>
-                        <td><?php echo form_label("Email(*)",'email');?>
+                        <td><?php echo form_label("Email",'email');?>
                         <td><?php echo form_input($email);?></td>
-                        <td><font color="red"><?php echo form_error('email'); ?></font></td>
+                        <td></td>
                         <td><?php echo form_label("Fecha Nacimiento",'fechaNacimiento');?></td>
                         <td><?php echo form_input($fechaNacimiento);?></td>
-                    </tr>
-                    
-                    <tr>
+                        <td><font color="red"><?php echo  form_error('fechaNacimiento');?></font></td>
                         <td><?php echo form_label("Sexo(*)",'sexo');?></td>
                         <td><?php echo  form_dropdown('sexo', $opcionSexo, set_value('sexo',@$datos_cliente[0]->sexo));?></td>
                         <td><font color="red"><?php echo  form_error('sexo');?></font></td>
-                        <td><?php echo form_label("Dirección",'direccion');?></td>
-                        <td><?php echo form_input($direccion);?></td>
                     </tr>
-                    
-                    <tr>
-                        <td><?php echo form_label("Departamento(*)",'departamento');?></td>
-                        <td><?php echo  form_dropdown('departamento', $opcionDepartamento, set_value('departamento',@$datos_cliente[0]->departamento));?></td>
-                        <td><font color="red"><?php echo  form_error('departamento');?></font></td>
-                        <td><?php echo form_label("Provincia(*)",'provincia');?></td>
-                        <td><?php echo  form_dropdown('provincia', $opcionProvincia, set_value('provincia',@$datos_cliente[0]->provincia));?></td>
-                        <td><font color="red"><?php echo  form_error('provincia');?></font></td>
-                        <td><?php echo form_label("Distrito(*)",'distrito');?></td>
-                        <td><?php echo  form_dropdown('distrito', $opcionDistrito, set_value('distrito',@$datos_cliente[0]->distrito));?></td>
-                        <td><font color="red"><?php echo  form_error('distrito');?></font></td>
-                    </tr>
-     
                     <tr>
                         <td><?php echo form_label("Estado(*)",'estado');?></td>
                         <td><?php echo  form_dropdown('estado', $opcionEstado, set_value('estado',@$datos_cliente[0]->estado));?></td>
@@ -192,13 +156,120 @@
                         <td><label> Empleado </label></td>
                         <td> <?php echo @$datos_cliente[0]->idUsuario;?>
                         <select name="idUsuario">
-                             <option>Seleccione Empleado</option>
+                            <option value="0">Seleccione Empleado</option>
                         <?php foreach ($arrayusuarios as  $usuario) {
-                        echo '<option value="'.$usuario->ID.'">'.$usuario->NOMBRE.' '.$usuario->APELLIDOS.'</option>';
-                        }?>     
+                            if($usuario->ID==@$datos_cliente[0]->idUsuario){
+                        echo '<option selected  value="'.$usuario->ID.'">'.$usuario->NOMBRE.' '.$usuario->APELLIDOS.'</option>';
+                        }else{
+                           echo '<option value="'.$usuario->ID.'">'.$usuario->NOMBRE.' '.$usuario->APELLIDOS.'</option>'; 
+                        }}
+                        
+                        ?>     
                         </select> 
                         </td>
+                        <td><font color="red"><?php echo  form_error('idUsuario');?></font></td>
                     </tr>
+                     <tr>
+                        <td colspan=9><hr/></td>
+                    </tr>     
+                     <tr>
+                         <td colspan=9><h5>DATOS DE  DIRECCIÓN DE DOMICILIO:</h5></td>
+                    </tr>   
+                    <tr>
+                        <td><label>Departamento(*)</label></td>
+                        <td>
+                           <select id="idDepartamento" name="departamento"> 
+                           <option value="0">Seleccione Departamento</option>
+                           <?php foreach ($datos_departamento as $datos) {
+                                 if($datos->id_ciudad==@$datos_cliente[0]->departamento){
+                                  echo '<option selected value="'.$datos->id_ciudad.'">'.$datos->nomb_ciudad.'</option>';
+                            } else{
+                                  echo '<option value="'.$datos->id_ciudad.'">'.$datos->nomb_ciudad.'</option>';
+                            }
+                            }
+                             ?>
+                       </select>  
+                       </td>
+                       <td><font color="red"><?php echo form_error('departamento'); ?></font></td>
+                        <td><label>Provincia(*)</label></td>
+                        <td> 
+                          <select id="idProvincia" name="provincia">
+                              <?php if($datos_cliente[0]->provincia){ ?>
+                              <option value="<?php echo @$datos_cliente[0]->provincia?>"><?php $provincia = $this->model_ciudad->getNombProvincia($datos_cliente[0]->provincia); foreach($provincia as $datos){ echo $datos->nomb_provincia;}?></option>
+                              <?php } else {?>
+                              <option value="0">Seleccione Provincia</option>
+                              <?php }?>
+                          </select>
+                        </td>  
+                        <td><font color="red"><?php echo form_error('provincia'); ?></font></td>
+                        <td><center><label>Distrito(*)</label></center></td>
+                        <td> 
+                          <select id="idDistrito" name="distrito">
+                          <?php if($datos_cliente[0]->distrito){ ?>
+                          <option value="<?php echo $datos_cliente[0]->distrito?>"><?php $distrito=$this->model_ciudad->getNombDistrito($datos_cliente[0]->distrito); foreach($distrito as $datos){ echo $datos->nomb_distrito;}?></option>
+                          <?php } else {?>
+                          <option value="0">Seleccione Distrito</option>
+                          <?php }?>
+                          </select>
+                        </td>
+                        <td><font color="red"><?php echo form_error('distrito'); ?></font></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo form_label("Dirección(*)",'direccion');?></td>
+                        <td><?php echo form_input($direccion);?></td>
+                        <td><font color="red"><?php echo form_error('direccion'); ?></font></td>
+                    </tr>
+                    <tr>
+                        <td colspan=9><hr/></td>
+                    </tr>     
+                     <tr>
+                         <td colspan=9><h5>DATOS DE  DIRECCIÓN DE NEGOCIO:</h5></td>
+                    </tr>
+                    <tr>
+                        <td><label>Departamento(*)</label></td>
+                        <td>
+                           <select id="idDepartamentoNegocio" name="departamentoNegocio"> 
+                           <option value="0">Seleccione Departamento</option>
+                           <?php foreach ($datos_departamento as $datos) {
+                                 if($datos->id_ciudad==@$datos_cliente[0]->departamentoNegocio){
+                                  echo '<option selected value="'.$datos->id_ciudad.'">'.$datos->nomb_ciudad.'</option>';
+                            } else{
+                                  echo '<option value="'.$datos->id_ciudad.'">'.$datos->nomb_ciudad.'</option>';
+                            }
+                            }
+                             ?>
+                       </select>  
+                       </td>
+                       <td><font color="red"><?php echo form_error('departamentoNegocio'); ?></font></td>
+                        <td><label>Provincia(*)</label></td>
+                        <td> 
+                          <select id="idProvinciaNegocio" name="provinciaNegocio">
+                              <?php if($datos_cliente[0]->provinciaNegocio){ ?>
+                              <option value="<?php echo @$datos_cliente[0]->provinciaNegocio?>"><?php $provincia = $this->model_ciudad->getNombProvincia($datos_cliente[0]->provinciaNegocio); foreach($provincia as $datos){ echo $datos->nomb_provincia;}?></option>
+                              <?php } else {?>
+                              <option value="0">Seleccione Provincia</option>
+                              <?php }?>
+                          </select>
+                        </td>  
+                        <td><font color="red"><?php echo form_error('provinciaNegocio'); ?></font></td>
+                        <td><center><label>Distrito(*)</label></center></td>
+                        <td> 
+                          <select id="idDistritoNegocio" name="distritoNegocio">
+                          <?php if($datos_cliente[0]->distritoNegocio){ ?>
+                          <option value="<?php echo $datos_cliente[0]->distritoNegocio?>"><?php $distrito=$this->model_ciudad->getNombDistrito($datos_cliente[0]->distritoNegocio); foreach($distrito as $datos){ echo $datos->nomb_distrito;}?></option>
+                          <?php } else {?>
+                          <option value="0">Seleccione Distrito</option>
+                          <?php }?>
+                          </select>
+                        </td>
+                        <td><font color="red"><?php echo form_error('distritoNegocio'); ?></font></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo form_label("Dirección",'direccionNegocio');?></td>
+                        <td><?php echo form_input($direccionNegocio);?></td>
+                        <td><font color="red"><?php echo form_error('direccionNegocio'); ?></font></td>
+                    </tr>
+                         
                     <tr>
                         <td colspan=9><?php echo $this->session->flashdata('msg');?></td>
                     </tr>
@@ -216,3 +287,56 @@
     <?php echo form_close()?>
 </body>
 </html>
+        <script type="text/javascript">   
+            $(document).ready(function() {                       
+                $("#idDepartamento").change(function() {
+                    $("#idDepartamento option:selected").each(function() {
+                        idDepartamento = $('#idDepartamento').val();
+                        $.post("<?php echo base_url(); ?>index.php/cliente/consultaProvincia", {
+                            idDepartamento : idDepartamento
+                        }, function(data) {
+                            $("#idProvincia").html(data);
+                        });
+                    });
+                });
+            });
+            
+                $(document).ready(function() {                       
+                $("#idProvincia").change(function() {
+                    $("#idProvincia option:selected").each(function() {
+                        idProvincia = $('#idProvincia').val();
+                        $.post("<?php echo base_url(); ?>index.php/cliente/consultaDistrito", {
+                            idProvincia : idProvincia
+                        }, function(data) {
+                            $("#idDistrito").html(data);
+                        });
+                    });
+                });
+            });
+            
+            $(document).ready(function() {                       
+                $("#idDepartamentoNegocio").change(function() {
+                    $("#idDepartamentoNegocio option:selected").each(function() {
+                        idDepartamentoNegocio = $('#idDepartamentoNegocio').val();
+                        $.post("<?php echo base_url(); ?>index.php/cliente/consultaProvinciaNegocio", {
+                            idDepartamentoNegocio : idDepartamentoNegocio
+                        }, function(data) {
+                            $("#idProvinciaNegocio").html(data);
+                        });
+                    });
+                });
+            });
+            
+                $(document).ready(function() {                       
+                $("#idProvinciaNegocio").change(function() {
+                    $("#idProvinciaNegocio option:selected").each(function() {
+                        idProvinciaNegocio = $('#idProvinciaNegocio').val();
+                        $.post("<?php echo base_url(); ?>index.php/cliente/consultaDistritoNegocio", {
+                            idProvinciaNegocio : idProvinciaNegocio
+                        }, function(data) {
+                            $("#idDistritoNegocio").html(data);
+                        });
+                    });
+                });
+            });
+        </script>

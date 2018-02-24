@@ -25,6 +25,7 @@ class model_ciudad extends CI_Model {
             return $departamentos->result();
         }
     }
+  
     
     public function getProvincia($idCiudad) {
         $this->db->where('id_ciudad', $idCiudad);
@@ -43,6 +44,14 @@ class model_ciudad extends CI_Model {
         
         if($distritos->num_rows() > 0){
             return $distritos->result();
+        }
+    }
+
+    public function getNombDepartamento($idDepartamento){
+        $this->db->where('id_ciudad', $idDepartamento);
+        $departamentos = $this->db->get('ciudad');
+        if($departamentos->num_rows() > 0){
+            return $departamentos ->result();
         }
     }
     

@@ -27,7 +27,7 @@ class model_cobranza extends CI_Model{
      }    
     public function ListarCobranza1()
     {
-        $this->db->select('idPrestamo, fechaInicio, fechaFinal, tasaInteres, capital, deuda, u.NOMBRE AS nombreU,
+        $this->db->select('idPrestamo, fechaInicio, fechaFinal, tasaInteres, capital, deuda, cuota, u.NOMBRE AS nombreU,
                 p.estado,
                 c.nombres as nombresC,
                 c.apellidos as apellidosC');

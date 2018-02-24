@@ -1,18 +1,17 @@
 <div id="container">
     <h2 align="center">DETALLE DE COBRANZA </h2>
 <br><br>
-  <table class="pretty">
+  <table  border='0' cellpadding="0" cellspacing="0" class="pretty">
+      <tbody>
          <?php if(!empty($arrayusuario)){
              foreach($arrayusuario as $usuario){?>
       <tr>
           <td><h6>EMPLEADO: <?php echo $usuario->APELLIDOS.', '.$usuario->NOMBRE;?></h6></td>
           <td><h6>CARGO: <?php echo $usuario->TIPO;?></h6></td>
           <td><h6>CELULAR:  <?php echo $usuario->TELEFONO;?></h6></td>
+          <td></td>
       </tr>
-      <tr>
-            <td colspan=4><hr/></td>
-      </tr>
-                 
+                
         <?php }}?>
         <?php if(!empty($arrayprestamo)){
           foreach($arrayprestamo as $prestamo){?>
@@ -26,8 +25,10 @@
             <td><h6>CAPITAL (S/.):   <?php echo $prestamo->capital;?></h6></td>
             <td><h6>INTERES:   <?php echo $prestamo->tasaInteres;?></h6></td>
             <td><h6>DEUDA INICIAL (S/.):   <?php echo $prestamo->deuda;?></h6></td>
+            <td></td>
         </tr>
           <?php }}?>
+        </tbody>
     </table>    
 <center>     
 <table id="cobranza" border="1" cellpadding="0" cellspacing="0" class="pretty">  

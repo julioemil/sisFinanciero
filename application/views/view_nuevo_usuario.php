@@ -30,11 +30,11 @@
                         );
                         
                         //Dibujando el campo fecha nacimiento
-                        $fechaEgreso = array(
-                        'name'        => 'fecha_egreso',
-                        'id'          => 'fecha_egreso',
+                        $fechaNacimiento = array(
+                        'name'        => 'fecha_nacimiento',
+                        'id'          => 'fecha_nacimiento',
                         'size'        => 10,
-                        'value'	  => set_value('fecha_egreso',@$datos_usuarios[0]->FECHA_EGRESO),
+                        'value'	  => set_value('fecha_nacimiento',@$datos_usuarios[0]->FECHA_NACIMIENTO),
                         'type'        => 'date',
                         );    
                         
@@ -144,9 +144,9 @@
                         <td><?php echo form_label("Sexo(*)",'sexo');?></td>
                         <td><?php echo  form_dropdown('sexo', $campoOpcionesSexo, set_value('sexo',@$datos_usuarios[0]->SEXO));?></td>
                         <td><font color="red"><?php echo  form_error('sexo');?></font></td>
-                        <td><?php echo form_label("Fecha Nacimiento(*)",'fecha_egreso');?></td>
-                        <td><?php echo form_input($fechaEgreso);?></td>
-                        <td><font color="red"><?php echo  form_error('fecha_egreso');?></font></td>
+                        <td><?php echo form_label("Fecha Nacimiento(*)",'fecha_nacimiento');?></td>
+                        <td><?php echo form_input($fechaNacimiento);?></td>
+                        <td><font color="red"><?php echo  form_error('fecha_nacimiento');?></font></td>
                     </tr>
                     <tr>
                         <td><?php echo form_label("Email(*)",'email');?>

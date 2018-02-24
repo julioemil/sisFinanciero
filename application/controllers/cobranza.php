@@ -39,7 +39,7 @@ class cobranza extends CI_Controller {
      }
      
      
-     public function nuevo($id = NULL){
+     public function nuevo($id = null){
          
         $this->Seguridad();
         $this->validaCampos();

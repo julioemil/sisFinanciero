@@ -21,7 +21,21 @@ class model_usuarios extends CI_Model {
      	$this->db->trans_complete();	
      }
      
-	 function BuscarID($id){
+     	public function getUsuarios(){
+		$this->db->select('*');
+		$this->db->from('usuarios');
+		$query = $this->db->get();
+					
+		return $query;
+	}
+        public function getUsuario($id){
+		$this->db->select('*');
+		$this->db->from('usuarios');
+                $this->db->where('ID',$id);
+		$query = $this->db->get();
+                return $query;
+	}
+     function BuscarID($id){
 
 		$query = $this->db->where('ID',$id);
 		$query = $this->db->get('usuarios');

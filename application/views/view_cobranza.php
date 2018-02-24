@@ -26,9 +26,11 @@ if(isset($_GET['save']))
 <tr>
 <th>N°</th>
 <th>APELLIDOS Y NOMBRES</th>
+<th>FECHA VENCIMIENTO</th>
 <th>CAPITAL</th>
 <th>TASA INTERES</th>
 <th>DEUDA INICIAL</th>
+<th>CUOTA</th>
 <th>SALDO ACTUAL</th>
 <th>ACCION</th>
 </tr>
@@ -42,9 +44,12 @@ if(isset($_GET['save']))
         echo '<tr>';
         echo '<td>'.$i.'</td>';
         echo '<td>'.$cobranza->nombresC.' '.$cobranza->apellidosC.'</td>';
+        echo '<td>'.$cobranza->fechaFinal.'</td>';
         echo '<td>'.$cobranza->capital.'</td>';
         echo '<td>'.$cobranza->tasaInteres.'</td>';
         echo '<td>'.$cobranza->deuda.'</td>';
+        echo '<td>'.round($cobranza->cuota,2).'</td>';
+        
 ?>
         <?php 
         $sumapago=0;

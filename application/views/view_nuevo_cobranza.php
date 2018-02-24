@@ -68,7 +68,7 @@
                         <td></td>
                         <td><label>Detalles:</label></td>
                         <td><h4>-Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?><br> -Interes(%):  <?php echo $array->tasaInteres ?><br>
-                           -Deuda Inicial (S/):  <?php  echo number_format($array->deuda, 2, '.', '')?></h4></td>
+                           -Deuda Inicial (S/):  <?php  echo number_format($array->deuda, 2, '.', '')?> <br>-Cuota(S/.):<?php echo round($array->cuota,2) ?></h4></td>
                         <?php } ?>
                     </tr>
                     <tr>
