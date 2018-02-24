@@ -28,6 +28,7 @@
                         'id'          => 'fechaInicio',
                         'size'        => 10, 
                         'value'	  => set_value('fechaInicio',@$hoy),
+                        'readonly'    => 'true',
                         'type'        => 'date',
                         );
                         //Dibujando el campo fechaFinal
@@ -36,6 +37,7 @@
                         'id'          => 'fechaFinal',
                         'size'        => 10,
                         'value'	  => set_value('fechaFinal',@$datos_prestamo[0]->FECHA_FINAL),
+                        'readonly'    => 'true',
                         'type'        => 'date',
                         );                       
                         // Dibujando el campo tasaInteres
