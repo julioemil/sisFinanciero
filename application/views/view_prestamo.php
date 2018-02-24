@@ -92,6 +92,8 @@ if(isset($_GET['password']))
                 <a href="<?php echo base_url();?>index.php/prestamo/detallaReprograma/<?php echo $prestamo->idPrestamo; ?>/2" class="btn btn-success">P2</a>
                 <?php } ?>
 
+
+
                 <!--Reprogramacion 1, 2, 3-->
                 <?php if($prestamo->cantidad=='3'){ ?>
                 <a href="<?php echo base_url();?>index.php/prestamo/detallaReprograma/<?php echo $prestamo->idPrestamo; ?>/1" class="btn btn-success">P1</a>
