@@ -76,10 +76,12 @@ if(isset($_GET['password']))
                 echo '<td>'.$prestamo->nombreC.'</td>';?>
                 <td>
                 <?php if($prestamo->producto=='mensual'){ ?>
+
                 <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">P</a>
                 <?php } ?>
 
                 <a href="<?php echo base_url();?>index.php/prestamo/reprogramar/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-info">R</a>
+
                 </td>
         <?php echo '</tr>';
     } 
