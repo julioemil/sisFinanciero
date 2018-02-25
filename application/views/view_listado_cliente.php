@@ -104,9 +104,6 @@ $usuario = $this->model_usuarios->BuscarID($cliente->idUsuario); foreach($usuari
 </tr>
 <tr>
     <td colspan="3" align="center">   
-    <a href="<?php echo base_url(); ?>index.php/cliente/excel/<?php echo $cliente->idCliente?>" class="btn btn-success">EXPORTAR EXCEL</a>
-    </td> 
-    <td colspan="3" align="center">   
     <a href="<?php echo base_url();?>index.php/cliente" class="btn btn-info">VOLVER</a>
     </td> 
 </tr> 
