@@ -22,7 +22,8 @@ class model_prestamo extends CI_Model
     {
         $this->db->select('idPrestamo, producto, plazo, fechaInicio, fechaFinal, tasaInteres, capital, deuda, u.NOMBRE AS nombreU,
                 p.estado,
-                c.nombres as nombreC, (select count(*)  from reprograma_prestamo rp where rp.idPrestamo = p.idPrestamo) as cantidad');
+                c.nombres as nombreC');
+        //(select count(*)  from reprograma_prestamo rp where rp.idPrestamo = p.idPrestamo) as cantidad'
         $this->db->from('prestamo p');
         $this->db->join('cliente c','c.idCliente = p.idCliente');
         $this->db->join('usuarios u','u.ID = p.idUsuario');
@@ -88,12 +89,12 @@ class model_prestamo extends CI_Model
         return $query->row();
     }
 
-    public function listarReprogramaDetalle($idPrestamo,$vez){
+    /*public function listarReprogramaDetalle($idPrestamo,$vez){
         $query = $this->db->where('idPrestamo',$idPrestamo);
         $query = $this->db->where('vez',$vez);
         $query = $this->db->get('reprograma_prestamo');
         return $query->row();
-    }
+    }*/
 
     public function verPrestamoDetalle($id){
         //$this->db->select('count(*) as cantidad');
