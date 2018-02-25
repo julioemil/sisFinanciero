@@ -68,7 +68,7 @@ class prestamo extends CI_Controller{
               $cuota = $capital*(pow((1 + $tasaInteres/100), $plazo));
               $data["cuota"] = $cuota;
             }
-            
+            $data["vez"]=0;
             $this->model_prestamo->crearPrestamo($data);
             redirect("prestamo?save=true");			
 		}else
@@ -181,14 +181,13 @@ class prestamo extends CI_Controller{
               'cuota' => $this->input->post('cuota'),
               'plazo' => $this->input->post('plazo'),
               'idPrestamo' => $this->input->post('idPrestamo'),
-              'vez' => '',
+              'vez' => '1',
               );
             $id = $this->input->post('idPrestamo');
             //$data = $this->input->post();
             $capital = $this->input->post('capital');
             $tasaInteres = $this->input->post('tasaInteres');
             $plazo = $this->input->post('plazo');
-
 
             //La condicion permite almacenar los decimales
             if($this->input->post('producto')=="mensual"){
@@ -201,8 +200,8 @@ class prestamo extends CI_Controller{
               $data["cuota"] = $cuota;
             }
             
-            $result = $this->model_prestamo->crearReprogramaPrestamo($data, $id);
-            redirect("prestamo?save=true".$result);     
+            $this->model_prestamo->crearReprogramaPrestamo($data, $id);
+            redirect("prestamo?save=true");     
     }else
                 {
       $this->load->view('header');                   

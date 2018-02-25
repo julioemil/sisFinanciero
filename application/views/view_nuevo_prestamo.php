@@ -79,6 +79,13 @@
                         'type'        => 'text',
                         );
 
+                        $vez       = array(
+                        'name'        => 'vez',
+                        'id'          => 'vez',
+                        'size'        => 10,
+                        'type'        => 'hidden',
+                        );
+
                         // Dibujando el campo estado
                         $estado = array(
                         'NONE'   => 'Seleccione Estado',
@@ -136,7 +143,7 @@
                         <td><?php echo form_label("Cuota(*) S/. ",'cuota');?></td>
                         <td><?php echo form_input($cuota);?></td>
                         <td><font color="red"><?php echo form_error('cuota'); ?></font></td>
-                        
+                        <td><?php echo form_input($vez);?></td>
                     </tr>
                     <tr>
                         <td><label>Usuario</label></td>

@@ -37,23 +37,43 @@ class model_prestamo extends CI_Model
     public function crearReprogramaPrestamo($data,$id){
         /*Nos aseguramos si realizamos todo o no*/
 
-        //$this->db->select('count(*)');
-        $this->db->from('reprograma_prestamo');
+        $this->db->select('producto, capital, tasaInteres, fechaInicio, fechaFinal, plazo, vez');
+        $this->db->from('prestamo');
         $this->db->where('idPrestamo',$id);
-        $result = $this->db->get()->num_rows();
-        if($result == 0){
-            $this->db->trans_start();
-            $data['vez'] = 1;
-            $this->db->insert('reprograma_prestamo',$data);
-            $this->db->trans_complete();
+        $result = $this->db->get()->row();
+        if($result->vez==0){
+            $data['producto0'] = $result->producto;
+            $data['capital0'] = $result->capital;
+            $data['tasaInteres0'] = $result->tasaInteres;
+            $data['fechaInicio0'] = $result->fechaInicio;
+            $data['fechaFinal0'] = $result->fechaFinal;
+            $data['plazo0'] = $result->plazo;
+            $data['vez'] = $result->vez+1;
+            $this->db->where('idPrestamo',$id);
+            $this->db->update('prestamo',$data);
         }
-        else{
-            $this->db->trans_start();
-            $data['vez'] = $result + 1;
-            $this->db->insert('reprograma_prestamo',$data);
-            $this->db->trans_complete();
+        if($result->vez==1){
+            $data['producto1'] = $result->producto;
+            $data['capital1'] = $result->capital;
+            $data['tasaInteres1'] = $result->tasaInteres;
+            $data['fechaInicio1'] = $result->fechaInicio;
+            $data['fechaFinal1'] = $result->fechaFinal;
+            $data['plazo1'] = $result->plazo;
+            $data['vez'] = $result->vez+1;
+            $this->db->where('idPrestamo',$id);
+            $this->db->update('prestamo',$data);
         }
-        return $result;
+        if($result->vez==2){
+            $data['producto2'] = $result->producto;
+            $data['capital2'] = $result->capital;
+            $data['tasaInteres2'] = $result->tasaInteres;
+            $data['fechaInicio2'] = $result->fechaInicio;
+            $data['fechaFinal2'] = $result->fechaFinal;
+            $data['plazo2'] = $result->plazo;
+            $data['vez'] = $result->vez+1;
+            $this->db->where('idPrestamo',$id);
+            $this->db->update('prestamo',$data);
+        }
     }
      
      function BuscarID($id){
@@ -76,24 +96,25 @@ class model_prestamo extends CI_Model
     }
 
     public function verPrestamoDetalle($id){
-        $this->db->select('count(*) as cantidad');
-        $this->db->from('reprograma_prestamo');
+        //$this->db->select('count(*) as cantidad');
+        $this->db->from('cobranza');
         $this->db->where('idPrestamo',$id);
-        $result = $this->db->get()->row();
-        $idUltimoPrestamo =$result->cantidad;
-        if($idUltimoPrestamo==0){
+        $result = $this->db->get()->num_rows();
+        //$idUltimoPrestamo =$result->cantidad;
+        if($result==0){
             $this->db->select('idPrestamo, deuda, c.nombres as nombreC, c.apellidos as apellidoC');
             $this->db->from('prestamo p');
             $this->db->join('cliente c','c.idCliente = p.idCliente');
             $this->db->where('p.idPrestamo',$id);
             return $this->db->get()->result();            
         }else{
-            $this->db->select('p.idPrestamo, rp.deuda, c.nombres as nombreC, c.apellidos as apellidoC');
+            $this->db->select('p.idPrestamo, saldo as deuda, c.nombres as nombreC, c.apellidos as apellidoC');
             $this->db->from('prestamo p');
             $this->db->join('cliente c','c.idCliente = p.idCliente');
-            $this->db->join('reprograma_prestamo rp','rp.idPrestamo = p.idPrestamo');
-            $this->db->where('rp.idPrestamo',$id);
-            $this->db->where('rp.vez',$idUltimoPrestamo);
+            $this->db->join('cobranza co','co.idPrestamo = p.idPrestamo');
+            $this->db->where('p.idPrestamo',$id);
+            $this->db->order_by('idCobranza','DESC');
+            $this->db->limit(1);
             return $this->db->get()->result();    
         }        
     }
