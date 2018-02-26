@@ -87,9 +87,9 @@
                         ?>
                         <td><label>Deuda Actual (S/.)</label></td>
                         <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo $deuda; ?>" /></td>
-                        <td><input type="text" name="vez" readonly=”readonly” value="<?php echo $array->vez; ?>"</td>
+                        <td></td>
                         <td><label>Detalles:</label></td>
-                        <td><h4>-Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?><br> -Interes(%):  <?php echo $array->tasaInteres ?><br>
+                        <td colspan="2"><h4>-Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?><br> -Interes(%):  <?php echo $array->tasaInteres ?><br>
                            -Deuda Inicial (S/):  <?php  echo number_format($array->deuda, 2, '.', '')?> <br>-Cuota(S/.):<?php echo round($array->cuota,2) ?></h4></td>
                         <?php } ?>
                     </tr>
@@ -97,15 +97,16 @@
                         <td><?php echo form_label("Pago(*)",'pago'); ?></td>
                         <td> <?php  echo form_input($pago); ?></td>
                         <td><font color="red"><?php echo form_error('pago');?></font></td>
-                        <td><?php echo form_label("N° de Recibo(*)",'nRecibo');?></td>
-                        <td><?php echo form_input($nRecibo);?></td>
-                        <td><font color="red"><?php echo form_error('nRecibo');?></font></td>
+                        <td colspan="3"><input type="hidden" name="vez"  value="<?php echo $array->vez; ?>"</td>
                     </tr>
 
                     <tr>
                         <td><?php echo form_label("Saldo(*)",'saldo');?></td>
                         <td><?php echo form_input($saldo);?></td>
                         <td><font color="red"><?php echo form_error('saldo'); ?></font></td>
+                        <td><?php echo form_label("N° de Recibo(*)",'nRecibo');?></td>
+                        <td><?php echo form_input($nRecibo);?></td>
+                        <td><font color="red"><?php echo form_error('nRecibo');?></font></td>
                     </tr>
                     
                     <tr>

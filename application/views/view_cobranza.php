@@ -81,8 +81,8 @@ if(isset($_GET['save']))
         echo '<td>'.$saldo.'</td>'
          ?>
         <td>
-            <a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Pago</a>
-            <a href="<?php echo base_url();?>index.php/cobranza/listado/<?php echo $cobranza->idPrestamo ?>" class="btn btn-info">DP</a>
+            <a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-info">P</a>
+            <a href="<?php echo base_url();?>index.php/cobranza/listado/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">D</a>
         </td> 
 <?php
         echo '</tr>';

@@ -18,14 +18,6 @@
         <tr>
             <td><h6>CLIENTE:   <?php echo $prestamo->apellidos.', '.$prestamo->nombres;?></h6></td>
             <td><h6>DOCUMENTO DE IDENTIDAD:  <?php echo $prestamo->dni;?></h6></td>
-            <td><h6>FECHA PRESTAMO: <?php echo $prestamo->fechaInicio;?></h6></td>
-            <td><h6>FECHA VENCIMIENTO: <?php echo $prestamo->fechaFinal;?></h6></td>
-        </tr>
-        <tr>
-            <td><h6>CAPITAL (S/.):   <?php echo $prestamo->capital;?></h6></td>
-            <td><h6>INTERES:   <?php echo $prestamo->tasaInteres;?></h6></td>
-            <td><h6>DEUDA INICIAL (S/.):   <?php echo $prestamo->deuda;?></h6></td>
-            <td></td>
         </tr>
           <?php }}?>
         </tbody>
