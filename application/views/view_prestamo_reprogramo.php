@@ -177,7 +177,7 @@
                         {?>
                         <select name="idUsuario">
                         <?php 
-                        echo '<option value="'.$this->session->userdata('ID').'">'.$this->session->userdata('NOMBRE').'</option>';
+                        echo '<option value="'.$this->session->userdata('ID').'">'.$this->session->userdata('NOMBRE').' '.$this->session->userdata('APELLIDOS').'</option>';
                         ?>     
                         </select>
                         <?php      
