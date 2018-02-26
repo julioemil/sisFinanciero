@@ -35,6 +35,11 @@ if(isset($_GET['password']))
 {
     echo '<div class="alert alert-success text-center">La Contraseña fue actualizado Correctamente</div>';                
 }
+
+if(isset($_GET['limitePrestamos']))
+{
+    echo '<div class="alert alert-success text-center">Se alcanzo el limite maximo de reprogramaciones.</div>';              
+}
 ?>
 <a href="<?php echo base_url();?>index.php/prestamo/nuevo" class="btn btn-success">REGISTRAR NUEVO PRESTAMO</a> 
 <br><br>
@@ -42,6 +47,7 @@ if(isset($_GET['password']))
 <table id="prestamos" border="0" cellpadding="0" cellspacing="0" class="pretty">
 <thead>
 <tr>
+<th>N°</th>
 <th>PRODUCTO</th>
 <th>PLAZO</th>
 <th>FECHA INICIO</th>
@@ -60,6 +66,7 @@ if(isset($_GET['password']))
  if(!empty($arrayprestamos)){
     foreach($arrayprestamos as $prestamo){
         echo '<tr>';
+        echo '<td>'.$prestamo->idPrestamo.'</td>';
         echo '<td>'.$prestamo->producto.'</td>';
         echo '<td>'.$prestamo->plazo.'</td>';
         echo '<td>'.$prestamo->fechaInicio.'</td>';
@@ -75,9 +82,12 @@ if(isset($_GET['password']))
                 }
                 echo '<td>'.$prestamo->nombreC.'</td>';?>
                 <td>
-                <?php if($prestamo->producto=='mensual'){ ?>
+                <?php if($prestamo->producto=='diario'){ ?>
+                    <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">P</a>
+                <?php } ?>
 
-                <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">P</a>
+                <?php if($prestamo->producto=='mensual'){ ?>
+                    <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">P</a>
                 <?php } ?>
 
                 <a href="<?php echo base_url();?>index.php/prestamo/reprogramar/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-info">R</a>

@@ -98,6 +98,13 @@ class model_prestamo extends CI_Model
 
     public function verPrestamoDetalle($id){
         //$this->db->select('count(*) as cantidad');
+        $this->db->from('prestamo');
+        $this->db->where('idPrestamo',$id);
+        $query = $this->db->get()->row();
+        if($query->vez==3){
+            return $query->vez;
+        }
+
         $this->db->from('cobranza');
         $this->db->where('idPrestamo',$id);
         $result = $this->db->get()->num_rows();

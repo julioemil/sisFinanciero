@@ -27,7 +27,8 @@
                         'name'        => 'fechaInicio',
                         'id'          => 'fechaInicio',
                         'size'        => 10, 
-                        'value'	  => set_value('fechaInicio',@$hoy),
+                        'value'	      => set_value('fechaInicio',@$hoy),
+                        'readonly'    => 'true',
                         'type'        => 'date',
                         );
                         //Dibujando el campo fechaFinal
@@ -36,6 +37,7 @@
                         'id'          => 'fechaFinal',
                         'size'        => 10,
                         'value'	  => set_value('fechaFinal',@$datos_prestamo[0]->FECHA_FINAL),
+                        'readonly'    => 'true',
                         'type'        => 'date',
                         );                       
                         // Dibujando el campo tasaInteres
@@ -88,7 +90,6 @@
 
                         // Dibujando el campo estado
                         $estado = array(
-                        'NONE'   => 'Seleccione Estado',
                         '0'	 => 'Activo',
                         '1'      => 'Inactivo',
                         );
@@ -162,7 +163,7 @@
                         {?>
                         <select name="idUsuario">
                         <?php 
-                        echo '<option value="'.$this->session->userdata('ID').'">'.$this->session->userdata('NOMBRE').'</option>';
+                        echo '<option value="'.$this->session->userdata('ID').'">'.$this->session->userdata('NOMBRE').' '.$this->session->userdata('APELLIDOS').'</option>';
                         ?>     
                         </select>
                         <?php      
@@ -181,7 +182,7 @@
                         <select name="idCliente">
                              <option>Seleccione Cliente</option>
                         <?php foreach ($arrayclientes as  $cliente) {
-                        echo '<option value="'.$cliente->idCliente.'">'.$cliente->nombres.'</option>';
+                        echo '<option value="'.$cliente->idCliente.'">'.$cliente->nombres.' '.$cliente->apellidos.'</option>';
                         }?>
                         </select>     
                         

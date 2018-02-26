@@ -139,8 +139,14 @@ class prestamo extends CI_Controller{
     public function detalle($id){
         $this->Seguridad();
         $this->load->view('header');
-        $dataPrestamo['arrayprestamo'] = $this->model_prestamo->listarPrestamoDetalle($id);
-        $this->load->view('view_prestamo_detalle',$dataPrestamo);
+        $result = $this->model_prestamo->listarPrestamoDetalle($id);
+        $dataPrestamo['arrayprestamo'] = $result;
+        if($result->producto=='diario'){
+          $this->load->view('view_prestamo_detalle_diario',$dataPrestamo);  
+        }
+        if($result->producto=='mensual'){
+          $this->load->view('view_prestamo_detalle',$dataPrestamo);  
+        }        
         $this->load->view('footer');
     }
 
@@ -156,13 +162,16 @@ class prestamo extends CI_Controller{
     public function reprogramar($id){
         $this->Seguridad();
         $this->load->view('header');
-        $dataPrestamo['arrayprestamo'] = $this->model_prestamo->verPrestamoDetalle($id);
-        $hoy   = date("Y")."-".date("m")."-".date("d");
-        $dataPrestamo['hoy'] = $hoy;
-        $this->load->view('view_prestamo_reprogramo',$dataPrestamo);
-        $this->load->view('footer');
+        if($this->model_prestamo->verPrestamoDetalle($id)==3){
+          redirect("prestamo?limitePrestamos=true".$this->model_prestamo->verPrestamoDetalle($id));
+        }else{
+          $dataPrestamo['arrayprestamo'] = $this->model_prestamo->verPrestamoDetalle($id);
+          $hoy   = date("Y")."-".date("m")."-".date("d");
+          $dataPrestamo['hoy'] = $hoy;
+          $this->load->view('view_prestamo_reprogramo',$dataPrestamo);
+          $this->load->view('footer');
+        }        
     }
-
 
     function insertarReprograma(){
     $this->Seguridad();
