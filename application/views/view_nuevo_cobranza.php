@@ -56,18 +56,40 @@
                         <td></td>
                         
                     </tr>
-                    <tr>
-                        <?php   $sumadeudaactual=$array->deuda;
+                    <tr>    
+                        <?php   $sumapago=0;
+                                $sumadeuda=$array->deuda;
+                                if($array->vez==0){
                                 $arraydeuda=$this->model_cobranza->getPago($array->idPrestamo);
-                                 foreach($arraydeuda as $datos){ 
-                                 $sumadeudaactual=$sumadeudaactual- $datos->pago;          
+                                 foreach($arraydeuda as $datos){
+                                 $sumapago=$sumapago+ $datos->pago;   
                                  }
+                                }
+                                if($array->vez==1){
+                                $arraydeuda=$this->model_cobranza->getPago1($array->idPrestamo);
+                                 foreach($arraydeuda as $datos){
+                                 $sumapago=$sumapago+ $datos->pago;   
+                                 }
+                                }
+                                if($array->vez==2){
+                                $arraydeuda=$this->model_cobranza->getPago2($array->idPrestamo);
+                                 foreach($arraydeuda as $datos){
+                                 $sumapago=$sumapago+ $datos->pago;   
+                                 }
+                                }
+                                if($array->vez==3){
+                                $arraydeuda=$this->model_cobranza->getPago3($array->idPrestamo);
+                                 foreach($arraydeuda as $datos){
+                                 $sumapago=$sumapago+ $datos->pago;   
+                                 }
+                                }
+                                 $deuda=$array->deuda-$sumapago;
                         ?>
                         <td><label>Deuda Actual (S/.)</label></td>
-                        <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo $sumadeudaactual ?>" /></td>
+                        <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo $deuda; ?>" /></td>
                         <td></td>
                         <td><label>Detalles:</label></td>
-                        <td><h4>-Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?><br> -Interes(%):  <?php echo $array->tasaInteres ?><br>
+                        <td colspan="2"><h4>-Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?><br> -Interes(%):  <?php echo $array->tasaInteres ?><br>
                            -Deuda Inicial (S/):  <?php  echo number_format($array->deuda, 2, '.', '')?> <br>-Cuota(S/.):<?php echo round($array->cuota,2) ?></h4></td>
                         <?php } ?>
                     </tr>
@@ -75,15 +97,16 @@
                         <td><?php echo form_label("Pago(*)",'pago'); ?></td>
                         <td> <?php  echo form_input($pago); ?></td>
                         <td><font color="red"><?php echo form_error('pago');?></font></td>
-                        <td><?php echo form_label("N° de Recibo(*)",'nRecibo');?></td>
-                        <td><?php echo form_input($nRecibo);?></td>
-                        <td><font color="red"><?php echo form_error('nRecibo');?></font></td>
+                        <td colspan="3"><input type="hidden" name="vez"  value="<?php echo $array->vez; ?>"</td>
                     </tr>
 
                     <tr>
                         <td><?php echo form_label("Saldo(*)",'saldo');?></td>
                         <td><?php echo form_input($saldo);?></td>
                         <td><font color="red"><?php echo form_error('saldo'); ?></font></td>
+                        <td><?php echo form_label("N° de Recibo(*)",'nRecibo');?></td>
+                        <td><?php echo form_input($nRecibo);?></td>
+                        <td><font color="red"><?php echo form_error('nRecibo');?></font></td>
                     </tr>
                     
                     <tr>

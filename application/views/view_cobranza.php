@@ -16,8 +16,6 @@ if(isset($_GET['save']))
 {
     echo '<div class="alert alert-success text-center">La Información  se Almaceno Correctamente</div>';
 }
-
-
 ?>
 <br><br>
 <center>  
@@ -31,6 +29,7 @@ if(isset($_GET['save']))
 <th>TASA INTERES</th>
 <th>DEUDA INICIAL</th>
 <th>CUOTA</th>
+<th>VEZ</th>
 <th>SALDO ACTUAL</th>
 <th>ACCION</th>
 </tr>
@@ -49,20 +48,41 @@ if(isset($_GET['save']))
         echo '<td>'.$cobranza->tasaInteres.'</td>';
         echo '<td>'.$cobranza->deuda.'</td>';
         echo '<td>'.round($cobranza->cuota,2).'</td>';
+        echo '<td>'.$cobranza->vez.'</td>';
         
 ?>
-        <?php 
+        <?php
         $sumapago=0;
+        if($cobranza->vez==0){
         $arraypago=$this->model_cobranza->getPago($cobranza->idPrestamo);
         foreach($arraypago as $datos){ 
             $sumapago=$sumapago+ $datos->pago;          
+        }
+        }
+        if($cobranza->vez==1){
+        $arraypago=$this->model_cobranza->getPago1($cobranza->idPrestamo);
+        foreach($arraypago as $datos){ 
+            $sumapago=$sumapago+ $datos->pago;          
+        }
+        }
+        if($cobranza->vez==2){
+        $arraypago=$this->model_cobranza->getPago2($cobranza->idPrestamo);
+        foreach($arraypago as $datos){ 
+            $sumapago=$sumapago+ $datos->pago;          
+        }
+        }
+        if($cobranza->vez==3){
+        $arraypago=$this->model_cobranza->getPago3($cobranza->idPrestamo);
+        foreach($arraypago as $datos){ 
+            $sumapago=$sumapago+ $datos->pago;          
+        }
         }
         $saldo=$cobranza->deuda-$sumapago;
         echo '<td>'.$saldo.'</td>'
          ?>
         <td>
-            <a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Pago</a>
-            <a href="<?php echo base_url();?>index.php/cobranza/listado/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">Detalle</a>
+            <a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-info">P</a>
+            <a href="<?php echo base_url();?>index.php/cobranza/listado/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">D</a>
         </td> 
 <?php
         echo '</tr>';

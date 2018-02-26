@@ -75,6 +75,9 @@ class cobranza extends CI_Controller {
                 $this->Seguridad();
                 $id=$this->uri->segment(3);
                 $data['arraycobranza']=$this->model_cobranza->getPago($id);
+                $data['arraycobranza1']=$this->model_cobranza->getPago1($id);
+                $data['arraycobranza2']=$this->model_cobranza->getPago2($id);
+                $data['arraycobranza3']=$this->model_cobranza->getPago3($id);
                 $data['arrayprestamo']  = $this->model_cobranza->BuscarID($id);
                 $data['arrayusuario']  = $this->model_cobranza->getUsuario($id);
                 $this->load->view('header');
