@@ -56,16 +56,38 @@
                         <td></td>
                         
                     </tr>
-                    <tr>
-                        <?php   $sumadeudaactual=$array->deuda;
+                    <tr>    
+                        <?php   $sumapago=0;
+                                $sumadeuda=$array->deuda;
+                                if($array->vez==0){
                                 $arraydeuda=$this->model_cobranza->getPago($array->idPrestamo);
-                                 foreach($arraydeuda as $datos){ 
-                                 $sumadeudaactual=$sumadeudaactual- $datos->pago;          
+                                 foreach($arraydeuda as $datos){
+                                 $sumapago=$sumapago+ $datos->pago;   
                                  }
+                                }
+                                if($array->vez==1){
+                                $arraydeuda=$this->model_cobranza->getPago1($array->idPrestamo);
+                                 foreach($arraydeuda as $datos){
+                                 $sumapago=$sumapago+ $datos->pago;   
+                                 }
+                                }
+                                if($array->vez==2){
+                                $arraydeuda=$this->model_cobranza->getPago2($array->idPrestamo);
+                                 foreach($arraydeuda as $datos){
+                                 $sumapago=$sumapago+ $datos->pago;   
+                                 }
+                                }
+                                if($array->vez==3){
+                                $arraydeuda=$this->model_cobranza->getPago3($array->idPrestamo);
+                                 foreach($arraydeuda as $datos){
+                                 $sumapago=$sumapago+ $datos->pago;   
+                                 }
+                                }
+                                 $deuda=$array->deuda-$sumapago;
                         ?>
                         <td><label>Deuda Actual (S/.)</label></td>
-                        <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo $sumadeudaactual ?>" /></td>
-                        <td></td>
+                        <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo $deuda; ?>" /></td>
+                        <td><input type="text" name="vez" readonly=”readonly” value="<?php echo $array->vez; ?>"</td>
                         <td><label>Detalles:</label></td>
                         <td><h4>-Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?><br> -Interes(%):  <?php echo $array->tasaInteres ?><br>
                            -Deuda Inicial (S/):  <?php  echo number_format($array->deuda, 2, '.', '')?> <br>-Cuota(S/.):<?php echo round($array->cuota,2) ?></h4></td>

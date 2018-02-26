@@ -30,6 +30,8 @@
           <?php }}?>
         </tbody>
     </table>    
+
+<?php  if(!empty($arraycobranza)){ ?>
 <center>     
 <table id="cobranza" border="1" cellpadding="0" cellspacing="0" class="pretty">  
 <thead>
@@ -43,7 +45,6 @@
 </thead>
 <tbody>
  <?php
-     if(!empty($arraycobranza)){ 
      $i=0;
     foreach($arraycobranza as $cobranza){
         $i++;
@@ -55,9 +56,111 @@
         echo '<td>'.$cobranza->saldo.'</td>';
         echo '</tr>';
     } 
-     }
  ?>
 </tbody>
 </table>   
 </center>
+<?php 
+    }
+if(!empty($arraycobranza1)){
+?> 
+<center>     
+<table id="cobranza" border="1" cellpadding="0" cellspacing="0" class="pretty">  
+<thead>
+    <tr>
+        <td colspan="5"><h4>Reprogramación N° 01</h4></td>
+    </tr>    
+<tr>
+<th>N°</th>
+<th>FECHA Y HORA DE PAGO</th>
+<th>DEUDA</th>
+<th>PAGO</th>
+<th>SALDO</th>
+</tr>
+</thead>
+<tbody>
+ <?php
+     $i=0;
+    foreach($arraycobranza1 as $cobranza){
+        $i++;
+        echo '<tr>';
+        echo '<td>'.$i.'</td>';
+        echo '<td>'.$cobranza->fechaCobranza.'</td>';
+        echo '<td>'.$cobranza->deudaActual.'</td>';
+        echo '<td>'.$cobranza->pago.'</td>';
+        echo '<td>'.$cobranza->saldo.'</td>';
+        echo '</tr>';
+    } 
+ ?>
+</tbody>
+</table>   
+</center>
+<?php }
+     if(!empty($arraycobranza2)){ ?>
+<center>     
+<table id="cobranza" border="1" cellpadding="0" cellspacing="0" class="pretty">  
+<thead>
+    <tr>
+        <td colspan="5"><h4>Reprogramación N° 02</h4></td>
+    </tr>
+<tr>
+<th>N°</th>
+<th>FECHA Y HORA DE PAGO</th>
+<th>DEUDA</th>
+<th>PAGO</th>
+<th>SALDO</th>
+</tr>
+</thead>
+<tbody>
+ <?php
+     $i=0;
+    foreach($arraycobranza2 as $cobranza){
+        $i++;
+        echo '<tr>';
+        echo '<td>'.$i.'</td>';
+        echo '<td>'.$cobranza->fechaCobranza.'</td>';
+        echo '<td>'.$cobranza->deudaActual.'</td>';
+        echo '<td>'.$cobranza->pago.'</td>';
+        echo '<td>'.$cobranza->saldo.'</td>';
+        echo '</tr>';
+    } 
+ ?>
+</tbody>
+</table>   
+</center>
+<?php }
+     if(!empty($arraycobranza3)){
+?>
+<center>     
+<table id="cobranza" border="1" cellpadding="0" cellspacing="0" class="pretty">  
+<thead>
+    <tr>
+        <td colspan="5"><h4>Reprogramación N° 03</h4></td>
+    </tr>
+<tr>
+<th>N°</th>
+<th>FECHA Y HORA DE PAGO</th>
+<th>DEUDA</th>
+<th>PAGO</th>
+<th>SALDO</th>
+</tr>
+</thead>
+<tbody>
+ <?php 
+     $i=0;
+    foreach($arraycobranza3 as $cobranza){
+        $i++;
+        echo '<tr>';
+        echo '<td>'.$i.'</td>';
+        echo '<td>'.$cobranza->fechaCobranza.'</td>';
+        echo '<td>'.$cobranza->deudaActual.'</td>';
+        echo '<td>'.$cobranza->pago.'</td>';
+        echo '<td>'.$cobranza->saldo.'</td>';
+        echo '</tr>';
+    } 
+ ?>
+</tbody>
+</table>   
+</center>
+     <?php }?>
 </div>

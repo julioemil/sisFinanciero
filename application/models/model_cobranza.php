@@ -27,7 +27,7 @@ class model_cobranza extends CI_Model{
      }    
     public function ListarCobranza1()
     {
-        $this->db->select('idPrestamo, fechaInicio, fechaFinal, tasaInteres, capital, deuda, cuota, u.NOMBRE AS nombreU,
+        $this->db->select('idPrestamo, fechaInicio, fechaFinal, tasaInteres, vez, capital, deuda, cuota, u.NOMBRE AS nombreU,
                 p.estado,
                 c.nombres as nombresC,
                 c.apellidos as apellidosC');
@@ -48,6 +48,31 @@ class model_cobranza extends CI_Model{
         $query =  $this->db->select('*');
         $query = $this->db->from('cobranza');
         $query = $this->db->where('idPrestamo',$id);
+        $query = $this->db->where('vez',0);
+        $query=$this->db->get();
+        return $query->result();	  
+    }
+       function getPago1($id){
+        $query =  $this->db->select('*');
+        $query = $this->db->from('cobranza');
+        $query = $this->db->where('idPrestamo',$id);
+        $query = $this->db->where('vez',1);
+        $query=$this->db->get();
+        return $query->result();	  
+    }
+    function getPago2($id){
+        $query =  $this->db->select('*');
+        $query = $this->db->from('cobranza');
+        $query = $this->db->where('idPrestamo',$id);
+        $query = $this->db->where('vez',2);
+        $query=$this->db->get();
+        return $query->result();	  
+    }
+    function getPago3($id){
+        $query =  $this->db->select('*');
+        $query = $this->db->from('cobranza');
+        $query = $this->db->where('idPrestamo',$id);
+        $query = $this->db->where('vez',3);
         $query=$this->db->get();
         return $query->result();	  
     }
