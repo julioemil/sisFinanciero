@@ -37,11 +37,9 @@ if(isset($_GET['save']))
 <tbody>
  <?php 
  if(!empty($arraycobranza)){
-     $i=0;
     foreach($arraycobranza as $cobranza){
-        $i++;
         echo '<tr>';
-        echo '<td>'.$i.'</td>';
+        echo '<td>'.$cobranza->idPrestamo.'</td>';
         echo '<td>'.$cobranza->nombresC.' '.$cobranza->apellidosC.'</td>';
         echo '<td>'.$cobranza->fechaFinal.'</td>';
         echo '<td>'.$cobranza->capital.'</td>';
