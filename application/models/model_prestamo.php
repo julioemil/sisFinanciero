@@ -18,11 +18,21 @@ class model_prestamo extends CI_Model
         $this->db->order_by('idPrestamo ASC');
         return $this->db->get('prestamo')->result();
     }
+
+    public function ListarPrestamos($fechaInicio,$fechaFinal){
+        $this->db->select("idPrestamo, producto, plazo, fechaInicio, fechaFinal, tasaInteres, capital, deuda, u.NOMBRE AS nombreU, p.estado, c.nombres as nombreC, c.apellidos as apellidoC");
+        //(select count(*)  from reprograma_prestamo rp where rp.idPrestamo = p.idPrestamo) as cantidad'
+        $this->db->from('prestamo p');
+        $this->db->join('cliente c','c.idCliente = p.idCliente');
+        $this->db->join('usuarios u','u.ID = p.idUsuario');
+        $this->db->where("p.fechaInicio >=",$fechaInicio);
+        $this->db->where("p.fechaInicio <=",$fechaFinal);
+        return $this->db->get()->result();
+    }
+
     public function ListarPrestamos2()
     {
-        $this->db->select('idPrestamo, producto, plazo, fechaInicio, fechaFinal, tasaInteres, capital, deuda, u.NOMBRE AS nombreU,
-                p.estado,
-                c.nombres as nombreC');
+        $this->db->select("idPrestamo, producto, plazo, fechaInicio, fechaFinal, tasaInteres, capital, deuda, u.NOMBRE AS nombreU, p.estado, c.nombres as nombreC, c.apellidos as apellidoC");
         //(select count(*)  from reprograma_prestamo rp where rp.idPrestamo = p.idPrestamo) as cantidad'
         $this->db->from('prestamo p');
         $this->db->join('cliente c','c.idCliente = p.idCliente');
@@ -110,13 +120,13 @@ class model_prestamo extends CI_Model
         $result = $this->db->get()->num_rows();
         //$idUltimoPrestamo =$result->cantidad;
         if($result==0){
-            $this->db->select('idPrestamo, deuda, c.nombres as nombreC, c.apellidos as apellidoC');
+            $this->db->select('idPrestamo, producto, plazo, deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento');
             $this->db->from('prestamo p');
             $this->db->join('cliente c','c.idCliente = p.idCliente');
             $this->db->where('p.idPrestamo',$id);
             return $this->db->get()->result();            
         }else{
-            $this->db->select('p.idPrestamo, saldo as deuda, c.nombres as nombreC, c.apellidos as apellidoC');
+            $this->db->select('p.idPrestamo, producto, plazo, saldo as deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento');
             $this->db->from('prestamo p');
             $this->db->join('cliente c','c.idCliente = p.idCliente');
             $this->db->join('cobranza co','co.idPrestamo = p.idPrestamo');
