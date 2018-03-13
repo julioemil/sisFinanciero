@@ -24,30 +24,8 @@ function printContent(el){
             <td><h6>CLIENTE:   <?php echo $usuario->apellidos.', '.$usuario->nombres;?></h6></td>
             <td><h6>DOCUMENTO DE IDENTIDAD:  <?php echo $usuario->dni;?></h6></td>
         </tr>
-                
-        <tr>
-            <td><h6>CAPITAL  <?php echo $usuario->capital0;?></h6></td>
-            <td><h6>TASA INTERES (%) :  <?php echo $usuario->tasaInteres0;?></h6></td>
-            <td><h6>DEUDA: <?php echo round($usuario->capital0*(1+$usuario->tasaInteres0/100),2)?></h6></td>
-        </tr>
-        <tr>
-            <td><h6>CAPITAL  <?php echo $usuario->capital;?></h6></td>
-            <td><h6>TASA INTERES (%) :  <?php echo $usuario->tasaInteres;?></h6></td>
-            <td><h6>DEUDA: <?php echo round($usuario->capital*(1+$usuario->tasaInteres/100),2);?></h6></td>
-        </tr>
-        <tr>
-            <td><h6>CAPITAL  <?php echo $usuario->capital1;?></h6></td>
-            <td><h6>TASA INTERES (%) :  <?php echo $usuario->tasaInteres1;?></h6></td>
-            <td><h6>DEUDA: <?php echo round($usuario->capital1*(1+$usuario->tasaInteres1/100),2);?></h6></td>
-        </tr>
-        <tr>
-            <td><h6>CAPITAL  <?php echo $usuario->capital2;?></h6></td>
-            <td><h6>TASA INTERES (%) :  <?php echo $usuario->tasaInteres2;?></h6></td>
-            <td><h6>DEUDA: <?php echo round($usuario->capital2*(1+$usuario->tasaInteres2/100),2)?></h6></td>
-        </tr>
-          <?php }}?>
-        </tbody>
-    </table>    
+  <?php }}?> 
+   </table>
 
 <?php  if(!empty($arraycobranza)){ 
     ?>
@@ -195,7 +173,7 @@ if(!empty($arraycobranza1)){
     <button class="btn-warning" onclick="printContent('container')">IMPRIMIR</button>
     </td>
     <td>
-    <button class="btn btn-info" href="<?php echo base_url();?>index.php/cobranza">Volver</button>
+    <a class="btn btn-info" href="<?php echo base_url();?>index.php/cobranza">Volver</a>
     </td>
     </tr>
     </table>
