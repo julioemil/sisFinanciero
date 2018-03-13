@@ -6,7 +6,7 @@
                 "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
         
                 } );
-            } );
+            });
 </script>
 <div id="container">
     <h2 align="center">MÓDULO PRESTAMO</h2>
@@ -224,28 +224,5 @@ if(isset($_GET['limitePrestamos']))
                 }
 
             });
-
-            /*var infoPrestamo = prestamo.split("*");
-            interes = (infoPrestamo[5]/100)/(1 + infoPrestamo[5]/100)*infoPrestamo[4];
-            TEA = Math.pow((1 + infoPrestamo[5]/100),12) - 1;
-            TED = Math.pow((1 + TEA),1/360) - 1;
-            capital = infoPrestamo[4]-interes;
-            deuda = Number(infoPrestamo[4]);
-            interesCompensatorio = parseFloat(capital*Math.pow((1+TED),infoPrestamo[3])-capital);
-            interesMoratorio = parseFloat(capital*Math.pow((1+TED),infoPrestamo[3])-capital);
-            deudaTotal = parseFloat(deuda + interesCompensatorio + interesMoratorio);
-            html = "<p><strong>Prestamo:</strong>"+infoPrestamo[0]+"</p>"
-            html += "<p><strong>Fecha Actual:</strong>"+infoPrestamo[1]+"</p>"
-            html += "<p><strong>Fecha Vencimiento:</strong>"+infoPrestamo[2]+"</p>"
-            html += "<p><strong>Dias Vencidos:</strong>"+infoPrestamo[3]+"</p>"
-            html += "<p><strong>Deuda:</strong>"+infoPrestamo[4]+"</p>"
-            html += "<p><strong>Tasa:</strong>"+infoPrestamo[5]+"</p>"
-            html += "<p><strong>------------------------------</p>"
-            html += "<p><strong>Interes:</strong>"+interes+"</p>"
-            html += "<p><strong>Capital:</strong>"+capital+"</p>"
-            html += "<p><strong>Interes Compensatorio:</strong>"+interesCompensatorio.toFixed(2)+"</p>"
-            html += "<p><strong>Interes Moratorio:</strong>"+interesMoratorio.toFixed(2)+"</p>"
-            html += "<p><strong>Deuda Total:</strong>"+deudaTotal.toFixed(2)+"</p>"
-            $("#myModal2 .modal-body").html(html);*/
     });
 </script>

@@ -90,6 +90,14 @@
                         'type'        => 'text',
                         );
 
+                        // Dibujando el campo cliente
+                        $idCliente       = array(
+                        'name'        => 'idCliente',
+                        'id'          => 'idCliente',
+                        'size'        => 10,
+                        'type'        => 'hidden',
+                        );
+
                         $vez       = array(
                         'name'        => 'vez',
                         'id'          => 'vez',
@@ -192,13 +200,20 @@
                         <td><font color="red"><?php echo form_error('estado');?></font></td>
 
                         <td><label>Cliente</label></td>
-                        <td>    
-                        <select name="idCliente">
+                        <td>
+                                                
+                                <?php echo form_input($idCliente);?>
+                                <div class="input-append">
+                                <input class="span2" id="cliente" type="text">
+                                <a class="btn btn-primary" data-toggle="modal" data-target="#myModal2"><i class="icon-search"></i> Buscar</a>
+                                </div>
+
+                        <!--<select name="idCliente">
                              <option>Seleccione Cliente</option>
-                        <?php foreach ($arrayclientes as  $cliente) {
+                        <?php /*foreach ($arrayclientes as  $cliente) {
                         echo '<option value="'.$cliente->idCliente.'">'.$cliente->nombres.' '.$cliente->apellidos.'</option>';
-                        }?>
-                        </select>     
+                        }*/?>
+                        </select>-->
                         
                         </td>
                     </tr>
@@ -229,9 +244,73 @@
             </tr>
         </table>
     </center>
+<div id="myModal2" class="modal hide fade" tabindex="2" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    <h3 id="myModalLabel">Lista de Clientes</h3>
+  </div>
+  <div class="modal-body">
+        <table id="clientePrestamo" border="0" cellpadding="0" cellspacing="0" class="pretty">
+            <thead>
+            <tr>
+            <th>N°</th>
+            <th>NOMBRE</th>
+            <th>APELLIDOS</th>
+            <th>DNI</th>
+            <th>TELEFONO</th>
+            <th>DIRECCIÓN</th>
+            <th>ACCION</th>
+            </tr>
+            </thead>
+            <tbody>
+             <?php 
+             if(!empty($arrayclientes)){
+                    $i=0;
+                foreach($arrayclientes as $clientes){
+                            $i++;
+                    echo '<tr>';
+                    echo '<td>'.$i.'</td>';
+                    echo '<td>'.$clientes->nombres.'</td>';
+                    echo '<td>'.$clientes->apellidos.'</td>';
+                    echo '<td>'.$clientes->dni.'</td>';
+                    echo '<td>'.$clientes->telefono.'</td>';
+                    echo '<td>'.$clientes->direccion.'</td>';
+                    $dataCliente = $clientes->idCliente."*".$clientes->nombres."*".$clientes->apellidos."*".$clientes->dni."*".$clientes->telefono."*".$clientes->direccion;
+             ?> 
+                    <td>
+                    <button type="button" class="btn btn-success btn-check" value="<?php echo $dataCliente; ?>"><i class="icon-check"></i></button>
+                    </td>
+             <?php   
+                    echo '</tr>';
+                } 
+             }
 
+             ?>
+            </tbody>
+            </table>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+  </div>
+</div>
 
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        $('#clientePrestamo').dataTable( {
+            // sDom: hace un espacio entre la tabla y los controles 
+        "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
+
+        } );
+    });
+
+    $(document).on("click", ".btn-check", function(){
+        cliente = $(this).val();
+        infocliente = cliente.split("*");
+        $("#idCliente").val(infocliente[0]);
+        $("#cliente").val(infocliente[1]+" "+infocliente[2]);
+        $("#myModal2").modal("hide");
+    });
 
 
     $("#producto").change(function () {
