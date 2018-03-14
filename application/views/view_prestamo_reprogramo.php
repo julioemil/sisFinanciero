@@ -38,8 +38,9 @@
                         'name'        => 'plazo',
                         'id'          => 'plazo',
                         'size'        => 50,
-                        'value'       => set_value('plazo',@$datos_prestamo[0]->PLAZO),
+                        'value'       => set_value('plazo',@$arrayprestamo[0]->plazo),
                         'placeholder' => 'Plazo',
+                        'readonly'    => 'true',
                         'type'        => 'text',
                         );
                         //Dibujando el campo fechaInicio
@@ -47,7 +48,8 @@
                         'name'        => 'fechaInicio',
                         'id'          => 'fechaInicio',
                         'size'        => 10, 
-                        'value'	  => set_value('fechaInicio',@$hoy),
+                        'value'	      => set_value('fechaInicio',@$hoy),
+                        'readonly'    => 'true',  
                         'type'        => 'date',
                         );
                         //Dibujando el campo fechaFinal
@@ -56,6 +58,7 @@
                         'id'          => 'fechaFinal',
                         'size'        => 10,
                         'value'	  => set_value('fechaFinal',@$datos_prestamo[0]->FECHA_FINAL),
+                        'readonly'    => 'true',
                         'type'        => 'date',
                         );                       
                         // Dibujando el campo tasaInteres
@@ -63,8 +66,9 @@
                         'name'        => 'tasaInteres',
                         'id'          => 'tasaInteres',
                         'size'        => 100,
-                        'value'	  => set_value('tasaInteres',@$datos_prestamo[0]->TASA_INTERES),
+                        'value'	  => set_value('tasaInteres',@$arrayprestamo[0]->tasaInteres),
                         'placeholder' => 'Tasa de Interes',
+                        'readonly'    => 'true',
                         'type'        => 'text',
                         );
                         //Dibujando el campo la deuda capitalizada
@@ -74,7 +78,7 @@
                         'size'        => 8, 
                         'value'	  => set_value('capital',@$arrayprestamo[0]->deuda),
                         'placeholder' => 'Capital',
-                        //'readonly'    => 'true',  
+                        'readonly'    => 'true',  
                         'type'        => 'text',
                         );
                         
@@ -124,7 +128,7 @@
 
                     <tr>
                         <td><?php echo form_label("Producto(*)",'producto'); ?></td>
-                        <td><?php echo form_dropdown('producto', $producto,set_value('producto',@$datos_prestamo[0]->producto),$js);?>
+                        <td><?php echo form_dropdown('producto', $producto,@$arrayprestamo[0]->producto,$js);?>
                         </td>
                         <td><font color="red"><?php echo form_error('producto');?></font></td>
                         <td><?php echo form_label("Plazo(*)",'plazo');?></td>
@@ -215,6 +219,36 @@
 
 
 <script type="text/javascript">
+
+    $(document).ready(function(){
+        if($("#producto").val()=='diario'){
+            var periodo = document.getElementById('plazo').value;
+            $.ajax({
+                data: {"periodo":periodo},
+                url: 'http://localhost:8080/sisFinanciero/index.php/prestamo/sumarDias',
+                type: 'post',
+                success: function(response,status){
+                    //alert("Respueta: "+response+" Estado "+status);
+                    $("#fechaFinal").val(response);
+                }
+            });    
+            calcularValores();
+        }
+        if($("#producto").val()=='mensual'){
+            var periodo = document.getElementById('plazo').value;
+            $.ajax({
+                data: {"periodo":periodo},
+                url: 'http://localhost:8080/sisFinanciero/index.php/prestamo/cadena',
+                type: 'post',
+                success: function(response,status){
+                    //alert("Respueta: "+response+" Estado "+status);
+                    $("#fechaFinal").val(response);
+                }
+            });    
+            calcularValores();
+        }
+
+    });
 
 
 

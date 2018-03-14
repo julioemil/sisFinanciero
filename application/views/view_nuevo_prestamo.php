@@ -49,6 +49,15 @@
                         'placeholder' => 'Tasa de Interes',
                         'type'        => 'text',
                         );
+                        // Dibujando el campo tasaMoratorio
+                        $tasaInteresMoratorio          = array(
+                        'name'        => 'tasaInteresMoratorio',
+                        'id'          => 'tasaInteresMoratorio',
+                        'size'        => 100,
+                        'value'   => set_value('tasaInteresMoratorio',@$datos_prestamo[0]->TASA_INTERES_MORATORIO),
+                        'placeholder' => 'Tasa de Interes Moratorio',
+                        'type'        => 'text',
+                        );
                         //Dibujando el campo capital
                         $capital       = array(
                         'name'        => 'capital',
@@ -131,22 +140,27 @@
                         <td><?php echo form_label("Tasa Interes(*) %",'tasaInteres');?></td>
                         <td><?php echo form_input($tasaInteres);?></td>
                         <td><font color="red"><?php echo form_error('tasaInteres'); ?></font></td>
-                        <td><?php echo form_label("Capital S/.",'capital');?></td>
-                        <td><?php echo form_input($capital);?></td>
-                        <td><font color="red"><?php echo form_error('capital'); ?></font></td>
+
+                        <td><?php echo form_label("Interes Moratorio(*) %",'tasaInteresMoratorio');?></td>
+                        <td><?php echo form_input($tasaInteresMoratorio);?></td>
+                        <td><font color="red"><?php echo form_error('tasaInteresMoratorio'); ?></font></td>
                     </tr>
                     
                     <tr>
+                        <td><?php echo form_label("Capital S/.",'capital');?></td>
+                        <td><?php echo form_input($capital);?></td>
+                        <td><font color="red"><?php echo form_error('capital'); ?></font></td>
+
                         <td><?php echo form_label("Deuda(*) S/. ",'deuda');?></td>
                         <td><?php echo form_input($deuda);?></td>
                         <td><font color="red"><?php echo form_error('deuda'); ?></font></td>
-
+                    </tr>
+                    <tr>
                         <td><?php echo form_label("Cuota(*) S/. ",'cuota');?></td>
                         <td><?php echo form_input($cuota);?></td>
                         <td><font color="red"><?php echo form_error('cuota'); ?></font></td>
-                        <td><?php echo form_input($vez);?></td>
-                    </tr>
-                    <tr>
+                        <?php echo form_input($vez);?>
+
                         <td><label>Usuario</label></td>
                         <td>
                         
@@ -220,8 +234,6 @@
 <script type="text/javascript">
 
 
-
-
     $("#producto").change(function () {
         
         if($("#producto").val()=='diario' || $("#producto").val()=='semanal'){
@@ -230,7 +242,7 @@
             var periodo = document.getElementById('plazo').value;
             $.ajax({
                 data: {"periodo":periodo},
-                url: 'http://localhost:8080/sisFinanciero/index.php/prestamo/cadena',
+                url: 'http://localhost:8080/sisFinanciero/index.php/prestamo/sumarDias',
                 type: 'post',
                 success: function(response,status){
                     //alert("Respueta: "+response+" Estado "+status);

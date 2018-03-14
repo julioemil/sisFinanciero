@@ -29,15 +29,28 @@ class prestamo extends CI_Controller{
          $this->model_seguridad->SessionActivo($url);
      }
      
-     public function index()
-     {
+     public function index(){
+
+      $fechaInicio = $this->input->post("fechaInicio");
+      $fechaFin = $this->input->post("fechaFin");
+      if($this->input->post("buscar")){
+        $prestamos = $this->model_prestamo->ListarPrestamos($fechaInicio,$fechaFin);
+      }else{
+        $prestamos = $this->model_prestamo->ListarPrestamos2();
+      }
+
+        
           /*Si el usuario esta logeado*/
           $this->Seguridad();
           $this->load->view('header');
-          $data['arrayprestamos'] = $this->model_prestamo->ListarPrestamos2();         
+          $data['arrayprestamos'] = $prestamos;
+          $data['fechaInicio'] = $fechaInicio;
+          $data['fechaFin'] = $fechaFin;
+          $data['fechaActual'] = date("Y")."-".date("m")."-".date("d");
           $this->load->view('view_prestamo', $data);
           $this->load->view('footer');
      }
+
      public function nuevo(){
         $this->Seguridad();
     	$this->load->view('header');
@@ -114,6 +127,36 @@ class prestamo extends CI_Controller{
 		}
 	}
 
+  public function sumarDias()  {
+      $periodo = $_POST['periodo'];
+      $hoyYear = date("Y");
+      $hoyMonth = date("m");
+      $hoydate = date("d");
+
+      $count = 0;
+      while($count<=30){
+        
+        if(checkdate($hoyMonth, $hoydate, $hoyYear)){
+          $hoydate = $hoydate + 1;
+        }else{
+          if($hoyMonth==12)
+          {
+            $hoyYear = $hoyYear + 1;
+            $hoyMonth = 1;
+            $hoydate = 1;
+          }else{
+            $hoyMonth = $hoyMonth + 1;
+            $hoydate = 1;  
+          }
+          
+        }
+        $count = $count + 1;
+      }
+
+      $hoy = $hoyYear.'/'.$hoyMonth.'/'.$hoydate;
+      $date = new DateTime($hoy);
+      echo $date->format('Y-m-d');
+  }
 
   public function cadena()  {
       $periodo = $_POST['periodo'];
@@ -134,7 +177,7 @@ class prestamo extends CI_Controller{
       $hoy = $hoyYear.'/'.$hoyMonth.'/'.$hoydate;
       $date = new DateTime($hoy);
       echo $date->format('Y-m-d');
-    }
+  }
 
     public function detalle($id){
         $this->Seguridad();
@@ -158,19 +201,35 @@ class prestamo extends CI_Controller{
         $this->load->view('footer');
     }
 
-
     public function reprogramar($id){
         $this->Seguridad();
         $this->load->view('header');
         if($this->model_prestamo->verPrestamoDetalle($id)==3){
           redirect("prestamo?limitePrestamos=true".$this->model_prestamo->verPrestamoDetalle($id));
         }else{
-          $dataPrestamo['arrayprestamo'] = $this->model_prestamo->verPrestamoDetalle($id);
+          $dataPrestamo = $this->model_prestamo->verPrestamoDetalle($id);
           $hoy   = date("Y")."-".date("m")."-".date("d");
-          $dataPrestamo['hoy'] = $hoy;
-          $this->load->view('view_prestamo_reprogramo',$dataPrestamo);
+          //$dataPrestamo['hoy'] = $hoy;
+
+          ///////////idPrestamo, producto, plazo, deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento
+          foreach ($dataPrestamo as $d) {
+            $prestamoData = array(
+              'idPrestamo' => $d->idPrestamo,
+              'producto' => $d->producto,
+              'plazo' => $d->plazo,
+              'deuda' => $d->deuda,
+              'tasaInteres' => $d->tasaInteres,
+              'tasaInteresMoratorio' => $d->tasaInteresMoratorio,
+              'nombreC' => $d->nombreC,
+              'apellidoC' => $d->apellidoC,
+              'fechaVencimiento' => $d->fechaVencimiento,
+            );
+          }
+          ///////////////////
+
+          $this->load->view('view_prestamo_reprogramo',$prestamoData);
           $this->load->view('footer');
-        }        
+        }   
     }
 
     function insertarReprograma(){
@@ -219,6 +278,37 @@ class prestamo extends CI_Controller{
       $this->load->view('view_nuevo_prestamo',$dataCliente);
       $this->load->view('footer');
     } 
+    }
+
+    public function obtenerDatosPrestamo(){
+      $hoy   = date("Y")."-".date("m")."-".date("d");
+
+      $idPrestamo = $this->input->post("idPrestamo");
+      $data = $this->model_prestamo->verPrestamoDetalle($idPrestamo);
+      foreach ($data as $d) {
+        $prestamoData = array(
+          'idPrestamo' => $d->idPrestamo,
+          'producto' => $d->producto,
+          'plazo' => $d->plazo,
+          'deuda' => $d->deuda,
+          'tasaInteres' => $d->tasaInteres,
+          'tasaInteresMoratorio' => $d->tasaInteresMoratorio,
+          'nombreC' => $d->nombreC,
+          'apellidoC' => $d->apellidoC,
+          'fechaVencimiento' => $d->fechaVencimiento,
+          'fechaActual' => $hoy,
+          'diasVencidos' => $this->diferenciaFechas($hoy,$d->fechaVencimiento),
+        );
+      }
+      
+      echo json_encode($prestamoData);
+    }
+
+    public function diferenciaFechas($fechaActual, $fechaVencimiento){
+      $datetime1 = new DateTime($fechaActual);
+      $datetime2 = new DateTime($fechaVencimiento);
+      $interval = $datetime1->diff($datetime2);
+      return $interval->format("%a");
     }
     
     /*
