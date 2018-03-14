@@ -37,13 +37,7 @@ if(isset($_GET['save']))
 <tbody>
  <?php 
  if(!empty($arraycobranza)){
-<<<<<<< HEAD
-     
     foreach($arraycobranza as $cobranza){
-        
-=======
-    foreach($arraycobranza as $cobranza){
->>>>>>> master
         echo '<tr>';
         echo '<td>'.$cobranza->idPrestamo.'</td>';
         echo '<td>'.$cobranza->nombresC.' '.$cobranza->apellidosC.'</td>';
