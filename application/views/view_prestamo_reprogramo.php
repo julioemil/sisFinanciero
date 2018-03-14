@@ -1,13 +1,13 @@
 <?php
                         // Creando los campos del formulario:
                         // Dibujando el campo producto
-
+                        
                         // Dibujando el campo plazo
                         $idPrestamo = array(
                         'name'        => 'idPrestamo',
                         'id'          => 'idPrestamo',
                         'size'        => 50,
-                        'value'       => set_value('cliente',@$arrayprestamo[0]->idPrestamo),
+                        'value'       => set_value('cliente',@$arrayprestamo['idPrestamo']),
                         'placeholder' => 'idPrestamo',
                         'readonly'    => 'true',
                         'type'        => 'hidden',
@@ -18,7 +18,7 @@
                         'name'        => 'cliente',
                         'id'          => 'cliente',
                         'size'        => 50,
-                        'value'       => set_value('cliente',@$arrayprestamo[0]->nombreC." ".@$arrayprestamo[0]->apellidoC),
+                        'value'       => set_value('cliente',@$arrayprestamo['nombreC']." ".@$arrayprestamo['apellidoC']),
                         'placeholder' => 'Cliente',
                         'readonly'    => 'true',
                         'type'        => 'text',
@@ -38,7 +38,7 @@
                         'name'        => 'plazo',
                         'id'          => 'plazo',
                         'size'        => 50,
-                        'value'       => set_value('plazo',@$arrayprestamo[0]->plazo),
+                        'value'       => set_value('plazo',@$arrayprestamo['plazo']),
                         'placeholder' => 'Plazo',
                         'readonly'    => 'true',
                         'type'        => 'text',
@@ -48,7 +48,7 @@
                         'name'        => 'fechaInicio',
                         'id'          => 'fechaInicio',
                         'size'        => 10, 
-                        'value'	      => set_value('fechaInicio',@$hoy),
+                        'value'	      => set_value('fechaInicio',@$arrayprestamo['hoy']),
                         'readonly'    => 'true',  
                         'type'        => 'date',
                         );
@@ -66,7 +66,7 @@
                         'name'        => 'tasaInteres',
                         'id'          => 'tasaInteres',
                         'size'        => 100,
-                        'value'	  => set_value('tasaInteres',@$arrayprestamo[0]->tasaInteres),
+                        'value'	  => set_value('tasaInteres',@$arrayprestamo['tasaInteres']),
                         'placeholder' => 'Tasa de Interes',
                         'readonly'    => 'true',
                         'type'        => 'text',
@@ -76,7 +76,7 @@
                         'name'        => 'capital',
                         'id'          => 'capital',
                         'size'        => 8, 
-                        'value'	  => set_value('capital',@$arrayprestamo[0]->deuda),
+                        'value'	  => set_value('capital',@$arrayprestamo['deuda']),
                         'placeholder' => 'Capital',
                         'readonly'    => 'true',  
                         'type'        => 'text',
@@ -128,7 +128,7 @@
 
                     <tr>
                         <td><?php echo form_label("Producto(*)",'producto'); ?></td>
-                        <td><?php echo form_dropdown('producto', $producto,@$arrayprestamo[0]->producto,$js);?>
+                        <td><?php echo form_dropdown('producto', $producto,@$arrayprestamo['producto'],$js);?>
                         </td>
                         <td><font color="red"><?php echo form_error('producto');?></font></td>
                         <td><?php echo form_label("Plazo(*)",'plazo');?></td>

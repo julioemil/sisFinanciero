@@ -217,19 +217,40 @@ class prestamo extends CI_Controller{
               'idPrestamo' => $d->idPrestamo,
               'producto' => $d->producto,
               'plazo' => $d->plazo,
-              'deuda' => $d->deuda,
+              'deuda' => $this->obtenerDeudaTotal($d->deuda, $d->tasaInteres, $d->tasaInteresMoratorio, $d->fechaVencimiento),
               'tasaInteres' => $d->tasaInteres,
               'tasaInteresMoratorio' => $d->tasaInteresMoratorio,
               'nombreC' => $d->nombreC,
               'apellidoC' => $d->apellidoC,
               'fechaVencimiento' => $d->fechaVencimiento,
+              'hoy' => $hoy,
             );
           }
+          $data['arrayprestamo'] = $prestamoData;
           ///////////////////
 
-          $this->load->view('view_prestamo_reprogramo',$prestamoData);
+          $this->load->view('view_prestamo_reprogramo',$data);
           $this->load->view('footer');
         }   
+    }
+
+    public function obtenerDeudaTotal($deuda, $interesCompensatorio, $interesMoratorio, $fechaVencimiento){
+      $hoy   = date("Y")."-".date("m")."-".date("d");
+
+      $interes = ($interesCompensatorio/100)/(1 + $interesCompensatorio/100)*$deuda;
+      $capital = $deuda-$interes;
+      $TEAC = pow((1 + $interesCompensatorio/100),12) - 1;
+      $TEDC = pow((1 + $TEAC),1/360) - 1;
+
+      $TEAM = pow((1 + $interesMoratorio/100),12) - 1;
+      $TEDM = pow((1 + $TEAM),1/360) - 1;
+      
+      $dias = $this->diferenciaFechas($hoy,$fechaVencimiento);
+
+      $interesC = ($capital*pow((1+$TEDC),$dias)-$capital);
+      $interesM = ($capital*pow((1+$TEDM),$dias)-$capital);
+      $deudaTotal = $deuda + $interesC + $interesM;
+      return $deudaTotal;
     }
 
     function insertarReprograma(){

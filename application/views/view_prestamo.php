@@ -132,9 +132,7 @@ if(isset($_GET['limitePrestamos']))
         ?>
         <td>
         <!--GENERACION DE PLAN DE PAGO DIARIO FALTA-->
-        <?php if($prestamo->producto=='diario'){ ?>
-            <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">P</a>
-        <?php } ?>
+        
 
         <?php if($prestamo->producto=='diario' && $fechaActual>$prestamo->fechaFinal){
             $datetime1 = new DateTime($fechaActual);
