@@ -136,6 +136,34 @@ class model_prestamo extends CI_Model
             return $this->db->get()->result();    
         }        
     }
+
+    public function verPrestamoDetalleMoroso($id){
+        //$this->db->select('count(*) as cantidad');
+        $this->db->from('prestamo');
+        $this->db->where('idPrestamo',$id);
+        $query = $this->db->get()->row();
+
+        $this->db->from('cobranza');
+        $this->db->where('idPrestamo',$id);
+        $result = $this->db->get()->num_rows();
+        //$idUltimoPrestamo =$result->cantidad;
+        if($result==0){
+            $this->db->select('idPrestamo, producto, plazo, deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento');
+            $this->db->from('prestamo p');
+            $this->db->join('cliente c','c.idCliente = p.idCliente');
+            $this->db->where('p.idPrestamo',$id);
+            return $this->db->get()->result();            
+        }else{
+            $this->db->select('p.idPrestamo, producto, plazo, saldo as deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento');
+            $this->db->from('prestamo p');
+            $this->db->join('cliente c','c.idCliente = p.idCliente');
+            $this->db->join('cobranza co','co.idPrestamo = p.idPrestamo');
+            $this->db->where('p.idPrestamo',$id);
+            $this->db->order_by('idCobranza','DESC');
+            $this->db->limit(1);
+            return $this->db->get()->result();    
+        }        
+    }
      /*
      public function ExisteEmail($email){
         $this->db->from('cliente');

@@ -134,22 +134,23 @@ if(isset($_GET['limitePrestamos']))
         <!--GENERACION DE PLAN DE PAGO DIARIO FALTA-->
         
 
-        <?php if($prestamo->producto=='diario' && $fechaActual>$prestamo->fechaFinal){
+        <?php if($prestamo->producto=='diario' && $fechaActual>=$prestamo->fechaFinal){
             $datetime1 = new DateTime($fechaActual);
             $datetime2 = new DateTime($prestamo->fechaFinal);
             $interval = $datetime2->diff($datetime1);
             $dataPrestamo = $prestamo->idPrestamo;//."*".$fechaActual."*".$prestamo->fechaFinal."*".$interval->format('%a')."*".$prestamo->deuda."*".$prestamo->tasaInteres;
         ?>
+
         <a href="<?php echo base_url();?>index.php/prestamo/reprogramar/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-info">R</a>
         <button role="button" class="btn btn-primary btn-prestamo" data-toggle="modal" data-target="#myModal2" value="<?php echo $dataPrestamo;?>">De.</button>
-        <?php }?>
+        <?php $dataPrestamo = 0;}?>
 
         <!--GENERACION DE PLAN DE PAGO DIARIO FALTA-->
         <?php if($prestamo->producto=='mensual'){ ?>
             <a href="<?php echo base_url();?>index.php/prestamo/detalle/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-success">P</a>
         <?php }?>
 
-        <?php if($prestamo->producto=='mensual' && $fechaActual > $prestamo->fechaFinal){
+        <?php if($prestamo->producto=='mensual' && $fechaActual >= $prestamo->fechaFinal){
             $datetime1 = new DateTime($fechaActual);
             $datetime2 = new DateTime($prestamo->fechaFinal);
             $interval = $datetime2->diff($datetime1);
@@ -157,7 +158,7 @@ if(isset($_GET['limitePrestamos']))
         ?>
         <a href="<?php echo base_url();?>index.php/prestamo/reprogramar/<?php echo $prestamo->idPrestamo; ?>" class="btn btn-info">R</a>
         <button role="button" class="btn btn-primary btn-prestamo" data-toggle="modal" data-target="#myModal2" value="<?php echo $dataPrestamo;?>">De.</button>
-        <?php } ?>
+        <?php $dataPrestamo=0;} ?>
         </td>
         <?php echo '</tr>';
     } 
@@ -218,6 +219,8 @@ if(isset($_GET['limitePrestamos']))
                     html += "<p><strong>Interes Compensatorio:</strong>"+interesCompensatorio.toFixed(2)+"</p>"
                     html += "<p><strong>Interes Moratorio:</strong>"+interesMoratorio.toFixed(2)+"</p>"
                     html += "<p><strong>Deuda Total:</strong>"+deudaTotal.toFixed(2)+"</p>"
+
+                    //html = "<p><strong>Deuda Total:</strong>"+response+"</p>"
                     
                     $("#myModal2 .modal-body").html(html);
                     //{"idPrestamo":"55","producto":"mensual","plazo":"6","deuda":"1297.92","tasaInteres":"8","nombreC":"Juan","apellidoC":"Basquez Miranda","fechaVencimiento":"2017-09-01","fechaActual":"2018-03-12","diasVencidos":"192"}

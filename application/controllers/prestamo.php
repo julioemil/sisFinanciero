@@ -305,7 +305,7 @@ class prestamo extends CI_Controller{
       $hoy   = date("Y")."-".date("m")."-".date("d");
 
       $idPrestamo = $this->input->post("idPrestamo");
-      $data = $this->model_prestamo->verPrestamoDetalle($idPrestamo);
+      $data = $this->model_prestamo->verPrestamoDetalleMoroso($idPrestamo);
       foreach ($data as $d) {
         $prestamoData = array(
           'idPrestamo' => $d->idPrestamo,
