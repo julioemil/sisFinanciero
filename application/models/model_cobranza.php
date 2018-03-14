@@ -95,5 +95,26 @@ class model_cobranza extends CI_Model{
         $query=$this->db->get();
         return $query->result();
     }
+    
+    function listaCobranzaPagadas()
+    {
+        $this->db->select('*');
+        $this->db->from('cobranza co');
+        $this->db->join('prestamo p','p.idPrestamo = co.idPrestamo');
+        $this->db->join('cliente c','c.idCliente = p.idCliente');
+        $this->db->join('usuarios u','u.ID = p.idUsuario');
+        $this->db->or_where('saldo <', 0.4);
+        $this->db->group_by('co.idPrestamo');
+        return $this->db->get()->result();
+        
+    }
+    function listaCobranzaPendientes()
+    {
+        $this->db->select('*');
+        $this->db->from('prestamo p');
+        $this->db->join('cliente c','c.idCliente = p.idCliente');
+        $this->db->join('usuarios u','u.ID = p.idUsuario');
+        return $this->db->get()->result();
+            }
 
 }

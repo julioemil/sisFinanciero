@@ -3,12 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/sisFinanciero/application/views/view_listado_cobranza.php</file>
-            <file>file:/C:/xampp/htdocs/sisFinanciero/application/views/view_nuevo_cobranza.php</file>
-            <file>file:/C:/xampp/htdocs/sisFinanciero/application/controllers/cobranza.php</file>
-            <file>file:/C:/xampp/htdocs/sisFinanciero/application/views/view_cobranza.php</file>
-            <file>file:/C:/xampp/htdocs/sisFinanciero/application/models/model_prestamo.php</file>
+            <file>file:/C:/xampp/htdocs/sisFinanciero/application/views/view_reporte_prestamo_pagado.php</file>
+            <file>file:/C:/xampp/htdocs/sisFinanciero/application/controllers/reporte.php</file>
             <file>file:/C:/xampp/htdocs/sisFinanciero/application/models/model_cobranza.php</file>
+            <file>file:/C:/xampp/htdocs/sisFinanciero/application/views/view_reporte_prestamo_pendiente.php</file>
         </group>
     </open-files>
 </project-private>
