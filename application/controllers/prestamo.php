@@ -166,8 +166,11 @@ class prestamo extends CI_Controller{
 
       while($periodo>0){
         if($hoyMonth + $periodo>12){
-          $hoyYear = $hoyYear + 1;
-          $periodo = $periodo - 12;
+          $meses = $hoyMonth + $periodo;
+          $hoyYear = $hoyYear + intval($meses / 12);
+          $periodo = $periodo - 12;          
+          $hoyMonth = $meses % 12;
+          $periodo = 0;
         }else{
           $hoyMonth = $hoyMonth + $periodo;          
           $periodo = 0;
@@ -250,7 +253,7 @@ class prestamo extends CI_Controller{
       $interesC = ($capital*pow((1+$TEDC),$dias)-$capital);
       $interesM = ($capital*pow((1+$TEDM),$dias)-$capital);
       $deudaTotal = $deuda + $interesC + $interesM;
-      return $deudaTotal;
+      return round($deudaTotal,2);
     }
 
     function insertarReprograma(){

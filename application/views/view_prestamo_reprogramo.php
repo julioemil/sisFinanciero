@@ -242,6 +242,7 @@
                 type: 'post',
                 success: function(response,status){
                     //alert("Respueta: "+response+" Estado "+status);
+                    //console.log(response);
                     $("#fechaFinal").val(response);
                 }
             });    

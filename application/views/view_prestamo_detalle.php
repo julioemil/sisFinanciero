@@ -1,45 +1,23 @@
-<script type="text/javascript">
-            /*prestamo*/
-            $(document).ready(function() {
-                $('#prestamos').dataTable( {
-                    // sDom: hace un espacio entre la tabla y los controles 
-                "sDom": "<'row-fluid'<'span6'l><'span6'f>r>t<'row-fluid'<'span6'i><'span6'p>>",
-        
-                } );
-            } );
+<script>
+    function printContent(el){
+        var restorepage = document.body.innerHTML;
+        var printcontent = document.getElementById(el).innerHTML;
+        document.body.innerHTML = printcontent;
+        window.print();
+        document.body.innerHTML = restorepage;
+    }
 </script>
+
+<body>
 <div id="container">
     <h2 align="center">PLAN DE PAGOS</h2>
-<?php
-if(isset($_GET['save']))
-{
-    echo '<div class="alert alert-success text-center">La Información  se Almaceno Correctamente</div>';
-}
-
-if(isset($_GET['delete']))
-{
-    echo '<div class="alert alert-warning text-center">La Información  se ha Eliminado Correctamente</div>';
-}
-
-if(isset($_GET['update']))
-{
-    echo '<div class="alert alert-success text-center">La Información  se Actualizo Correctamente</div>';
-}
-
-if(isset($_GET['permisos']))
-{
-    echo '<div class="alert alert-success text-center">Los Permisos fueron Asignados Correctamente</div>';
-}
-
-if(isset($_GET['password']))
-{
-    echo '<div class="alert alert-success text-center">La Contraseña fue actualizado Correctamente</div>';                
-}
-?>
 
 <br><br>
+<?php $hoy   = date("Y")."-".date("m")."-".date("d");?>
+<label>Fecha: <?php echo $hoy;?></label>
+<label>Hora: <?php echo date("H:i:s");?></label>
 <center>  
-<table id="prestamos" border="0" cellpadding="0" cellspacing="0" class="pretty">
+<table id="prestamos" border="1" cellpadding="0" cellspacing="0" class="pretty">
 <thead>
 <tr>
 <th>PERIODO</th>
@@ -136,3 +114,9 @@ $totalCuota = 0;
 </table>
 </center>
 </div>
+<center>
+<button class="btn-warning" onclick="printContent('container')">IMPRIMIR</button>
+<a class="btn btn-info" href="<?php echo base_url();?>index.php/prestamo">Volver</a>
+</center>
+</body>
+

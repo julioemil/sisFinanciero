@@ -79,10 +79,10 @@ if(isset($_GET['save']))
         echo '<td>'.$saldo.'</td>'
          ?>
         <td>
-           <?php $hoy   = date("Y")."-".date("m")."-".date("d");
-           if($hoy<=$cobranza->fechaFinal){?>
+           
+           
             <a href="<?php echo base_url();?>index.php/cobranza/nuevo/<?php echo $cobranza->idPrestamo ?>" class="btn btn-info">P</a>
-            <?php } ?>
+           
             <a href="<?php echo base_url();?>index.php/cobranza/listado/<?php echo $cobranza->idPrestamo ?>" class="btn btn-success">D</a>
         </td> 
 <?php
