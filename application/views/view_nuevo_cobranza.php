@@ -5,7 +5,7 @@
                         'name'        => 'pago',
                         'id'          => 'pago',
                         'size'        => 8, 
-                        'value'	  => set_value('pago',@$datos_cobranza[0]->pago),
+                        'value'   => set_value('pago',@$datos_cobranza[0]->pago),
                         'placeholder' => 'pago',
                         'type'        => 'text',
                         );
@@ -15,7 +15,7 @@
                         'name'        => 'nRecibo',
                         'id'          => 'nRecibo',
                         'size'        => 8, 
-                        'value'	  => set_value('nRecibo',@$datos_cobranza[0]->nRecibo),
+                        'value'   => set_value('nRecibo',@$datos_cobranza[0]->nRecibo),
                         'placeholder' => 'nRecibo',
                         'type'        => 'text',
                         );
@@ -24,7 +24,7 @@
                         'name'        => 'saldo',
                         'id'          => 'saldo',
                         'size'        => 8, 
-                        'value'	  => set_value('saldo',@$datos_cobranza[0]->saldo),
+                        'value'   => set_value('saldo',@$datos_cobranza[0]->saldo),
                         'placeholder' => 'Saldo',
                         'type'        => 'text',
                         'readonly'    => 'readonly',
@@ -57,33 +57,33 @@
                         
                     </tr>
                     <tr>    
-                        <?php   
-                                $saldosueldo=$array->deuda;
+                        <?php   $sumapago=0;
+                                $sumadeuda=$array->deuda;
                                 if($array->vez==0){
-                                $arraydeuda=$this->model_cobranza->getPagoSaldo($array->idPrestamo,$array->vez);
+                                $arraydeuda=$this->model_cobranza->getPago($array->idPrestamo);
                                  foreach($arraydeuda as $datos){
-                                 $saldosueldo=$datos->saldo;   
+                                 $sumapago=$sumapago+ $datos->pago;   
                                  }
                                 }
                                 if($array->vez==1){
-                                $arraydeuda=$this->model_cobranza->getPagoSaldo($array->idPrestamo,$array->vez);
+                                $arraydeuda=$this->model_cobranza->getPago1($array->idPrestamo);
                                  foreach($arraydeuda as $datos){
-                                 $saldosueldo=$datos->saldo;   
+                                 $sumapago=$sumapago+ $datos->pago;   
                                  }
                                 }
                                 if($array->vez==2){
-                                $arraydeuda=$this->model_cobranza->getPagoSaldo($array->idPrestamo,$array->vez);
+                                $arraydeuda=$this->model_cobranza->getPago2($array->idPrestamo);
                                  foreach($arraydeuda as $datos){
-                                 $saldosueldo=$datos->saldo;   
+                                 $sumapago=$sumapago+ $datos->pago;   
                                  }
                                 }
                                 if($array->vez==3){
-                                $arraydeuda=$this->model_cobranza->getPagoSaldo($array->idPrestamo,$array->vez);
+                                $arraydeuda=$this->model_cobranza->getPago3($array->idPrestamo);
                                  foreach($arraydeuda as $datos){
-                                 $saldosueldo=$datos->saldo;   
+                                 $sumapago=$sumapago+ $datos->pago;   
                                  }
                                 }
-                                 $deuda=$saldosueldo;
+                                 $deuda=$array->deuda-$sumapago;
 
                                   $hoy = date("Y")."-".date("m")."-".date("d");
                                   $capital = $array->capital;
@@ -205,7 +205,7 @@
                     </table>
                 <?php echo form_close();?> 
                 <?php
-			
+            
                 ?>
                 </td>
             </tr>
