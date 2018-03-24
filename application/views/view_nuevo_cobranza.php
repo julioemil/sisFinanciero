@@ -85,12 +85,12 @@
                                 }
                                  $deuda=$array->deuda-$sumapago;
 
-                                 $hoy = date("Y")."-".date("m")."-".date("d");
+                                  $hoy = date("Y")."-".date("m")."-".date("d");
+                                  $capital = $array->capital;
 
-                                 $interesCompensatorio = $array->tasaInteres;
+                                  $interesCompensatorio = $array->tasaInteres;
                                   $interesMoratorio = $array->tasaInteresMoratorio;
-                                  $interes = ($interesCompensatorio/100)/(1 + $interesCompensatorio/100)*$deuda;
-                                  $capital = $deuda-$interes;
+
                                   $TEAC = pow((1 + $interesCompensatorio/100),12) - 1;
                                   $TEDC = pow((1 + $TEAC),1/360) - 1;
 
@@ -103,11 +103,19 @@
 
                                     //SI PASO FECHA VENCIMIENTO 
                                   if($hoy > $array->fechaFinal){
+
+                                    $deudaMensual = $capital*pow((1+$TEDC),30);
+                                    $saldoRestante = $deudaMensual - $sumapago;                                    
+
+                                    $interesVenc = ($interesCompensatorio/100)/(1 + $interesCompensatorio/100)*$saldoRestante;
+                                    $capitalVenc = $saldoRestante - $interesVenc;
                                     $interval = $datetime1->diff($datetime2);
-                                    $dias = $interval->format("%a");
-                                    $interesC = ($capital*pow((1+$TEDC),$dias)-$capital);
-                                    $interesM = ($capital*pow((1+$TEDM),$dias)-$capital);
-                                    $deudaTotal = $deuda + $interesC + $interesM;
+                                    $dias = $interval->format("%a");                                    
+
+                                    $interesC = ($capitalVenc*pow((1+$TEDC),$dias)-$capitalVenc);
+                                    $interesM = ($capitalVenc*pow((1+$TEDM),$dias)-$capitalVenc);
+                                    $saldoVariable = $saldoRestante + $interesC + $interesM;
+                                    $deudaTotal = $saldoVariable;
                                   }
                                   //SE ENCUENTRE DEL PLAZO DE PRESTAMO
                                   else{
@@ -116,11 +124,12 @@
                                     $interesC = ($capital*pow((1+$TEDC),$dias)-$capital);
                                     $interesM = ($capital*pow((1+$TEDM),0)-$capital);
                                     $deudaTotal = $capital + $interesC;
+                                    $saldoVariable = $deudaTotal - $sumapago;
                                   }
                                   
                         ?>
                         <td><label>Deuda Actual (S/.)</label></td>
-                        <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo round($deudaTotal,2); ?>" /></td>
+                        <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo round($saldoVariable,2); ?>" /></td>
                         <td></td>
                         <td><label>Detalles:</label></td>
                         <td colspan="2">
@@ -131,15 +140,27 @@
                                 <br>-Cuota(S/.):<?php echo round($array->cuota,2) ?><br>
                                 -Fecha Final: <?php echo $array->fechaFinal;?><br>
                                 -Fecha Hoy: <?php echo $hoy; ?><br>
-                                _Saldo: <?php echo $deuda;?><br>
-                                -----------------------------------
-                                _Dias: <?php echo $dias;?><br>
-                                <?php if ($hoy > $array->fechaFinal) {?>
-                                _Interes: <?php echo round($interes,2);}?><br>
-                                _capital: <?php echo round($capital,2);?><br>
-                                _Interes Com: <?php echo round($interesC,2);?><br>
-                                _Interes Mora: <?php echo round($interesM,2);?><br>
-                                _Deuda Total: <?php echo round($deudaTotal,2);?><br>
+                                -----------------------------------<br>
+                                <?php if($hoy > $array->fechaFinal){?>
+                                    _Estado: Vencido<br>
+                                    _Deuda General: <?php echo round($deudaMensual,2);?><br>
+                                    _Total Pagos: <?php echo round($sumapago,2);?><br>
+                                    _Saldo: <?php echo round($saldoRestante,2);?><br>
+                                    _Dias Vencidos: <?php echo $dias;?><br>
+                                    _Interes: <?php echo round($interesVenc,2);?><br>
+                                    _capital: <?php echo round($capitalVenc,2);?><br>
+                                    _Interes Com: <?php echo round($interesC,2);?><br>
+                                    _Interes Mor: <?php echo round($interesM,2);?><br>
+                                    _Deuda: <?php echo round($deudaTotal,2);?><br>
+                                <?php } else{ ?>
+                                    _Estado: Activo<br>
+                                    _Total Pagos: <?php echo round($sumapago,2);?><br>
+                                    _Saldo: <?php echo round($saldoVariable,2);?><br>
+                                    _Dias: <?php echo $dias;?><br>
+                                    _Interes Com: <?php echo round($interesC,2);?><br>
+                                    _Deuda: <?php echo round($deudaTotal,2);?><br>
+                                <?php } ?>
+                                
                             </h4>
                                  
                         </td>

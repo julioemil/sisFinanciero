@@ -193,14 +193,19 @@ if(isset($_GET['limitePrestamos']))
                 dataType: "json",
                 success: function(response,status){
                     //alert("Respueta: "+response+" Estado "+status);
-                    interes = parseFloat((response['tasaInteres']/100)/(1 + response['tasaInteres']/100)*response['deuda']);
-                    capital = parseFloat(response['deuda']-interes);
+
                     TEAC = Math.pow((1 + response['tasaInteres']/100),12) - 1;
                     TEDC = Math.pow((1 + TEAC),1/360) - 1;
 
                     TEAM = Math.pow((1 + response['tasaInteresMoratorio']/100),12) - 1;
                     TEDM = Math.pow((1 + TEAM),1/360) - 1;
-                    deuda = Number(response['deuda']);
+
+                    deudaGeneral = parseFloat(response['capital']*Math.pow((1+TEDC),30)).toFixed(2);
+
+                    deuda = deudaGeneral - response['sumaPagos'];
+
+                    interes = parseFloat((response['tasaInteres']/100)/(1 + response['tasaInteres']/100)*deuda);
+                    capital = parseFloat(deuda-interes);
                     
                     interesCompensatorio = parseFloat(capital*Math.pow((1+TEDC),response['diasVencidos'])-capital);
                     interesMoratorio = parseFloat(capital*Math.pow((1+TEDM),response['diasVencidos'])-capital);
@@ -210,7 +215,7 @@ if(isset($_GET['limitePrestamos']))
                     html += "<p><strong>Fecha Actual:</strong>"+response['fechaActual']+"</p>"
                     html += "<p><strong>Fecha Vencimiento:</strong>"+response['fechaVencimiento']+"</p>"
                     html += "<p><strong>Dias Vencidos:</strong>"+response['diasVencidos']+"</p>"
-                    html += "<p><strong>Deuda:</strong>"+response['deuda']+"</p>"
+                    html += "<p><strong>Deuda:</strong>"+deuda+"</p>"
                     html += "<p><strong>Tasa Interes Compensatorio:</strong>% "+response['tasaInteres']+"</p>"
                     html += "<p><strong>Tasa Interes Moratorio:</strong>% "+response['tasaInteresMoratorio']+"</p>"
                     html += "<p><strong>---------------------------</strong></p>"

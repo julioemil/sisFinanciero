@@ -220,7 +220,7 @@ class prestamo extends CI_Controller{
               'idPrestamo' => $d->idPrestamo,
               'producto' => $d->producto,
               'plazo' => $d->plazo,
-              'deuda' => $this->obtenerDeudaTotal($d->deuda, $d->tasaInteres, $d->tasaInteresMoratorio, $d->fechaVencimiento),
+              'deuda' => $this->obtenerDeudaTotal($d->deuda, $d->capital, $d->tasaInteres, $d->tasaInteresMoratorio, $d->fechaVencimiento, $d->sumaPagos),
               'tasaInteres' => $d->tasaInteres,
               'tasaInteresMoratorio' => $d->tasaInteresMoratorio,
               'nombreC' => $d->nombreC,
@@ -237,16 +237,22 @@ class prestamo extends CI_Controller{
         }   
     }
 
-    public function obtenerDeudaTotal($deuda, $interesCompensatorio, $interesMoratorio, $fechaVencimiento){
+    public function obtenerDeudaTotal($deuda, $capital, $interesCompensatorio, $interesMoratorio, $fechaVencimiento, $sumaPagos){
+
       $hoy   = date("Y")."-".date("m")."-".date("d");
 
-      $interes = ($interesCompensatorio/100)/(1 + $interesCompensatorio/100)*$deuda;
-      $capital = $deuda-$interes;
       $TEAC = pow((1 + $interesCompensatorio/100),12) - 1;
       $TEDC = pow((1 + $TEAC),1/360) - 1;
 
       $TEAM = pow((1 + $interesMoratorio/100),12) - 1;
       $TEDM = pow((1 + $TEAM),1/360) - 1;
+
+      $deudaGeneral = $capital*pow((1+$TEDC),30);
+
+      $deuda = $deudaGeneral - $sumaPagos;
+
+      $interes = ($interesCompensatorio/100)/(1 + $interesCompensatorio/100)*$deuda;
+      $capital = $deuda-$interes;
       
       $dias = $this->diferenciaFechas($hoy,$fechaVencimiento);
 
@@ -313,6 +319,7 @@ class prestamo extends CI_Controller{
         $prestamoData = array(
           'idPrestamo' => $d->idPrestamo,
           'producto' => $d->producto,
+          'capital' => $d->capital,
           'plazo' => $d->plazo,
           'deuda' => $d->deuda,
           'tasaInteres' => $d->tasaInteres,
@@ -322,6 +329,7 @@ class prestamo extends CI_Controller{
           'fechaVencimiento' => $d->fechaVencimiento,
           'fechaActual' => $hoy,
           'diasVencidos' => $this->diferenciaFechas($hoy,$d->fechaVencimiento),
+          'sumaPagos' => $d->sumaPagos,
         );
       }
       
