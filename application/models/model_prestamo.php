@@ -118,6 +118,7 @@ class model_prestamo extends CI_Model
         $this->db->from('cobranza');
         $this->db->where('idPrestamo',$id);
         $result = $this->db->get()->num_rows();
+
         //$idUltimoPrestamo =$result->cantidad;
         if($result==0){
             $this->db->select('idPrestamo, producto, capital, plazo, deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento');
@@ -140,8 +141,8 @@ class model_prestamo extends CI_Model
                   'fechaVencimiento' => $d->fechaVencimiento,
                   'sumaPagos' => 0,
                 );
-              }
-              return $prestamoData;
+            }
+            return $prestamoData;
         }else{
             $this->db->select('p.idPrestamo, producto, capital, plazo, saldo as deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento, SUM(co.pago) as sumaPagos');
             $this->db->from('prestamo p');
@@ -150,8 +151,84 @@ class model_prestamo extends CI_Model
             $this->db->where('p.idPrestamo',$id);
             $this->db->order_by('idCobranza','DESC');
             $this->db->limit(1);
-            return $this->db->get()->result();    
+            return $this->db->get()->result();
         }        
+    }
+
+    public function verPrestamoDetalle1($id){
+        //$this->db->select('count(*) as cantidad');
+        $this->db->from('prestamo');
+        $this->db->where('idPrestamo',$id);
+        $query = $this->db->get()->row();
+        if($query->vez==3){
+            return $query->vez;
+        }
+
+        $this->db->from('cobranza');
+        $this->db->where('idPrestamo',$id);
+        $result = $this->db->get()->num_rows();
+
+        //$idUltimoPrestamo =$result->cantidad;
+        if($result==0){
+            $this->db->select('idPrestamo, producto, capital, plazo, deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento');
+            $this->db->from('prestamo p');
+            $this->db->join('cliente c','c.idCliente = p.idCliente');
+            $this->db->where('p.idPrestamo',$id);
+            $data = $this->db->get()->result();
+            
+            foreach ($data as $d) {
+                $prestamoData = array(
+                  'idPrestamo' => $d->idPrestamo,
+                  'producto' => $d->producto,
+                  'capital' => $d->capital,
+                  'plazo' => $d->plazo,
+                  'deuda' => $d->deuda,
+                  'tasaInteres' => $d->tasaInteres,
+                  'tasaInteresMoratorio' => $d->tasaInteresMoratorio,
+                  'nombreC' => $d->nombreC,
+                  'apellidoC' => $d->apellidoC,
+                  'fechaVencimiento' => $d->fechaVencimiento,
+                  'sumaPagos' => 0,
+                );
+            }
+            return (object) array($prestamoData);
+        }else{
+            $this->db->select('p.idPrestamo, producto, capital, plazo, saldo as deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento, SUM(co.pago) as sumaPagos');
+            $this->db->from('prestamo p');
+            $this->db->join('cliente c','c.idCliente = p.idCliente');
+            $this->db->join('cobranza co','co.idPrestamo = p.idPrestamo');
+            $this->db->where('p.idPrestamo',$id);
+            $this->db->order_by('idCobranza','DESC');
+            $this->db->limit(1);
+            $data = $this->db->get()->result();
+            
+            foreach ($data as $d) {
+                $prestamoData = array(
+                  'idPrestamo' => $d->idPrestamo,
+                  'producto' => $d->producto,
+                  'capital' => $d->capital,
+                  'plazo' => $d->plazo,
+                  'deuda' => $d->deuda,
+                  'tasaInteres' => $d->tasaInteres,
+                  'tasaInteresMoratorio' => $d->tasaInteresMoratorio,
+                  'nombreC' => $d->nombreC,
+                  'apellidoC' => $d->apellidoC,
+                  'fechaVencimiento' => $d->fechaVencimiento,
+                  'sumaPagos' => 0,
+                );
+            }
+            return (object) array($prestamoData);
+        }        
+    }
+
+    public function obtenerPagosExtemporaneos($idPrestamo, $vez){
+        $this->db-select('SUM(pago) as sumaPagosExtemporaneo, fechaCobranza');
+        $this->db->from('cobranza');
+        $this->db->where('idPrestamo',$idPrestamo);
+        $this->db->where('sumaPagosExtemporaneo',$vez);
+        $this->db->order_by('fechaCobranza',DESC);
+        $this->db->limit(1);
+        return $this->db->get->result();
     }
 
     public function verPrestamoDetalleMoroso($id){

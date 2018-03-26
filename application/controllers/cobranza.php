@@ -20,7 +20,7 @@ class cobranza extends CI_Controller {
           $this->load->model('model_login');
           $this->load->model('model_cliente');
           $this->load->model('model_cobranza');
-          
+          $this->load->model('model_prestamo');
     }
     function Seguridad()
     {
@@ -39,7 +39,7 @@ class cobranza extends CI_Controller {
      }
      
      
-     public function nuevo($id = null){
+     public function nuevo($id = null,$fecha=null){
          
         $this->Seguridad();
         $this->validaCampos();
@@ -47,10 +47,58 @@ class cobranza extends CI_Controller {
             {
             
             $hoy   = date("Y")."-".date("m")."-".date("d")." ".date("H:i:s");
-            $data = $this->input->post();
+            $hoy1   = date("Y")."-".date("m")."-".date("d");
+            $data = array(
+              'pago' => $this->input->post('pago'),
+              'nRecibo' => $this->input->post('nRecibo'),
+              'saldo' => $this->input->post('saldo'),
+              'deudaActual' => $this->input->post('deudaActual'),
+              'idPrestamo' => $this->input->post('idPrestamo'),
+              'vez' => $this->input->post('vez'),
+            );
             $data["fechaCobranza"] = $hoy;
+            if($hoy1 > $fecha){
+              //Pago Vencido = Verdadero
+              $data["pagoExtemporaneo"] = 0;
+              $data1 = array(
+                'producto' => $this->input->post('producto'),
+                'fechaInicio' => $hoy1,
+                'fechaFinal' => $this->sumarDias(),
+                'capital' => $this->input->post('capital'),
+                'tasaInteres' => $this->input->post('tasaInteres'),
+                'deuda' => $this->input->post('nuevaDeuda'),
+                'cuota' => '',
+                'plazo' => $this->input->post('plazo'),
+                'idPrestamo' => $this->input->post('idPrestamo'),
+                'vez' => '1',
+                );
+              $id = $this->input->post('idPrestamo');
+              //$data = $this->input->post();
+              $capital = $this->input->post('capital');
+              $tasaInteres = $this->input->post('tasaInteres');
+              $plazo = $this->input->post('plazo');
+              //La condicion permite almacenar los decimales
+              if($this->input->post('producto')=="diario"){
+                $cuota = $capital*(pow((1 + $tasaInteres/100), 30))/27;
+                $data1["cuota"] = $cuota;
+              }
+              if($this->input->post('producto')=="mensual"){
+                $cuota = $capital*(pow((1 + $tasaInteres/100), $plazo)*$tasaInteres/100)/(pow((1 + $tasaInteres/100), $plazo) - 1);
+                $data1["cuota"] = $cuota;
+              }
+              if($this->input->post('producto')=="mesCampana"){
+                $cuota = $capital*(pow((1 + $tasaInteres/100), $plazo));
+                $data1["cuota"] = $cuota;
+              }              
+              $this->model_prestamo->crearReprogramaPrestamo($data1, $id);
+            }else{
+              //Pago Vencido = Falso
+              $data["pagoExtemporaneo"] = 1;
+            }
+
             $this->model_cobranza->crearCobranza($data);
             redirect("cobranza?save=true");
+            
             }
         else{
             
@@ -86,5 +134,36 @@ class cobranza extends CI_Controller {
                 $this->load->view('view_listado_cobranza', $data);
         	$this->load->view('footer');
     }
+
+  public function sumarDias()  {
+    $periodo = $_POST['periodo'];
+    $hoyYear = date("Y");
+    $hoyMonth = date("m");
+    $hoydate = date("d");
+
+    $count = 0;
+    while($count<=30){
+      
+      if(checkdate($hoyMonth, $hoydate, $hoyYear)){
+        $hoydate = $hoydate + 1;
+      }else{
+        if($hoyMonth==12)
+        {
+          $hoyYear = $hoyYear + 1;
+          $hoyMonth = 1;
+          $hoydate = 1;
+        }else{
+          $hoyMonth = $hoyMonth + 1;
+          $hoydate = 1;  
+        }
+        
+      }
+      $count = $count + 1;
+    }
+
+    $hoy = $hoyYear.'/'.$hoyMonth.'/'.$hoydate;
+    $date = new DateTime($hoy);
+    return $date->format('Y-m-d');
+  }
     
 }

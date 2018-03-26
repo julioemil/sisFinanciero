@@ -84,6 +84,15 @@ class model_cobranza extends CI_Model{
         $query=$this->db->get();
         return $query->result();	  
     }
+  function Usuario($id){
+        $query =  $this->db->select('*');
+        $query = $this->db->from('usuarios');
+        $query = $this->db->where('id',$id);
+        $query=$this->db->get();
+        return $query->row();      
+    }
+    
+
     
     function getUsuarioPrestamoCobranza($id)
     {
