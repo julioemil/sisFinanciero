@@ -129,8 +129,10 @@
                                   if($array->producto == 'mesCampana'){
                                       //SI PASO FECHA VENCIMIENTO 
                                       if($hoy > $array->fechaFinal){
+                                        $intervalTranscurrido = $datetime2->diff($datetime3);
+                                        $diasTranscurridos = $intervalTranscurrido->format("%a");
 
-                                        $deudaMensual = $capital*pow((1+$TEDC),30);
+                                        $deudaMensual = $capital*pow((1+$TEDC),$diasTranscurridos);
                                         $saldoRestante = $deudaMensual - $sumapago;                                    
 
                                         $interesVenc = ($interesCompensatorio/100)/(1 + $interesCompensatorio/100)*$saldoRestante;
@@ -159,14 +161,14 @@
                         ?>
                         <td colspan="2" align="center"><label><h4>Detalles:</h4></label></td>
                         <td colspan="2">
-                            <h4>_producto:<?php echo $array->producto; ?><br>
-                                -Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?>
-                            <br> -Interes Compen(%):  <?php echo $array->tasaInteres ?><br>
-                                -Interes Mora(%): <?php echo $array->tasaInteresMoratorio ?><br>
-                                -Deuda Inicial (S/):  <?php  echo number_format($array->deuda, 2, '.', '')?> 
-                                <br>-Cuota(S/.):<?php echo round($array->cuota,2) ?><br>
-                                -Fecha Final: <?php echo $array->fechaFinal;?><br>
-                                -Fecha Hoy: <?php echo $hoy; ?><br>
+                            <h4>_Producto:<?php echo $array->producto; ?><br>
+                                _Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?>
+                            <br>_Interes Compen(%):  <?php echo $array->tasaInteres ?><br>
+                                _Interes Mora(%): <?php echo $array->tasaInteresMoratorio ?><br>
+                                _Deuda Inicial (S/):  <?php  echo number_format($array->deuda, 2, '.', '')?> 
+                                <br>_Cuota(S/.):<?php echo round($array->cuota,2) ?><br>
+                                _Fecha Final: <?php echo $array->fechaFinal;?><br>
+                                _Fecha Hoy: <?php echo $hoy; ?><br>
                             </h4>
                         </td>
                         <td colspan="2">
