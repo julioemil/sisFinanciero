@@ -215,12 +215,18 @@ class prestamo extends CI_Controller{
           //$dataPrestamo['hoy'] = $hoy;
 
           ///////////idPrestamo, producto, plazo, deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento
+
+          $pagosExtemporaneos = $this->model_prestamo->verDetallePagoExtemporaneo($id);
+
+          $pagoExtemporaneo = 0;
+          $cantidad = 0;
+          
           foreach ($dataPrestamo as $d) {
             $prestamoData = array(
               'idPrestamo' => $d->idPrestamo,
               'producto' => $d->producto,
               'plazo' => $d->plazo,
-              'deuda' => $this->obtenerDeudaTotal($d->deuda, $d->capital, $d->tasaInteres, $d->tasaInteresMoratorio, $d->fechaVencimiento, $d->sumaPagos),
+              'deuda' => $this->obtenerDeudaTotal($d->deuda, $d->capital, $d->tasaInteres, $d->tasaInteresMoratorio, $d->fechaVencimiento, $d->sumaPagos, $pagoExtemporaneo, $cantidad),
               'tasaInteres' => $d->tasaInteres,
               'tasaInteresMoratorio' => $d->tasaInteresMoratorio,
               'nombreC' => $d->nombreC,
@@ -230,14 +236,14 @@ class prestamo extends CI_Controller{
             );
           }
           $data['arrayprestamo'] = $prestamoData;
-          ///////////////////
+          //
 
           $this->load->view('view_prestamo_reprogramo',$data);
           $this->load->view('footer');
         }   
     }
 
-    public function obtenerDeudaTotal($deuda, $capital, $interesCompensatorio, $interesMoratorio, $fechaVencimiento, $sumaPagos){
+    public function obtenerDeudaTotal($deuda, $capital, $interesCompensatorio, $interesMoratorio, $fechaVencimiento, $sumaPagos, $pagoExtemporaneo, $cantidad){
 
       $hoy   = date("Y")."-".date("m")."-".date("d");
 

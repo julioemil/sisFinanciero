@@ -31,18 +31,17 @@
                         );
 ?>
 <center>
-        <table border=0 class="ventanas" width="90%" cellspacing="0" cellpadding="0">
-            <tr>
-                <td height='10' class='tabla_ventanas_login' height='10' colspan='3'><legend align='center'>.: REGISTRO DE PAGO :.</legend></td>
-            </tr>
-            <tr>
-                <td colspan=3>
                 <?php $attributes = array("class" => "form-horizontal", "id" => "form", "name" => "form");
                     foreach ($arrayprestamo as $array) { 
                       echo form_open("/cobranza/nuevo/$array->idPrestamo/$array->fechaFinal");
                  ?> 
-                    
-            <table border=0>    
+        <table border=0 class="ventanas" width="90%" cellspacing="0" cellpadding="0">
+            <tr>
+                <td height='10' class='tabla_ventanas_login' height='10' colspan='3'><legend align='center'>.: REGISTRO DE PAGO :. &emsp;&emsp;&emsp; N° PRESTAMO: <?php echo $array->idPrestamo; ?></legend></td>
+            </tr>
+            <tr>
+                <td colspan=3>
+                <table border=0>    
                     <tr>
                         <td><label>Cliente</label></td>
                         <td>    
@@ -56,7 +55,6 @@
                         <td><input type="text" readonly=”readonly” value="<?php $arrayusuario= $this->model_cobranza->Usuario($array->idUsuario); echo  $arrayusuario->APELLIDOS.' '.$arrayusuario->NOMBRE;?>" /></td>
                         
                     </tr>
-                    <tr>    
                         <?php   $sumapago=0;
                                 $sumadeuda=$array->deuda;
                                 if($array->vez==0){
@@ -156,112 +154,241 @@
                                       }  
                                   }
 
+                                  if($array->producto == 'mensual'){
+                                    $cantidadPagos=$this->model_cobranza->getCobranzaPago($array->idPrestamo);
+                                    
+                                    $diasGenerados = 30*($cantidadPagos +1);
+                                    $capitalPrestamo = $capital;
+
+                                    $fechaVencimientoCuota = strtotime ('+'.$diasGenerados.' day', strtotime($array->fechaInicio));
+                                    $fechaVencimientoCuota = date ('Y-m-j', $fechaVencimientoCuota);
+                                    $fechaVencimientoCuota = new DateTime($fechaVencimientoCuota);
+                                    $fechaVencimientoCuotaS = $fechaVencimientoCuota->format('Y-m-d');
+
+                                    $fechaVencCuotaAnterior = strtotime ('-30 day' , strtotime($fechaVencimientoCuotaS));
+                                    $fechaVencCuotaAnterior = date ('Y-m-j', $fechaVencCuotaAnterior);
+                                    $fechaVencCuotaAnterior = new DateTime($fechaVencCuotaAnterior);
+                                    $fechaVencCuotaAnteriorS = $fechaVencCuotaAnterior->format('Y-m-d');
+
+                                    if($cantidadPagos > 0){
+                                        $arraysaldo = $this->model_cobranza->getSaldo($array->idPrestamo);
+                                        foreach($arraysaldo as $datos){
+                                            $saldoMensual = $datos->saldo;
+                                            $fechaVencCuotaAnterior = new DateTime($datos->fechaCobranza);
+                                            $fechaVencCuotaAnteriorS = $fechaVencCuotaAnterior->format('Y-m-d');
+                                            $fechaVencCuotaAnterior = new DateTime($fechaVencCuotaAnterior->format('Y-m-d'));
+                                        }
+                                        $capital = $saldoMensual;
+                                    }
+
+                                      //SI PASO FECHA VENCIMIENTO 
+                                      if($hoy > $fechaVencimientoCuotaS){
+
+                                        $intervalTranscurrido = $datetime1->diff($fechaVencCuotaAnterior);
+                                        $diasCuota = $intervalTranscurrido->format("%a");
+
+                                        $intervalVencido = $datetime1->diff($fechaVencimientoCuota);
+                                        $diasVencidos = $intervalVencido->format("%a");
+
+                                        $dias = $diasVencidos;
+
+                                        $interesC = ($capital*pow((1+$TEDC),$diasCuota)-$capital);
+                                        $interesM = ($capital*pow((1+$TEDM),$diasVencidos)-$capital);
+                                        $deudaTotal = $capital + $interesC + $interesM;
+                                        $saldoVariable = $capital;
+
+                                        $plazo = $array->plazo;
+                                        $tasaInteres = $array->tasaInteres;
+
+                                        $cuota = $capitalPrestamo*(pow((1 + $tasaInteres/100), $plazo)*$tasaInteres/100)/(pow((1 + $tasaInteres/100), $plazo) - 1);
+
+                                        $saldoCapital = $capitalPrestamo;
+                                        $count = 0;
+                                        $totalCapital = 0;
+                                        $totalInteres = 0;
+                                        $totalCuota = 0;
+                                        $periodo = $cantidadPagos + 1;
+
+                                         while($periodo>$count){
+                                            $count = $count + 1;
+
+                                            $interes = +$tasaInteres/100*$saldoCapital;
+                                            $capital = +$cuota - $interes;
+                                            $saldoCapital = +$saldoCapital - $capital;
+                                         }
+                                         echo $saldoCapital;
+                                         $pagoNuevo = $deudaTotal - $saldoCapital;                                        
+                                        $pago['value'] = set_value('pago', round($pagoNuevo,2));
+                                      }
+                                      //SE ENCUENTRE DEL PLAZO DE PRESTAMO
+                                      else{
+                                        $interval = $datetime1->diff($fechaVencCuotaAnterior);
+                                        $dias = $interval->format("%a");
+
+                                        $interesC = ($capital*pow((1+$TEDC),$dias)-$capital);
+                                        
+                                        $deudaTotal = $capital + $interesC;
+                                        $saldoVariable = $capital;
+                                      }  
+                                  }
+
+                                  
+
                                   
                                   
                         ?>
-                        <td colspan="2" align="center"><label><h4>Detalles:</h4></label></td>
-                        <td colspan="2">
-                            <h4>_Producto:<?php echo $array->producto; ?><br>
-                                _Capital (S/):  <?php echo number_format($array->capital, 2, '.', '') ?>
-                            <br>_Interes Compen(%):  <?php echo $array->tasaInteres ?><br>
-                                _Interes Mora(%): <?php echo $array->tasaInteresMoratorio ?><br>
-                                _Deuda Inicial (S/):  <?php  echo number_format($array->deuda, 2, '.', '')?> 
-                                <br>_Cuota(S/.):<?php echo round($array->cuota,2) ?><br>
-                                _Fecha Final: <?php echo $array->fechaFinal;?><br>
-                                _Fecha Hoy: <?php echo $hoy; ?><br>
-                            </h4>
-                        </td>
-                        <td colspan="2">
-                            <h4>
+                    <tr>
+                        <td><label>Producto:</label></td>
+                        <td><input type="text" readonly=”readonly” value="<?php echo $array->producto; ?>" /></td>
+                        <td><label>Capital (S/.):</label></td>
+                        <td><input type="text" readonly=”readonly” value="<?php echo number_format($array->capital, 2, '.', ''); ?>"/></td>
+                        <td><label>Interes Compensatorio(%):</label></td>
+                        <td><input type="text" readonly=”readonly” value="<?php echo $array->tasaInteres; ?>"/></td>
+                    </tr>
+                    <tr>
+                        <td><label>Interes Moratorio(%):</label></td>
+                        <td><input type="text" readonly=”readonly” value="<?php echo $array->tasaInteresMoratorio; ?>" /></td>
+                        <td><label>Deuda Inicial (S/.):</label></td>
+                        <td><input type="text" readonly=”readonly” value="<?php  echo number_format($array->deuda, 2, '.', '');?>"/></td>
+                        <td><label>Fecha de Vencimiento:</label></td>
+                        <td><input type="text" readonly=”readonly” value="<?php echo $array->fechaFinal;?>" /></td>
+                    </tr>
                                     <?php 
                                     if($array->producto == 'diario'){
                                         //Vencido
                                         if($hoy > $array->fechaFinal){
                                     ?>
-                                    <table>
-                                        <tr>
-                                            <td>_Estado</td>
-                                            <td>:</td>
-                                            <td>&emsp;Vencido</td>
+                                        <tr>  
+                                            <td><strong><mark>Total Pagos(S/.):</mark></strong></td>
+                                            <td><strong><mark><?php echo number_format($sumapago,2,'.','');?></mark></strong></td>  
+                                            <td><strong><mark>Saldo(S/.):</mark></strong></td>
+                                            <td><strong><mark><?php echo number_format($saldoRestante,2,'.','');?></mark></strong></td>  
+                                            <td><strong><mark>Dias Vencidos:</mark></strong></td>
+                                            <td><strong><mark><?php echo $dias;?></mark></strong></td> 
                                         </tr>
-
+                                        <!--
                                         <tr>
-                                            <td>_Deuda General</td>
-                                            <td>:</td>
-                                            <td>&emsp;<?php echo round($deudaMensual,2);?></td>  
+                                            <td><label>Interes:</label></td>
+                                            <td><?php //echo round($interesVenc,2);?></td>  
+                                            <td><label>Capital:</label></td>
+                                            <td><?php //echo round($capitalVenc,2);?></td>  
                                         </tr>
+                                        -->
                                         <tr>
-                                            <td>_Total Pagos</td>
-                                            <td>:</td>
-                                            <td>&emsp;<?php echo round($sumapago,2);?></td>  
+                                            <td><strong><mark>Interes Com:</mark></strong></td>
+                                            <td><strong><mark><?php echo $interesC;?></mark></strong></td>  
+                                            <td><strong><mark>Interes Mor:</mark></strong></td>
+                                            <td><strong><mark><?php echo $interesM;?></mark></strong></td> 
+                                            <td><strong><mark>Reprogramaciones:</mark></strong></td>
+                                            <td><strong><mark><?php echo $array->vez;?></mark></strong></td>  
                                         </tr>
-                                        <tr>
-                                            <td>_Saldo</td>
-                                            <td>:</td>
-                                            <td>&emsp;<?php echo round($saldoRestante,2);?></td>  
-                                        </tr>
-                                        <tr>
-                                            <td>_Dias Vencidos</td>
-                                            <td>:</td>
-                                            <td>&emsp;<?php echo $dias;?></td>   
-                                        </tr>
-                                        <tr>
-                                            <td>_Interes:</td>
-                                            <td>:</td>
-                                            <td>&emsp;<?php echo round($interesVenc,2);?></td>   
-                                        </tr>
-                                        <tr>
-                                            <td>_capital:</td>
-                                            <td>:</td>
-                                            <td>&emsp;<?php echo round($capitalVenc,2);?></td>   
-                                        </tr>
-                                        <tr>
-                                            <td>_Interes Com:</td>
-                                            <td>:</td>
-                                            <td>&emsp;<?php echo round($interesC,2);?>;?></td>   
-                                        </tr>
-                                        <tr>
-                                            <td>_Interes Com:</td>
-                                            <td>:</td>
-                                            <td>&emsp;<?php echo round($interesC,2);?>;?></td>   
-                                        </tr>
-
-                                    </table>
-                                        _ <br>
-                                         <br>
-                                        _Interes Mor: <?php echo round($interesM,2);?><br>
-                                        _Deuda: <?php echo round($deudaTotal,2);?><br>
                                     <?php } 
                                         //Dentro del plazo
                                     else{ ?>
-                                        _Estado: Activo<br>
-                                        _Total Pagos: <?php echo round($sumapago,2);?><br>
-                                        _Saldo: <?php echo round($saldoVariable,2);?><br>
+                                        <tr>
+                                            <td><strong><mark>Pagos Total (S/.):</mark></strong></td>
+                                            <td><strong><mark><?php echo number_format($sumapago,2,'.', '');?></mark></strong></td>
+                                             <td><?php //echo round($saldoVariable,2);?></td>
+                                        </tr>
+                                    <?php }
+                                    }
+                                    ?>
+                                    <?php 
+                                    if($array->producto == 'mesCampana'){
+                                        if($hoy > $array->fechaFinal){
+                                    ?>
+                                    <tr>
+
+                                         <td><strong><mark>Deuda por dia: </mark></strong></td>
+                                         <td><strong><mark><?php echo round($deudaTotal,2);?></mark></strong></td>
+                                         <td><strong><mark>Total Pagos:</mark></strong></td>
+                                         <td><strong><mark><?php echo round($sumapago,2);?></mark></strong></td>
+                                         <td><strong><mark>Saldo:</mark></strong></td>
+                                         <td><strong><mark><?php echo round($saldoRestante,2);?></mark></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><mark>Dias Vencidos: </mark></strong></td>                 
+                                        <td><strong><mark><?php echo $dias;?></mark></strong></td>
+                                        <td><strong><mark>Interes Com:</mark></strong></td>
+                                        <td><strong><mark><?php echo $interesC;?></mark></strong></td>
+                                        <td><strong><mark>Interes Mor: </mark></strong></td>
+                                        <td><strong><mark><?php echo $interesM;?></mark></strong></td>
+                                    </tr>
+                                    <?php } else{ ?>
+                                    <tr>
+
+                                        <td><strong><mark>Deuda por Dia:<strong><mark></td>
+                                        <td><strong><mark><?php echo round($deudaTotal,2);?><strong><mark></td>
+                                        <td><strong><mark>Total Pagos:</mark></strong></td>
+                                        <td><strong><mark><?php echo round($sumapago,2);?></mark></strong></td>
+                                        <td><strong><mark>Saldo:</mark></strong></td>
+                                        <td><strong><mark><?php echo round($saldoVariable,2);?></mark></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><mark>Dias:</mark></strong></td>
+                                        <td><strong><mark><?php echo $dias;?></mark></strong></td>
+                                        <td><strong><mark>Interes Com:<strong><mark></td>
+                                        <td><strong><mark><?php echo $interesC;?><strong><mark></td>
+                                    </tr>
                                     <?php }
                                     }
                                     ?>
 
                                     <?php 
-                                    if($array->producto == 'mesCampana'){
-                                        if($hoy > $array->fechaFinal){
+                                    if($array->producto == 'mensual'){
+                                        if($hoy > $fechaVencimientoCuotaS){
+                                        //CUOTA VENCIDA
                                     ?>
-                                        _Estado: Vencido<br>
-                                        _Deuda General: <?php echo round($deudaMensual,2);?><br>
-                                        _Total Pagos: <?php echo round($sumapago,2);?><br>
-                                        _Saldo: <?php echo round($saldoRestante,2);?><br>
-                                        _Dias Vencidos: <?php echo $dias;?><br>
-                                        _Interes: <?php echo round($interesVenc,2);?><br>
-                                        _capital: <?php echo round($capitalVenc,2);?><br>
-                                        _Interes Com: <?php echo round($interesC,2);?><br>
-                                        _Interes Mor: <?php echo round($interesM,2);?><br>
-                                        _Deuda: <?php echo round($deudaTotal,2);?><br>
-                                    <?php } else{ ?>
-                                        _Estado: Activo<br>
-                                        _Total Pagos: <?php echo round($sumapago,2);?><br>
-                                        _Saldo: <?php echo round($saldoVariable,2);?><br>
-                                        _Dias: <?php echo $dias;?><br>
-                                        _Interes Com: <?php echo round($interesC,2);?><br>
-                                        _Deuda: <?php echo round($deudaTotal,2);?><br>
+                                    <tr>
+                                        <td><strong><mark>F. Cuota Anterior:<strong><mark></td>
+                                        <td><strong><mark><?php echo $fechaVencCuotaAnteriorS;?><strong><mark></td>
+                                        <td><strong><mark>F. Vencimiento Cuota:</mark></strong></td>
+                                        <td><strong><mark><?php echo $fechaVencimientoCuotaS;?></mark></strong></td>
+                                        <td><strong><mark>F. Actual:</mark></strong></td>
+                                        <td><strong><mark><?php echo $hoy;?></mark></strong></td>
+                                    </tr>
+                                    <tr>
+                                         <td><strong><mark>Deuda por dia: </mark></strong></td>
+                                         <td><strong><mark><?php echo round($deudaTotal,2);?></mark></strong></td>
+                                         <td><strong><mark>Total Pagos:</mark></strong></td>
+                                         <td><strong><mark><?php echo round($sumapago,2);?></mark></strong></td>
+                                         <td><strong><mark>Saldo:</mark></strong></td>
+                                         <td><strong><mark><?php echo round($saldoVariable,2);?></mark></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><mark>Dias Vencidos: </mark></strong></td>                 
+                                        <td><strong><mark><?php echo $dias;?></mark></strong></td>
+                                        <td><strong><mark>Interes Com:</mark></strong></td>
+                                        <td><strong><mark><?php echo round($interesC,2);?></mark></strong></td>
+                                        <td><strong><mark>Interes Mor: </mark></strong></td>
+                                        <td><strong><mark><?php echo round($interesM,2);?></mark></strong></td>
+                                    </tr>
+                                    <?php } else{ 
+                                        //CUOTA DENTRO DEL PLAZO DE VENCIMIENTO
+                                    ?>
+
+                                    <tr>
+                                        <td><strong><mark>F. Cuota Anterior:<strong><mark></td>
+                                        <td><strong><mark><?php echo $fechaVencCuotaAnteriorS;?><strong><mark></td>
+                                        <td><strong><mark>F. Vencimiento Cuota:</mark></strong></td>
+                                        <td><strong><mark><?php echo $fechaVencimientoCuotaS;?></mark></strong></td>
+                                        <td><strong><mark>F. Actual:</mark></strong></td>
+                                        <td><strong><mark><?php echo $hoy;?></mark></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><mark>Deuda por Dia:<strong><mark></td>
+                                        <td><strong><mark><?php echo round($deudaTotal,2);?><strong><mark></td>
+                                        <td><strong><mark>Total Pagos:</mark></strong></td>
+                                        <td><strong><mark><?php echo round($sumapago,2);?></mark></strong></td>
+                                        <td><strong><mark>Saldo:</mark></strong></td>
+                                        <td><strong><mark><?php echo round($saldoVariable,2);?></mark></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong><mark>Dias:</mark></strong></td>
+                                        <td><strong><mark><?php echo $dias;?></mark></strong></td>
+                                        <td><strong><mark>Interes Com:<strong><mark></td>
+                                        <td><strong><mark><?php echo round($interesC,2);?><strong><mark></td>
+                                    </tr>
                                     <?php }
                                     }
                                     ?>
@@ -271,10 +398,10 @@
                     </tr>
                     <tr>
                         <td><label>Deuda Actual (S/.)</label></td>
-                        <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo round($saldoVariable,2); ?>" /></td>
+                        <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo round($deudaTotal,2); ?>" /></td>
                         <td></td>
                         <td><?php echo form_label("Pago(*)",'pago'); ?></td>
-                        <td> <?php  echo form_input($pago); ?></td>
+                        <td> <?php  echo form_input($pago,10); ?></td>
                         <td><font color="red"><?php echo form_error('pago');?></font></td>
                         <input type="hidden" name="vez"  value="<?php echo $array->vez; ?>">
                     </tr>

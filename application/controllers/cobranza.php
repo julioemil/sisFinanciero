@@ -60,48 +60,15 @@ class cobranza extends CI_Controller {
             if($hoy1 > $fecha){
               //Pago Vencido = Verdadero
               $data["pagoExtemporaneo"] = 0;
-              $data1 = array(
-                'producto' => $this->input->post('producto'),
-                'fechaInicio' => $hoy1,
-                'fechaFinal' => $this->sumarDias(),
-                'capital' => $this->input->post('capital'),
-                'tasaInteres' => $this->input->post('tasaInteres'),
-                'deuda' => $this->input->post('nuevaDeuda'),
-                'cuota' => '',
-                'plazo' => $this->input->post('plazo'),
-                'idPrestamo' => $this->input->post('idPrestamo'),
-                'vez' => '1',
-                );
-              $id = $this->input->post('idPrestamo');
-              //$data = $this->input->post();
-              $capital = $this->input->post('capital');
-              $tasaInteres = $this->input->post('tasaInteres');
-              $plazo = $this->input->post('plazo');
-              //La condicion permite almacenar los decimales
-              if($this->input->post('producto')=="diario"){
-                $cuota = $capital*(pow((1 + $tasaInteres/100), 30))/27;
-                $data1["cuota"] = $cuota;
-              }
-              if($this->input->post('producto')=="mensual"){
-                $cuota = $capital*(pow((1 + $tasaInteres/100), $plazo)*$tasaInteres/100)/(pow((1 + $tasaInteres/100), $plazo) - 1);
-                $data1["cuota"] = $cuota;
-              }
-              if($this->input->post('producto')=="mesCampana"){
-                $cuota = $capital*(pow((1 + $tasaInteres/100), $plazo));
-                $data1["cuota"] = $cuota;
-              }              
-              $this->model_prestamo->crearReprogramaPrestamo($data1, $id);
+              $this->model_cobranza->crearCobranza($data);
             }else{
               //Pago Vencido = Falso
               $data["pagoExtemporaneo"] = 1;
-            }
-
-            $this->model_cobranza->crearCobranza($data);
+              $this->model_cobranza->crearCobranza($data);
+            }    
             redirect("cobranza?save=true");
-            
-            }
-        else{
-            
+        }
+        else{            
                 $id=$this->uri->segment(3);
                 $data['arrayprestamo']= $this->model_cobranza->buscarID($id);
                 $this->load->view('header');
@@ -110,7 +77,7 @@ class cobranza extends CI_Controller {
         }             
         }
 
-       function validaCampos()
+    function validaCampos()
     {
 		/*Campos para validar que no esten vacio los campos*/
                  $this->form_validation->set_rules("idPrestamo", "idPrestamo", "trim|required");

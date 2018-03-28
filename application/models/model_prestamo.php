@@ -155,6 +155,31 @@ class model_prestamo extends CI_Model
         }        
     }
 
+    public function verDetallePagoExtemporaneo($id){
+      $this->db->from('cobranza');
+      $this->db->where('idPrestamo',$id);
+      $this->db->where('pagoExtemporaneo',0);
+      $result = $this->db->get()->num_rows();
+      if($result == 0){
+        $data = array(
+          'cantidadPagos' => $result,
+          'pagoExtemporaneos' => 0,
+        );
+        return $data;
+      }else{
+        $this->db->select('SUM(pagoExtemporaneo) as pagoExtemporaneos');
+        $this->db->from('cobranza');
+        $this->db->where('idPrestamo',$id);
+        $this->db->where('pagoExtemporaneo',0);
+        $data = $this->db->get()->row();
+        $dataExtemporaneo = array(
+          'cantidadPagos' => $result,
+          'pagoExtemporaneos' => $data->pagoExtemporaneos,
+        );
+        return $dataExtemporaneo;
+      }
+    }
+
     public function verPrestamoDetalle1($id){
         //$this->db->select('count(*) as cantidad');
         $this->db->from('prestamo');
