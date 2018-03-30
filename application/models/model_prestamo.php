@@ -125,7 +125,8 @@ class model_prestamo extends CI_Model
             $this->db->from('prestamo p');
             $this->db->join('cliente c','c.idCliente = p.idCliente');
             $this->db->where('p.idPrestamo',$id);
-            $data = $this->db->get()->result();
+            return $this->db->get()->result();
+            /*$data = $this->db->get()->result();
 
             foreach ($data as $d) {
                 $prestamoData = array(
@@ -142,7 +143,7 @@ class model_prestamo extends CI_Model
                   'sumaPagos' => 0,
                 );
             }
-            return $prestamoData;
+            return $prestamoData;*/
         }else{
             $this->db->select('p.idPrestamo, producto, capital, plazo, saldo as deuda, tasaInteres, tasaInteresMoratorio, c.nombres as nombreC, c.apellidos as apellidoC, fechaFinal as fechaVencimiento, SUM(co.pago) as sumaPagos');
             $this->db->from('prestamo p');
