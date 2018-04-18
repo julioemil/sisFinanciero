@@ -193,8 +193,20 @@ class prestamo extends CI_Controller{
      
     echo $nuevafecha;
   }
+  
+  public function sumarDiasMesPagoPC(){
+    $periodo = $_POST['periodo'];
+    $fechaPagoPC = $_POST['fechaPagoPC'];
 
-    public function detalle($id){
+    $dias = 30 * $periodo;
+
+    $nuevafecha = strtotime('+'.$dias.' day', strtotime($fechaPagoPC));
+    $nuevafecha = date('Y-m-j', $nuevafecha);
+     
+    echo $nuevafecha;
+  }
+
+  public function detalle($id){
         $this->Seguridad();
         $this->load->view('header');
         $result = $this->model_prestamo->listarPrestamoDetalle($id);

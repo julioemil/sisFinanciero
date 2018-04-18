@@ -39,6 +39,14 @@
                         'value'	  => set_value('fechaFinal',@$datos_prestamo[0]->FECHA_FINAL),
                         'readonly'    => 'true',
                         'type'        => 'date',
+                        );
+                        //Dibujando el campo fechaPagoPrimeraCuota
+                        $fechaPagoPC = array(
+                        'name'        => 'fechaPagoPC',
+                        'id'          => 'fechaPagoPC',
+                        'size'        => 10,
+                        'value'   => set_value('fechaPagoPC',@$datos_prestamo[0]->FECHA_PAGOPC),
+                        'type'        => 'date',
                         );                       
                         // Dibujando el campo tasaInteres
                         $tasaInteres 		  = array(
@@ -142,6 +150,9 @@
                         <td><?php echo form_label("Fecha Final(*)",'fechaFinal');?></td>
                         <td><?php echo form_input($fechaFinal);?></td>
                         <td><font color="red"><?php echo form_error('fechaFinal'); ?></font></td>
+                        <td><?php echo form_label("F. Cuota1",'fechaPagoPC');?></td>
+                        <td><?php echo form_input($fechaPagoPC);?></td>
+                        <td><font color="red"><?php echo form_error('fechaPagoPC'); ?></font></td>
                     </tr>
                     
                     <tr>
@@ -371,6 +382,23 @@
         if($("#capital").val()!='' &&  $("#tasaInteres").val()!='' && $("#plazo").val()!=''){
             calcularValores();
         }        
+    });
+
+    $("#fechaPagoPC").focusout(function(e) {
+        if($("#producto").val()=='mesCampana' || $("#producto").val()=='mensual'){
+                
+        var periodo = document.getElementById('plazo').value;
+        var fechaPagoPC = document.getElementById('fechaPagoPC').value;
+            $.ajax({
+                data: {"periodo":periodo, "fechaPagoPC":fechaPagoPC},
+                url: 'http://localhost:8080/sisFinanciero/index.php/prestamo/sumarDiasMesPagoPC',
+                type: 'post',
+                success: function(response,status){
+                    //alert("Respueta: "+response+" Estado "+status);
+                    $("#fechaFinal").val(response);
+                }
+            });
+        }
     });
 
     function calcularValores(){

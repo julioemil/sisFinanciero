@@ -175,6 +175,25 @@
                                     $fechaVencCuotaAnterior = new DateTime($fechaVencCuotaAnterior);
                                     $fechaVencCuotaAnteriorS = $fechaVencCuotaAnterior->format('Y-m-d');
 
+                                    if($cantidadPagos == 0 && $array->fechaPagoPC != ''){
+                                        $datetime1 = new DateTime($array->fechaInicio);
+                                        $datetime2 = new DateTime($array->fechaPagoPC);
+                                        $interval = $datetime2->diff($datetime1);
+                                        $dias = $interval->format("%a");
+
+                                        $interesCompen = $array->tasaInteres;
+                                        
+                                        $TEAC = pow((1 + $interesCompen/100),12) - 1;
+                                        $TEDC = pow((1 + $TEAC),1/360) - 1;
+
+                                        $capital = $array->capital;
+                                        $interesGenerado = ($capital*pow((1 + $TEDC),$dias))-$capital;
+                                        
+                                    }else{
+                                        $interesGenerado = 0;
+                                    }
+
+                                    //Verificar las fecha de pago
                                     if($cantidadPagos > 0){
                                         $arraysaldo = $this->model_cobranza->getSaldo($array->idPrestamo);
                                         foreach($arraysaldo as $datos){
@@ -205,7 +224,7 @@
                                         $plazo = $array->plazo;
                                         $tasaInteres = $array->tasaInteres;
 
-                                        $cuota = $capitalPrestamo*(pow((1 + $tasaInteres/100), $plazo)*$tasaInteres/100)/(pow((1 + $tasaInteres/100), $plazo) - 1);
+                                        $cuota = ($capitalPrestamo*(pow((1 + $tasaInteres/100), $plazo)*$tasaInteres/100)/(pow((1 + $tasaInteres/100), $plazo) - 1)) + $interesGenerado;
 
                                         $saldoCapital = $capitalPrestamo;
                                         $count = 0;
@@ -235,6 +254,11 @@
                                         
                                         $deudaTotal = $capital + $interesC;
                                         $saldoVariable = $capital;
+
+                                        $plazo = $array->plazo;
+                                        $tasaInteres = $array->tasaInteres;
+
+                                        $cuota = ($capitalPrestamo*(pow((1 + $tasaInteres/100), $plazo)*$tasaInteres/100)/(pow((1 + $tasaInteres/100), $plazo) - 1)) + $interesGenerado;
                                       }  
                                   }
 
@@ -406,7 +430,7 @@
                         <td><label>Deuda Actual (S/.)</label></td>
                         <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo round($deudaTotal,2); ?>" /></td>
                         <td><label>Cuota:</label></td>
-                        <td><input type="text" readonly=”readonly” value="<?php echo number_format($array->cuota,2,'.', '');?>" /></td>
+                        <td><input type="text" readonly=”readonly” value="<?php echo number_format($cuota,2,'.', '');?>" /></td>
                         <td><?php echo form_label("Pago(*)",'pago'); ?></td>
                         <td> <?php  echo form_input($pago,10); ?></td>
                         <td><font color="red"><?php echo form_error('pago');?></font></td>

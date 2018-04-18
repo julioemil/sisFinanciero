@@ -41,6 +41,10 @@
  $fechaInicio = $arrayprestamo->fechaInicio;
  $producto = $arrayprestamo->producto;
 
+ if($arrayprestamo->fechaPagoPC != ''){
+    $fechaInicio = $arrayprestamo->fechaPagoPC;
+ }
+
  $fechaYear = date("Y", strtotime($fechaInicio));
  $fechaMonth = date("m", strtotime($fechaInicio));
  $fechaDate = date("d", strtotime($fechaInicio));
@@ -49,7 +53,7 @@
  $periodo = $arrayprestamo->plazo;
     echo '<tr>';
         echo '<td>'.'0'.'</td>';
-        echo '<td>'.$fechaInicio.'</td>';
+        echo '<td>'.$arrayprestamo->fechaInicio.'</td>';
         echo '<td>'.number_format($saldoCapital,2).'</td>';
         echo '<td>'.'0'.'</td>';
         echo '<td>'.'0'.'</td>';
@@ -61,11 +65,32 @@ $totalCapital = 0;
 $totalInteres = 0;
 $totalCuota = 0;
 $nuevafecha = $fechaInicio;
+
 if($producto == 'mensual'){
  while($periodo>0){
     $count = $count + 1;
 
-    $interes = +$tem/100*$saldoCapital;
+    $cuota = $arrayprestamo->cuota;
+
+    //Imprime la cuota correspondiente cuando existe un aplazo en el pago de esta
+    $interesGenerado = 0;
+    if($count == 1 && $arrayprestamo->fechaPagoPC != ''){
+        $datetime1 = new DateTime($arrayprestamo->fechaInicio);
+        $datetime2 = new DateTime($arrayprestamo->fechaPagoPC);
+        $interval = $datetime2->diff($datetime1);
+        $dias = $interval->format("%a");
+
+        $interesCompensatorio = $arrayprestamo->tasaInteres;
+        
+        $TEAC = pow((1 + $interesCompensatorio/100),12) - 1;
+        $TEDC = pow((1 + $TEAC),1/360) - 1;
+
+        $capital = $arrayprestamo->capital;
+        $interesGenerado = ($capital*pow((1 + $TEDC),$dias))-$capital;
+        $cuota = $cuota + $interesGenerado;
+    }
+
+    $interes = (+$tem/100*$saldoCapital) + $interesGenerado;
     $capital = +$cuota - $interes;
     $saldoCapital = +$saldoCapital - $capital;
 
@@ -100,7 +125,7 @@ if($producto == 'mensual'){
         echo '<td>'.number_format($saldoCapital, 2).'</td>';
         echo '<td>'.number_format($capital,2).'</td>';
         echo '<td>'.number_format($interes,2).'</td>';
-        echo '<td>'.number_format($cuota,2).'</td>';                
+        echo '<td>'.number_format($cuota,2).'</td>';                            
     echo '</tr>';
     $periodo = $periodo - 1;
  }
