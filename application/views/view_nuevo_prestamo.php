@@ -130,7 +130,7 @@
                         <td><?php echo form_dropdown('producto', $producto,set_value('producto',@$datos_prestamo[0]->producto),$js);?>
                         </td>
                         <td><font color="red"><?php echo form_error('producto');?></font></td>
-                        <td><?php echo form_label("Plazo(*)",'plazo');?></td>
+                        <td><?php echo form_label("Plazo(Meses*)",'plazo');?></td>
                         <td><?php echo form_input($plazo);?></td>
                         <td><font color="red"><?php echo form_error('plazo');?></font></td>
                     </tr>
@@ -348,13 +348,12 @@
             var periodo = document.getElementById('plazo').value;
             $.ajax({
                 data: {"periodo":periodo},
-                url: 'http://localhost:8080/sisFinanciero/index.php/prestamo/cadena',
+                url: 'http://localhost:8080/sisFinanciero/index.php/prestamo/sumarDiasMes',
                 type: 'post',
                 success: function(response,status){
                     //alert("Respueta: "+response+" Estado "+status);
                     $("#fechaFinal").val(response);
                 }
-
             });    
         }
         if($("#capital").val()!='' &&  $("#tasaInteres").val()!='' && $("#plazo").val()!=''){

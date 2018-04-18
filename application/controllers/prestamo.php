@@ -182,6 +182,18 @@ class prestamo extends CI_Controller{
       echo $date->format('Y-m-d');
   }
 
+  public function sumarDiasMes(){
+    $periodo = $_POST['periodo'];
+    $hoy   = date("Y")."-".date("m")."-".date("d");
+
+    $dias = 30 * $periodo;
+
+    $nuevafecha = strtotime('+'.$dias.' day', strtotime($hoy));
+    $nuevafecha = date('Y-m-j', $nuevafecha);
+     
+    echo $nuevafecha;
+  }
+
     public function detalle($id){
         $this->Seguridad();
         $this->load->view('header');

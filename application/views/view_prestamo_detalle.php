@@ -11,7 +11,6 @@
 <body>
 <div id="container">
     <h2 align="center">PLAN DE PAGOS</h2>
-
 <br><br>
 <?php $hoy   = date("Y")."-".date("m")."-".date("d");?>
 <label>Fecha: <?php echo $hoy;?></label>
@@ -40,6 +39,7 @@
  $cuota = $arrayprestamo->cuota;
  $saldoCapital = $arrayprestamo->capital;
  $fechaInicio = $arrayprestamo->fechaInicio;
+ $producto = $arrayprestamo->producto;
 
  $fechaYear = date("Y", strtotime($fechaInicio));
  $fechaMonth = date("m", strtotime($fechaInicio));
@@ -60,7 +60,8 @@ $count = 0;
 $totalCapital = 0;
 $totalInteres = 0;
 $totalCuota = 0;
-
+$nuevafecha = $fechaInicio;
+if($producto == 'mensual'){
  while($periodo>0){
     $count = $count + 1;
 
@@ -76,8 +77,11 @@ $totalCuota = 0;
         echo '<td>'.$count.'</td>';?>
         <td>
             <?php
-            
-            if($fechaMonth + 1 <= 12){
+            $nuevafecha = strtotime('+30 day', strtotime($nuevafecha));
+            $nuevafecha = date ( 'Y-m-j' , $nuevafecha );
+             
+            echo $nuevafecha;
+            /*if($fechaMonth + 1 <= 12){
                 $fechaMonth = ($fechaMonth + 1);
                 $fecha = $fechaYear.'/'.$fechaMonth.'/'.$fechaDate;
                 $date = new DateTime($fecha);
@@ -88,7 +92,7 @@ $totalCuota = 0;
                 $fecha = $fechaYear.'/'.$fechaMonth.'/'.$fechaDate;
                 $date = new DateTime($fecha);
                 echo $date->format('Y-m-d');
-            }
+            }*/
             
             ?>
         </td>
@@ -100,7 +104,7 @@ $totalCuota = 0;
     echo '</tr>';
     $periodo = $periodo - 1;
  }
-
+}
  ?>
 </tbody>
 <tfoot>
