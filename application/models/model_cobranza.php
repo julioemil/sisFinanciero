@@ -116,5 +116,24 @@ class model_cobranza extends CI_Model{
         $this->db->join('usuarios u','u.ID = p.idUsuario');
         return $this->db->get()->result();
             }
-
+   
+    function getPrueba($id){
+        $query =  $this->db->select(' idPrestamo, saldo, max(fechaCobranza) as fecha');
+        $query = $this->db->from('cobranza');
+        $query = $this->db->where('idPrestamo',$id);
+        $query = $this->db->where('vez',0);
+        $query=$this->db->get();
+        return $query->result();
+    }
+    
+    function  getPagoSaldo($id,$vez){
+            $this->db->select('saldo');
+            $this->db->from('cobranza');
+            $this->db->where('idPrestamo',$id);
+            $this->db->where('vez',$vez);
+            $this->db->order_by('idCobranza','DESC');
+            $this->db->limit(1);
+            return $this->db->get()->result();   
+    }
+    
 }

@@ -57,33 +57,33 @@
                         
                     </tr>
                     <tr>    
-                        <?php   $sumapago=0;
-                                $sumadeuda=$array->deuda;
+                        <?php   
+                                $saldosueldo=$array->deuda;
                                 if($array->vez==0){
-                                $arraydeuda=$this->model_cobranza->getPago($array->idPrestamo);
+                                $arraydeuda=$this->model_cobranza->getPagoSaldo($array->idPrestamo,$array->vez);
                                  foreach($arraydeuda as $datos){
-                                 $sumapago=$sumapago+ $datos->pago;   
+                                 $saldosueldo=$datos->saldo;   
                                  }
                                 }
                                 if($array->vez==1){
-                                $arraydeuda=$this->model_cobranza->getPago1($array->idPrestamo);
+                                $arraydeuda=$this->model_cobranza->getPagoSaldo($array->idPrestamo,$array->vez);
                                  foreach($arraydeuda as $datos){
-                                 $sumapago=$sumapago+ $datos->pago;   
+                                 $saldosueldo=$datos->saldo;   
                                  }
                                 }
                                 if($array->vez==2){
-                                $arraydeuda=$this->model_cobranza->getPago2($array->idPrestamo);
+                                $arraydeuda=$this->model_cobranza->getPagoSaldo($array->idPrestamo,$array->vez);
                                  foreach($arraydeuda as $datos){
-                                 $sumapago=$sumapago+ $datos->pago;   
+                                 $saldosueldo=$datos->saldo;   
                                  }
                                 }
                                 if($array->vez==3){
-                                $arraydeuda=$this->model_cobranza->getPago3($array->idPrestamo);
+                                $arraydeuda=$this->model_cobranza->getPagoSaldo($array->idPrestamo,$array->vez);
                                  foreach($arraydeuda as $datos){
-                                 $sumapago=$sumapago+ $datos->pago;   
+                                 $saldosueldo=$datos->saldo;   
                                  }
                                 }
-                                 $deuda=$array->deuda-$sumapago;
+                                 $deuda=$saldosueldo;
 
                                  $hoy = date("Y")."-".date("m")."-".date("d");
 
