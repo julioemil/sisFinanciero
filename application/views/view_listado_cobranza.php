@@ -18,7 +18,7 @@ function printContent(el){
       <tr>
           <td><h6>EMPLEADO: <?php echo $usuario->APELLIDOS.', '.$usuario->NOMBRE;?></h6></td>
           <td><h6>CARGO: <?php echo $usuario->TIPO;?></h6></td>
-          <td colspan="2"><h6>CELULAR:  <?php echo $usuario->TELEFONO;?></h6></td>
+          <td><h6>CELULAR:  <?php echo $usuario->TELEFONO;?></h6></td>
       </tr>
         <tr>
             <td><h6>CLIENTE:   <?php echo $usuario->apellidos.', '.$usuario->nombres;?></h6></td>
@@ -36,6 +36,9 @@ function printContent(el){
 <th>N°</th>
 <th>FECHA Y HORA DE PAGO</th>
 <th>DEUDA</th>
+<th>% CAPITAL PAGADO</th>
+<th>I. COMPENSATORIO</th>
+<th>I. MORATORIO</th>
 <th>PAGO</th>
 <th>SALDO</th>
 </tr>
@@ -49,6 +52,9 @@ function printContent(el){
         echo '<td>'.$i.'</td>';
         echo '<td>'.$cobranza->fechaCobranza.'</td>';
         echo '<td>'.$cobranza->deudaActual.'</td>';
+        echo '<td>'.$cobranza->capital.'</td>';
+        echo '<td>'.$cobranza->compensatorioPagado.'</td>';
+        echo '<td>'.$cobranza->moratorioPagado.'</td>';
         echo '<td>'.$cobranza->pago.'</td>';
         echo '<td>'.$cobranza->saldo.'</td>';
         echo '</tr>';
@@ -71,6 +77,9 @@ if(!empty($arraycobranza1)){
 <th>N°</th>
 <th>FECHA Y HORA DE PAGO</th>
 <th>DEUDA</th>
+<th>% CAPITAL PAGADO</th>
+<th>I. COMPENSATORIO</th>
+<th>I. MORATORIO</th>
 <th>PAGO</th>
 <th>SALDO</th>
 </tr>
@@ -84,6 +93,9 @@ if(!empty($arraycobranza1)){
         echo '<td>'.$i.'</td>';
         echo '<td>'.$cobranza->fechaCobranza.'</td>';
         echo '<td>'.$cobranza->deudaActual.'</td>';
+        echo '<td>'.$cobranza->capital.'</td>';
+        echo '<td>'.$cobranza->compensatorioPagado.'</td>';
+        echo '<td>'.$cobranza->moratorioPagado.'</td>';
         echo '<td>'.$cobranza->pago.'</td>';
         echo '<td>'.$cobranza->saldo.'</td>';
         echo '</tr>';
@@ -104,6 +116,9 @@ if(!empty($arraycobranza1)){
 <th>N°</th>
 <th>FECHA Y HORA DE PAGO</th>
 <th>DEUDA</th>
+<th>% CAPITAL PAGADO</th>
+<th>I. COMPENSATORIO</th>
+<th>I. MORATORIO</th>
 <th>PAGO</th>
 <th>SALDO</th>
 </tr>
@@ -117,6 +132,9 @@ if(!empty($arraycobranza1)){
         echo '<td>'.$i.'</td>';
         echo '<td>'.$cobranza->fechaCobranza.'</td>';
         echo '<td>'.$cobranza->deudaActual.'</td>';
+        echo '<td>'.$cobranza->capital.'</td>';
+        echo '<td>'.$cobranza->compensatorioPagado.'</td>';
+        echo '<td>'.$cobranza->moratorioPagado.'</td>';
         echo '<td>'.$cobranza->pago.'</td>';
         echo '<td>'.$cobranza->saldo.'</td>';
         echo '</tr>';
@@ -138,6 +156,9 @@ if(!empty($arraycobranza1)){
 <th>N°</th>
 <th>FECHA Y HORA DE PAGO</th>
 <th>DEUDA</th>
+<th>% CAPITAL PAGADO</th>
+<th>I. COMPENSATORIO</th>
+<th>I. MORATORIO</th>
 <th>PAGO</th>
 <th>SALDO</th>
 </tr>
@@ -151,6 +172,9 @@ if(!empty($arraycobranza1)){
         echo '<td>'.$i.'</td>';
         echo '<td>'.$cobranza->fechaCobranza.'</td>';
         echo '<td>'.$cobranza->deudaActual.'</td>';
+        echo '<td>'.$cobranza->capital.'</td>';
+        echo '<td>'.$cobranza->compensatorioPagado.'</td>';
+        echo '<td>'.$cobranza->moratorioPagado.'</td>';
         echo '<td>'.$cobranza->pago.'</td>';
         echo '<td>'.$cobranza->saldo.'</td>';
         echo '</tr>';

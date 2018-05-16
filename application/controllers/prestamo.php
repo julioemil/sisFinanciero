@@ -134,7 +134,7 @@ class prestamo extends CI_Controller{
       $hoydate = date("d");
 
       $count = 0;
-      while($count<=30){
+      while($count<30){
         
         if(checkdate($hoyMonth, $hoydate, $hoyYear)){
           $hoydate = $hoydate + 1;
@@ -218,23 +218,24 @@ class prestamo extends CI_Controller{
 
           $pagosExtemporaneos = $this->model_prestamo->verDetallePagoExtemporaneo($id);
 
-          $pagoExtemporaneo = 0;
-          $cantidad = 0;
+          $pagoExtem = $pagosExtemporaneos['pagoExtemporaneos'];
+          $cantidad = $pagosExtemporaneos['cantidadPagos'];
           
-          foreach ($dataPrestamo as $d) {
-            $prestamoData = array(
-              'idPrestamo' => $d->idPrestamo,
-              'producto' => $d->producto,
-              'plazo' => $d->plazo,
-              'deuda' => $this->obtenerDeudaTotal($d->deuda, $d->capital, $d->tasaInteres, $d->tasaInteresMoratorio, $d->fechaVencimiento, $d->sumaPagos, $pagoExtemporaneo, $cantidad),
-              'tasaInteres' => $d->tasaInteres,
-              'tasaInteresMoratorio' => $d->tasaInteresMoratorio,
-              'nombreC' => $d->nombreC,
-              'apellidoC' => $d->apellidoC,
-              'fechaVencimiento' => $d->fechaVencimiento,
-              'hoy' => $hoy,
-            );
-          }
+
+          
+          $prestamoData = array(
+            'idPrestamo' => $dataPrestamo['idPrestamo'],
+            'producto' => $dataPrestamo['producto'],
+            'plazo' => $dataPrestamo['plazo'],
+            'deuda' => $this->obtenerDeudaTotal($dataPrestamo['deuda'], $dataPrestamo['capital'], $dataPrestamo['tasaInteres'], $dataPrestamo['tasaInteresMoratorio'], $dataPrestamo['fechaVencimiento'], $dataPrestamo['sumaPagos'], $pagoExtem, $cantidad),
+            'tasaInteres' => $dataPrestamo['tasaInteres'],
+            'tasaInteresMoratorio' => $dataPrestamo['tasaInteresMoratorio'],
+            'nombreC' => $dataPrestamo['nombreC'],
+            'apellidoC' => $dataPrestamo['apellidoC'],
+            'fechaVencimiento' => $dataPrestamo['fechaVencimiento'],
+            'hoy' => $hoy,
+          );
+          
           $data['arrayprestamo'] = $prestamoData;
           //
 
@@ -255,7 +256,7 @@ class prestamo extends CI_Controller{
 
       $deudaGeneral = $capital*pow((1+$TEDC),30);
 
-      $deuda = $deudaGeneral - $sumaPagos;
+      $deuda = $deudaGeneral - ($sumaPagos - $pagoExtemporaneo);
 
       $interes = ($interesCompensatorio/100)/(1 + $interesCompensatorio/100)*$deuda;
       $capital = $deuda-$interes;
@@ -265,6 +266,10 @@ class prestamo extends CI_Controller{
       $interesC = ($capital*pow((1+$TEDC),$dias)-$capital);
       $interesM = ($capital*pow((1+$TEDM),$dias)-$capital);
       $deudaTotal = $deuda + $interesC + $interesM;
+
+      if($cantidad > 0){
+        $deudaTotal = $deudaTotal - $pagoExtemporaneo;
+      }
       return round($deudaTotal,2);
     }
 
@@ -321,6 +326,12 @@ class prestamo extends CI_Controller{
 
       $idPrestamo = $this->input->post("idPrestamo");
       $data = $this->model_prestamo->verPrestamoDetalleMoroso($idPrestamo);
+
+      $pagosExtemporaneos = $this->model_prestamo->verDetallePagoExtemporaneo($idPrestamo);
+
+      $pagoExtem = $pagosExtemporaneos['pagoExtemporaneos'];
+      $cantidad = $pagosExtemporaneos['cantidadPagos'];
+
       foreach ($data as $d) {
         $prestamoData = array(
           'idPrestamo' => $d->idPrestamo,
@@ -336,6 +347,8 @@ class prestamo extends CI_Controller{
           'fechaActual' => $hoy,
           'diasVencidos' => $this->diferenciaFechas($hoy,$d->fechaVencimiento),
           'sumaPagos' => $d->sumaPagos,
+          'pagosExtemporaneo' => $pagoExtem,
+          'cantidad' => $cantidad,
         );
       }
       

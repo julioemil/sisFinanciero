@@ -194,6 +194,7 @@ if(isset($_GET['limitePrestamos']))
                 success: function(response,status){
                     //alert("Respueta: "+response+" Estado "+status);
 
+
                     TEAC = Math.pow((1 + response['tasaInteres']/100),12) - 1;
                     TEDC = Math.pow((1 + TEAC),1/360) - 1;
 
@@ -202,7 +203,7 @@ if(isset($_GET['limitePrestamos']))
 
                     deudaGeneral = parseFloat(response['capital']*Math.pow((1+TEDC),30)).toFixed(2);
 
-                    deuda = deudaGeneral - response['sumaPagos'];
+                    deuda = deudaGeneral - (response['sumaPagos'] -response['pagosExtemporaneo'] );
 
                     interes = parseFloat((response['tasaInteres']/100)/(1 + response['tasaInteres']/100)*deuda);
                     capital = parseFloat(deuda-interes);
@@ -211,11 +212,19 @@ if(isset($_GET['limitePrestamos']))
                     interesMoratorio = parseFloat(capital*Math.pow((1+TEDM),response['diasVencidos'])-capital);
                     deudaTotal = parseFloat(deuda + interesCompensatorio + interesMoratorio);
 
+                    if(response['cantidad'] > 0){
+                        deudaTotal = deudaTotal - response['pagosExtemporaneo'];
+                    }
+
                     html = "<p><strong>Prestamo:</strong>"+response['idPrestamo']+"</p>"
                     html += "<p><strong>Fecha Actual:</strong>"+response['fechaActual']+"</p>"
                     html += "<p><strong>Fecha Vencimiento:</strong>"+response['fechaVencimiento']+"</p>"
                     html += "<p><strong>Dias Vencidos:</strong>"+response['diasVencidos']+"</p>"
                     html += "<p><strong>Deuda:</strong>"+deuda+"</p>"
+                    if(response['cantidad']>0){
+                        html += "<p><strong>Pago Extemporaneo:</strong>"+response['pagosExtemporaneo']+"</p>"
+                        html += "<p><strong>Nueva deuda:</strong>"+(deuda - response['pagosExtemporaneo'])+"</p>"
+                    }
                     html += "<p><strong>Tasa Interes Compensatorio:</strong>% "+response['tasaInteres']+"</p>"
                     html += "<p><strong>Tasa Interes Moratorio:</strong>% "+response['tasaInteresMoratorio']+"</p>"
                     html += "<p><strong>---------------------------</strong></p>"

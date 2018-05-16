@@ -100,7 +100,7 @@
                                   $datetime3 = new DateTime($array->fechaInicio);
 
                                   //CASO DIARIO:
-                                  if($array->producto == 'diario'){
+                                  if($array->producto == 'diario' || $array->producto == 'semanal'){
                                     //SI PASO FECHA VENCIMIENTO 
                                       if($hoy > $array->fechaFinal){
 
@@ -121,8 +121,13 @@
                                       //SE ENCUENTRE DEL PLAZO DE PRESTAMO
                                       else{
                                         $saldoVariable = $deuda;
+                                        $deudaTotal = $saldoVariable;
+                                        $interesC = 0;
+                                        $interesM = 0;
                                       } 
                                   }
+
+
 
                                   if($array->producto == 'mesCampana'){
                                       //SI PASO FECHA VENCIMIENTO 
@@ -226,6 +231,7 @@
                                         $dias = $interval->format("%a");
 
                                         $interesC = ($capital*pow((1+$TEDC),$dias)-$capital);
+                                        $interesM = 0;
                                         
                                         $deudaTotal = $capital + $interesC;
                                         $saldoVariable = $capital;
@@ -254,7 +260,7 @@
                         <td><input type="text" readonly=”readonly” value="<?php echo $array->fechaFinal;?>" /></td>
                     </tr>
                                     <?php 
-                                    if($array->producto == 'diario'){
+                                    if($array->producto == 'diario' || $array->producto == 'semanal'){
                                         //Vencido
                                         if($hoy > $array->fechaFinal){
                                     ?>
@@ -399,7 +405,8 @@
                     <tr>
                         <td><label>Deuda Actual (S/.)</label></td>
                         <td><input type="text" id="deudaActual" name="deudaActual" readonly=”readonly” value="<?php echo round($deudaTotal,2); ?>" /></td>
-                        <td></td>
+                        <td><label>Cuota:</label></td>
+                        <td><input type="text" readonly=”readonly” value="<?php echo number_format($array->cuota,2,'.', '');?>" /></td>
                         <td><?php echo form_label("Pago(*)",'pago'); ?></td>
                         <td> <?php  echo form_input($pago,10); ?></td>
                         <td><font color="red"><?php echo form_error('pago');?></font></td>
@@ -417,6 +424,16 @@
                     <tr colspan=6>
                         <?php if($hoy>$array->fechaFinal){?>
                         <div class="alert alert-danger text-center">Se recomienda realizar la reprogramacion de su prestamo</div>
+                        <?php } 
+
+                            $fechaVNueva = strtotime ('- 3 day', strtotime($array->fechaFinal));
+                            $fechaVNueva = date ('Y-m-j', $fechaVNueva);
+                            $fechaVNueva = new DateTime($fechaVNueva);
+                            $fechaVNuevaS = $fechaVNueva->format('Y-m-d');
+                        ?>
+
+                        <?php if($hoy>=$fechaVNuevaS && $hoy<$array->fechaFinal){?>
+                        <div class="alert alert-danger text-center">Credito por Vencer y Reprogramar</div>
                         <?php } ?>
                     </tr>
                     <tr>
@@ -428,6 +445,11 @@
                     </tr>
                     
                     <tr>
+                        <?php //if($array->producto == 'mensual'){ ?>
+                        <input type="hidden" id="capitalPagado" name="capitalPagado">
+                        <input type="hidden" id="compensatorioPagado" name="compensatorioPagado" value="<?php echo $interesC; ?>">
+                        <input type="hidden" id="moratorioPagado" name="moratorioPagado" value="<?php echo $interesM; ?>">
+                        <?php //} ?>
                         <td colspan=3><center> <input type="submit" class="btn btn-success" value="GRABAR"></center></td>
                         <td colspan=3>
                         <center>
@@ -451,10 +473,13 @@
    if($("#deudaActual").val()!='' &&  $("#pago").val()!=''){
             var deudaActual = document.getElementById('deudaActual').value;
             var pago = document.getElementById('pago').value;
+            var interesC = document.getElementById('compensatorioPagado').value;
+            var interesM = document.getElementById('moratorioPagado').value;
             //var tasaInteres = document.getElementById('tasaInteres').value;
             var saldo = parseFloat(deudaActual-pago).toFixed(2);
             //var nuevaDeuda = parseFloat(saldo*(1+tasaInteres/100)).toFixed(2);
             document.getElementById("saldo").value = saldo;    
+            document.getElementById("capitalPagado").value = pago - interesC - interesM;
             //document.getElementById("capital").value = saldo;
             //document.getElementById("nuevaDeuda").value = nuevaDeuda;
         }        
@@ -464,10 +489,13 @@
         if($("#deudaActual").val()!='' &&  $("#pago").val()!=''){
             var deudaActual = document.getElementById('deudaActual').value;
             var pago = document.getElementById('pago').value;
+            var interesC = document.getElementById('compensatorioPagado').value;
+            var interesM = document.getElementById('moratorioPagado').value;
             //var tasaInteres = document.getElementById('tasaInteres').value;
             var saldo = parseFloat(deudaActual-pago).toFixed(2);
             //var nuevaDeuda = parseFloat(saldo*(1+tasaInteres/100)).toFixed(2);
             document.getElementById("saldo").value = saldo;    
+            document.getElementById("capitalPagado").value = pago - interesC - interesM;
             //document.getElementById("capital").value = saldo;
             //document.getElementById("nuevaDeuda").value = nuevaDeuda;
         }        
